@@ -1,0 +1,7 @@
+@import "../variables.scss";
+
+.root:after {
+  display: block;
+  height: 48px;
+  content: '';
+}
