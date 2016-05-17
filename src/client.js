@@ -129,3 +129,5 @@ if (['complete', 'loaded', 'interactive'].includes(document.readyState) && docum
 } else {
   document.addEventListener('DOMContentLoaded', run, false);
 }
+
+console.log("sdfsdf");
