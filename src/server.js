@@ -119,6 +119,8 @@ server.get('*', (req, res) => {
 
   match({routes, location: req.url}, (err, redirectLocation, props) => {
 
+    console.log("Starting to render the react router!");
+
     const template = require('./views/index.jade');
     const data = {title: '', description: '', css: '', body: '', entry: assets.main.js};
 
