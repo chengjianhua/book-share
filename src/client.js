@@ -10,15 +10,13 @@
 import "babel-polyfill";
 import ReactDOM from "react-dom";
 import FastClick from "fastclick";
-import Router from "./routes";
-// import Router from "./router/router";
+// import Router from "./routes";
 import Location from "./core/Location";
 import {addEventListener, removeEventListener} from "./core/DOMUtils";
 import injectTapEventPlugin from "react-tap-event-plugin";
 
-// import {Router} from "react-router";
-
-// import Routes from "./router/router";
+import {Router, browserHistory } from "react-router";
+import routes from "./router/routes";
 
 injectTapEventPlugin();
 
@@ -50,32 +48,32 @@ const context = {
 let trackPageview = () => (trackPageview = () => window.ga('send', 'pageview'));
 
 function render(state) {
-  Router.dispatch(state, (newState, component) => {
+  /*Router.dispatch(state, (newState, component) => {
 
-    console.dir(component);
+   console.dir(component);
 
-    ReactDOM.render(component, appContainer, () => {
-      // Restore the scroll position if it was saved into the state
-      if (state.scrollY !== undefined) {
-        window.scrollTo(state.scrollX, state.scrollY);
-      } else {
-        window.scrollTo(0, 0);
-      }
+   ReactDOM.render(component, appContainer, () => {
+   // Restore the scroll position if it was saved into the state
+   if (state.scrollY !== undefined) {
+   window.scrollTo(state.scrollX, state.scrollY);
+   } else {
+   window.scrollTo(0, 0);
+   }
 
-      trackPageview();
+   trackPageview();
 
-      // Remove the pre-rendered CSS because it's no longer used
-      // after the React app is launched
-      if (cssContainer) {
-        cssContainer.parentNode.removeChild(cssContainer);
-        cssContainer = null;
-      }
-    });
-  });
+   // Remove the pre-rendered CSS because it's no longer used
+   // after the React app is launched
+   if (cssContainer) {
+   cssContainer.parentNode.removeChild(cssContainer);
+   cssContainer = null;
+   }
+   });
+   });*/
 
- /* ReactDOM.render(
-    <Router routes={Routes} />, appContainer
-  );*/
+  ReactDOM.render(
+    <Router history={browserHistory} routes={routes}/>, appContainer
+  );
 }
 
 function run() {

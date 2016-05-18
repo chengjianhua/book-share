@@ -20,10 +20,13 @@ import ReactDOM from 'react-dom/server';
 import PrettyError from 'pretty-error';
 import passport from './core/passport';
 import schema from './data/schema';
-import Router from './routes';
-// import Router from './router/router';
+// import Router from './routes';
 import assets from './assets';
-import { port, auth, analytics } from './config';
+import {port, auth, analytics} from './config';
+
+import React from 'react';
+import routes from './router/routes';
+import {match, RouterContext} from 'react-router';
 
 const server = global.server = express();
 
@@ -39,7 +42,7 @@ global.navigator.userAgent = global.navigator.userAgent || 'all';
 // -----------------------------------------------------------------------------
 server.use(express.static(path.join(__dirname, 'public')));
 server.use(cookieParser());
-server.use(bodyParser.urlencoded({ extended: true }));
+server.use(bodyParser.urlencoded({extended: true}));
 server.use(bodyParser.json());
 
 //
@@ -55,14 +58,14 @@ server.use(expressJwt({
 server.use(passport.initialize());
 
 server.get('/login/facebook',
-  passport.authenticate('facebook', { scope: ['email', 'user_location'], session: false })
+  passport.authenticate('facebook', {scope: ['email', 'user_location'], session: false})
 );
 server.get('/login/facebook/return',
-  passport.authenticate('facebook', { failureRedirect: '/login', session: false }),
+  passport.authenticate('facebook', {failureRedirect: '/login', session: false}),
   (req, res) => {
     const expiresIn = 60 * 60 * 24 * 180; // 180 days
-    const token = jwt.sign(req.user, auth.jwt.secret, { expiresIn });
-    res.cookie('id_token', token, { maxAge: 1000 * expiresIn, httpOnly: true });
+    const token = jwt.sign(req.user, auth.jwt.secret, {expiresIn});
+    res.cookie('id_token', token, {maxAge: 1000 * expiresIn, httpOnly: true});
     res.redirect('/');
   }
 );
@@ -73,43 +76,73 @@ server.get('/login/facebook/return',
 server.use('/graphql', expressGraphQL(req => ({
   schema,
   graphiql: true,
-  rootValue: { request: req },
+  rootValue: {request: req},
   pretty: process.env.NODE_ENV !== 'production',
 })));
 
 //
 // Register server-side rendering middleware
 // -----------------------------------------------------------------------------
-server.get('*', async (req, res, next) => {
-  try {
-    let statusCode = 200;
+/*server.get('*', async(req, res, next) => {
+ try {
+ let statusCode = 200;
+ const template = require('./views/index.jade');
+ const data = {title: '', description: '', css: '', body: '', entry: assets.main.js};
+
+ if (process.env.NODE_ENV === 'production') {
+ data.trackingId = analytics.google.trackingId;
+ }
+
+ const css = [];
+ const context = {
+ insertCss: styles => css.push(styles._getCss()),
+ onSetTitle: value => (data.title = value),
+ onSetMeta: (key, value) => (data[key] = value),
+ onPageNotFound: () => (statusCode = 404),
+ };
+
+ console.dir(`Server Render ${Router}`);
+
+ await Router.dispatch({path: req.path, query: req.query, context}, (state, component) => {
+ data.body = ReactDOM.renderToString(component);
+ data.css = css.join('');
+ });
+
+ res.status(statusCode);
+ res.send(template(data));
+ } catch (err) {
+ next(err);
+ }
+ });*/
+
+server.get('*', (req, res) => {
+
+  match({routes, location: req.url}, (err, redirectLocation, props) => {
+
     const template = require('./views/index.jade');
-    const data = { title: '', description: '', css: '', body: '', entry: assets.main.js };
+    const data = {title: '', description: '', css: '', body: '', entry: assets.main.js};
 
-    if (process.env.NODE_ENV === 'production') {
-      data.trackingId = analytics.google.trackingId;
+    // console.log(...props);
+
+    if (err) {
+
+      res.status(500).send(err.message);
+    } else if (redirectLocation) {
+
+      res.redirect(302, redirectLocation.pathname + redirectLocation.search);
+    } else if (props || true) {
+
+      var body = ReactDOM.renderToString(<RouterContext {...props} />);
+
+      data.body = '';
+
+      res.status(200).send(template(data));
+    } else {
+
+      res.status(404).send('Not found');
     }
+  }); // ~match
 
-    const css = [];
-    const context = {
-      insertCss: styles => css.push(styles._getCss()),
-      onSetTitle: value => (data.title = value),
-      onSetMeta: (key, value) => (data[key] = value),
-      onPageNotFound: () => (statusCode = 404),
-    };
-
-    console.dir(`Server Render ${Router}`);
-
-    await Router.dispatch({ path: req.path, query: req.query, context }, (state, component) => {
-      data.body = ReactDOM.renderToString(component);
-      data.css = css.join('');
-    });
-
-    res.status(statusCode);
-    res.send(template(data));
-  } catch (err) {
-    next(err);
-  }
 });
 
 //

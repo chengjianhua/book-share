@@ -9,6 +9,7 @@
 
 import React, {Component, PropTypes} from "react";
 import emptyFunction from "fbjs/lib/emptyFunction";
+import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import s from "./App.scss";
 import FlatHeader from "../FlatHeader";
 import FlatFooter from "../FlatFooter";
@@ -43,14 +44,14 @@ class App extends Component {
     };
   }
 
-  componentWillMount() {
+  /*componentWillMount() {
     const {insertCss} = this.props.context;
     this.removeCss = insertCss(s);
   }
 
   componentWillUnmount() {
     this.removeCss();
-  }
+  }*/
 
   render() {
     return !this.props.error ? (
@@ -64,4 +65,4 @@ class App extends Component {
 
 }
 
-export default App;
+export default withStyles(App, s);

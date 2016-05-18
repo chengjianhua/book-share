@@ -36,10 +36,10 @@ class ContentWrapper extends React.Component {
 }
 
 class Routes extends React.Component {
-
+  
   render() {
     return (
-      <Route path="/" component={<App name = "sdf"/>}>
+      <Route path="/" component={App}>
         <IndexRoute component={BookCardPage}/>
 
         <Route path="/about" component={ContactPage}/>
