@@ -11,9 +11,9 @@ import ActionHome from "material-ui/lib/svg-icons/action/home";
 import ActionFavorite from "material-ui/lib/svg-icons/action/favorite";
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 
-import Link from "../Link";
+import {Link, browserHistory} from "react-router";
 
-import s from "./FlatFooter.scss";
+import "./FlatFooter.scss";
 
 class FlatFooter extends React.Component {
 
@@ -33,29 +33,35 @@ class FlatFooter extends React.Component {
 
   };
 
-  handleActive = (value) => {
+  handleTouchTap = (value) => {
 
     console.log(`${value.target} has been activated!`);
-    // console.log(`state has been changed from ${this.state.value} to ${value}`);
+
 
   };
 
   render() {
     return (
-      <div className={s.root}>
+      <div>
         <Tabs
           value={this.state.value}
           onChange={this.handleChange}>
-          <Tab value="/" icon={ <Link to="/"><ActionHome  /></Link> }>
-          </Tab>
-          <Tab value="/contact" onTouchTap={this.handleActive} icon={ <Link to="/contact"><ActionFlightTakeoff /></Link> }>
-          </Tab>
-          <Tab value="/me" icon={ <ActionFavorite /> }>
-          </Tab>
+
+          <Tab value="/"
+               icon={ <Link to="/"> <ActionHome  /> </Link> }/>
+
+          <Tab value="/login"
+               onTouchTap={this.handleTouchTap}
+               icon={ <Link to="/login"> <ActionFlightTakeoff /> </Link> }/>
+
+          <Tab value="/me"
+               onTouchTap={this.handleTouchTap}
+               icon={ <ActionFavorite /> }/>
+
         </Tabs>
       </div>
     );
   }
 }
 
-export default withStyles(FlatFooter, s);
+export default FlatFooter;

@@ -10,48 +10,21 @@
 import React, {Component, PropTypes} from "react";
 import emptyFunction from "fbjs/lib/emptyFunction";
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
+import '../../../node_modules/normalize.css/normalize.css';
 import s from "./App.scss";
 import FlatHeader from "../FlatHeader";
 import FlatFooter from "../FlatFooter";
 
 class App extends Component {
 
+  constructor(props) {
+    super(props);
+  }
+
   static propTypes = {
-    context: PropTypes.shape({
-      insertCss: PropTypes.func,
-      onSetTitle: PropTypes.func,
-      onSetMeta: PropTypes.func,
-      onPageNotFound: PropTypes.func,
-    }),
     children: PropTypes.element.isRequired,
     error: PropTypes.object,
   };
-
-  static childContextTypes = {
-    insertCss: PropTypes.func.isRequired,
-    onSetTitle: PropTypes.func.isRequired,
-    onSetMeta: PropTypes.func.isRequired,
-    onPageNotFound: PropTypes.func.isRequired,
-  };
-
-  getChildContext() {
-    const context = this.props.context;
-    return {
-      insertCss: context.insertCss || emptyFunction,
-      onSetTitle: context.onSetTitle || emptyFunction,
-      onSetMeta: context.onSetMeta || emptyFunction,
-      onPageNotFound: context.onPageNotFound || emptyFunction,
-    };
-  }
-
-  /*componentWillMount() {
-    const {insertCss} = this.props.context;
-    this.removeCss = insertCss(s);
-  }
-
-  componentWillUnmount() {
-    this.removeCss();
-  }*/
 
   render() {
     return !this.props.error ? (
@@ -65,4 +38,4 @@ class App extends Component {
 
 }
 
-export default withStyles(App, s);
+export default withStyles(s)(App);

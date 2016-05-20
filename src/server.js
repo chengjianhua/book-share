@@ -16,7 +16,7 @@ import expressJwt from 'express-jwt';
 import expressGraphQL from 'express-graphql';
 import jwt from 'jsonwebtoken';
 import fetch from './core/fetch';
-import ReactDOM from 'react-dom/server';
+import {renderToString} from 'react-dom/server';
 import PrettyError from 'pretty-error';
 import passport from './core/passport';
 import schema from './data/schema';
@@ -27,6 +27,8 @@ import {port, auth, analytics} from './config';
 import React from 'react';
 import routes from './router/routes';
 import {match, RouterContext} from 'react-router';
+
+import WithStylesContext from "./components/WithStylesContext";
 
 const server = global.server = express();
 
@@ -117,14 +119,12 @@ server.use('/graphql', expressGraphQL(req => ({
 
 server.get('*', (req, res) => {
 
-  match({routes, location: req.url}, (err, redirectLocation, props) => {
+  match({routes, location: req.url}, (err, redirectLocation, renderProps) => {
 
     console.log("Starting to render the react router!");
 
     const template = require('./views/index.jade');
     const data = {title: '', description: '', css: '', body: '', entry: assets.main.js};
-
-    // console.log(...props);
 
     if (err) {
 
@@ -132,11 +132,16 @@ server.get('*', (req, res) => {
     } else if (redirectLocation) {
 
       res.redirect(302, redirectLocation.pathname + redirectLocation.search);
-    } else if (props || true) {
+    } else if (renderProps || true) {
 
-      var body = ReactDOM.renderToString(<RouterContext {...props} />);
+      const css = [];
+      //noinspection JSCheckFunctionSignatures
+      data.body = renderToString(
+        <WithStylesContext onInsertCss={styles => css.push(styles._getCss())}>
+          <RouterContext {...renderProps} />
+        </WithStylesContext>);
 
-      data.body = '';
+      // data.body = '';
 
       res.status(200).send(template(data));
     } else {

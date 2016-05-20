@@ -8,71 +8,44 @@
  */
 
 import "babel-polyfill";
+import React from "react";
 import ReactDOM from "react-dom";
 import FastClick from "fastclick";
-// import Router from "./routes";
 import Location from "./core/Location";
 import {addEventListener, removeEventListener} from "./core/DOMUtils";
 import injectTapEventPlugin from "react-tap-event-plugin";
 
-import {Router, browserHistory } from "react-router";
+import {Router, browserHistory, match} from "react-router";
 import routes from "./router/routes";
+
+import WithStylesContext from "./components/WithStylesContext";
 
 injectTapEventPlugin();
 
-let cssContainer = document.getElementById('css');
 const appContainer = document.getElementById('app');
-const context = {
-  insertCss: styles => styles._insertCss(),
-  onSetTitle: value => (document.title = value),
-  onSetMeta: (name, content) => {
-    // Remove and create a new <meta /> tag in order to make it work
-    // with bookmarks in Safari
-    const elements = document.getElementsByTagName('meta');
-    Array.from(elements).forEach((element) => {
-      if (element.getAttribute('name') === name) {
-        element.parentNode.removeChild(element);
-      }
-    });
-    const meta = document.createElement('meta');
-    meta.setAttribute('name', name);
-    meta.setAttribute('content', content);
-    document
-      .getElementsByTagName('head')[0]
-      .appendChild(meta);
-  },
-};
 
 // Google Analytics tracking. Don't send 'pageview' event after the first
 // rendering, as it was already sent by the Html component.
 let trackPageview = () => (trackPageview = () => window.ga('send', 'pageview'));
 
 function render(state) {
-  /*Router.dispatch(state, (newState, component) => {
 
-   console.dir(component);
+  if (state.scrollY !== undefined) {
+    window.scrollTo(state.scrollX, state.scrollY);
+  } else {
+    window.scrollTo(0, 0);
+  }
 
-   ReactDOM.render(component, appContainer, () => {
-   // Restore the scroll position if it was saved into the state
-   if (state.scrollY !== undefined) {
-   window.scrollTo(state.scrollX, state.scrollY);
-   } else {
-   window.scrollTo(0, 0);
-   }
+  trackPageview();
 
-   trackPageview();
-
-   // Remove the pre-rendered CSS because it's no longer used
-   // after the React app is launched
-   if (cssContainer) {
-   cssContainer.parentNode.removeChild(cssContainer);
-   cssContainer = null;
-   }
-   });
+  /*match({ browserHistory, routes }, (error, redirectLocation, renderProps) => {
+   ReactDOM.render(<Router  history={browserHistory} routes={routes} {...renderProps} />, appContainer);
    });*/
 
   ReactDOM.render(
-    <Router history={browserHistory} routes={routes}/>, appContainer
+    <WithStylesContext onInsertCss={styles => styles._insertCss()}>
+      <Router history={browserHistory} routes={routes}/>
+    </WithStylesContext>, appContainer
   );
 }
 
@@ -90,7 +63,6 @@ function run() {
       path: location.pathname,
       query: location.query,
       state: location.state,
-      context,
     });
     render(currentState);
   });

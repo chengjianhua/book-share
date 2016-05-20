@@ -18,11 +18,11 @@ class BookCardPage extends React.Component {
     }
 
     return (
-      <div className={s.root}>
+      <div>
         {bookList}
       </div>
     );
   }
 }
 
-export default withStyles(BookCardPage, s);
+export default BookCardPage;

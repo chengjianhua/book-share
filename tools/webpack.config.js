@@ -73,7 +73,7 @@ const config = {
         ],
         loader: 'babel-loader',
       }, {
-        test: /\.scss$/,
+        test: /\.(css|scss)$/,
         loaders: [
           'isomorphic-style-loader',
           `css-loader?${DEBUG ? 'sourceMap&' : 'minimize&'}modules&localIdentName=` +
