@@ -1,0 +1,9 @@
+{
+  "name": "FlatFooter",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./IndexTabs.js",
+  "dependencies": {
+    "react-router": "latest"
+  }
+}

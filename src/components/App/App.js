@@ -13,7 +13,6 @@ import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import '../../../node_modules/normalize.css/normalize.css';
 import s from "./App.scss";
 import FlatHeader from "../FlatHeader";
-import FlatFooter from "../FlatFooter";
 
 class App extends Component {
 
@@ -31,7 +30,6 @@ class App extends Component {
       <div>
         <FlatHeader />
         {this.props.children}
-        <FlatFooter />
       </div>
     ) : this.props.children;
   }

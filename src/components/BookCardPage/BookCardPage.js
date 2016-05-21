@@ -2,9 +2,11 @@
  * Created by cjh95414 on 2016/5/5.
  */
 
+//noinspection JSUnresolvedVariable,NpmUsedModulesInstalled
 import React from "react";
 import BookCard from "../BookCard";
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
+//noinspection JSUnresolvedVariable
 import s from "./BookCardPage.scss";
 
 class BookCardPage extends React.Component {
@@ -14,7 +16,7 @@ class BookCardPage extends React.Component {
     var bookList = [];
 
     for (let i = 0; i < 5; i++) {
-      bookList.push(<BookCard userName="Cheng" key={i}/>);
+      bookList.push(<BookCard key={i}/>);
     }
 
     return (
@@ -25,4 +27,4 @@ class BookCardPage extends React.Component {
   }
 }
 
-export default BookCardPage;
+export default withStyles(s)(BookCardPage);
