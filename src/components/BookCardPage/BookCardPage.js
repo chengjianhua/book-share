@@ -20,7 +20,7 @@ class BookCardPage extends React.Component {
     }
 
     return (
-      <div>
+      <div style={{marginTop: '1rem'}}>
         {bookList}
       </div>
     );

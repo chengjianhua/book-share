@@ -4,47 +4,16 @@
 
 //noinspection JSUnresolvedVariable,NpmUsedModulesInstalled
 import React, {PropTypes} from "react";
-import Tabs from "material-ui/lib/tabs/tabs";
-import Tab from "material-ui/lib/tabs/tab";
-import ActionFlightTakeoff from "material-ui/lib/svg-icons/action/flight-takeoff";
-import ActionHome from "material-ui/lib/svg-icons/action/home";
-import ActionFavorite from "material-ui/lib/svg-icons/action/favorite";
+import Tabs from "material-ui/Tabs/Tabs";
+import Tab from "material-ui/Tabs/Tab";
+import ActionFlightTakeoff from "material-ui/svg-icons/action/flight-takeoff";
+import ActionHome from "material-ui/svg-icons/action/home";
+import ActionFavorite from "material-ui/svg-icons/action/favorite";
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 //noinspection JSUnresolvedVariable
 import s from "./IndexTabs.scss";
 
 import {Link} from "react-router";
-
-/*class LinkTab extends React.Component {
- static propTypes = {
- to: PropTypes.string.isRequired,
- children: React.PropTypes.node,
- selected: React.PropTypes.bool,
- };
-
- render() {
- const styles = {
- height: 0,
- overflow: 'hidden',
- width: '100%',
- position: 'relative',
- textAlign: 'initial',
- };
-
- if (this.props.selected) {
- delete styles.height;
- delete styles.overflow;
- }
-
- return (
- <div style={styles}>
- <Link to={this.props.to || "/login"}>
- {this.props.children}
- </Link>
- </div>
- );
- }
- }*/
 
 class IndexTabs extends React.Component {
 
@@ -80,7 +49,7 @@ class IndexTabs extends React.Component {
 
 
     return (
-      <div className={s.root}>
+      <div>
         <Tabs
           value={this.state.value}
           onChange={this.handleChange}
@@ -120,4 +89,4 @@ class IndexTabs extends React.Component {
 }
 
 
-export default (IndexTabs);
+export default withStyles(s)(IndexTabs);

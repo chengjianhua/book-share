@@ -1,18 +1,14 @@
-/**
- * React Starter Kit (https://www.reactstarterkit.com/)
- *
- * Copyright © 2014-2016 Kriasoft, LLC. All rights reserved.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE.txt file in the root directory of this source tree.
- */
-
 import React, {Component, PropTypes} from "react";
+
+import baseTheme from 'material-ui/styles/baseThemes/lightBaseTheme';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
+
 import emptyFunction from "fbjs/lib/emptyFunction";
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import '../../../node_modules/normalize.css/normalize.css';
 import s from "./App.scss";
-import FlatHeader from "../FlatHeader";
+import AppHeader from "../AppHeader";
+// import PageHeader from '../PageHeader';
 
 class App extends Component {
 
@@ -23,12 +19,27 @@ class App extends Component {
   static propTypes = {
     children: PropTypes.element.isRequired,
     error: PropTypes.object,
+    header: PropTypes.element,
   };
 
+  static defaultProps = {
+    header: <AppHeader />
+  };
+
+  static childContextTypes = {
+    muiTheme: PropTypes.object.isRequired,
+  };
+
+  //noinspection JSMethodCanBeStatic
+  getChildContext() {
+    return {muiTheme: getMuiTheme(baseTheme)};
+  }
+
   render() {
+
     return !this.props.error ? (
       <div>
-        <FlatHeader />
+        {this.props.header}
         {this.props.children}
       </div>
     ) : this.props.children;
