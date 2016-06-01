@@ -1,0 +1,6 @@
+{
+  "name": "SelectableList",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./SelectableList.js"
+}

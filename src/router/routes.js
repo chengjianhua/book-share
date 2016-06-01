@@ -10,6 +10,7 @@ import LoginPage from '../components/LoginPage';
 import BookCardPage from '../components/BookCardPage';
 import ProfilePage from '../components/ProfilePage';
 import BookDetail from '../components/BookDetail';
+import Share from '../components/Share';
 
 import AppHeader from '../components/AppHeader';
 import PageHeader from '../components/PageHeader';
@@ -37,7 +38,9 @@ export default ([
   </Route>,
   <Route path="share" component={AppPage}>
     <Route path="book" component={BookDetail}>
+    </Route>
 
+    <Route path="add" component={Share}>
     </Route>
   </Route>
 ]);

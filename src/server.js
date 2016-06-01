@@ -15,18 +15,18 @@ import bodyParser from 'body-parser';
 import expressJwt from 'express-jwt';
 import expressGraphQL from 'express-graphql';
 import jwt from 'jsonwebtoken';
-import fetch from './core/fetch';
 import {renderToString} from 'react-dom/server';
 import PrettyError from 'pretty-error';
 import passport from './core/passport';
 import schema from './data/schema';
-// import Router from './routes';
 import assets from './assets';
 import {port, auth, analytics} from './config';
 
 import React from 'react';
-import routes from './router/routes';
 import {match, RouterContext} from 'react-router';
+import routes from './router/routes';
+
+import indexRouter from './controller/index';
 
 import WithStylesContext from "./components/WithStylesContext";
 
@@ -59,6 +59,16 @@ server.use(expressJwt({
 }));
 server.use(passport.initialize());
 
+//
+// Enable CORS
+// -----------------------------------------------------------------------------
+server.use(function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
+
+
 server.get('/login/facebook',
   passport.authenticate('facebook', {scope: ['email', 'user_location'], session: false})
 );
@@ -81,6 +91,8 @@ server.use('/graphql', expressGraphQL(req => ({
   rootValue: {request: req},
   pretty: process.env.NODE_ENV !== 'production',
 })));
+
+server.use('/manage', indexRouter);
 
 //
 // Register server-side rendering middleware
@@ -140,8 +152,6 @@ server.get('*', (req, res) => {
         <WithStylesContext onInsertCss={styles => css.push(styles._getCss())}>
           <RouterContext {...renderProps} />
         </WithStylesContext>);
-
-      // data.body = '';
 
       res.status(200).send(template(data));
     } else {

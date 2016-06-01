@@ -1,0 +1,25 @@
+.root {
+  padding: 1rem;
+}
+
+.bookInputContainer {
+  width: 100%;
+  position: relative;
+}
+
+.iconSearch {
+  display: inline-block;
+  position: absolute;
+  //top: 1em;
+  right: 0;
+}
+
+.fixBottom {
+  width: 100%;
+  margin-top: 1rem;
+  /*position: fixed;
+  left: 0;
+  bottom: 1rem;
+  padding: 0 0.5rem;
+  box-sizing: border-box;*/
+}
