@@ -9,10 +9,12 @@ import {Link} from 'react-router';
 import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
 import FlatButton from "material-ui/FlatButton";
 
+import Divider from 'material-ui/Divider';
+
 class BookCard extends Component {
 
   static propTypes = {
-    userName: PropTypes.string,
+    username: PropTypes.string,
     userSignature: PropTypes.string,
     avatar: PropTypes.string,
     bookName: PropTypes.string,
@@ -23,7 +25,7 @@ class BookCard extends Component {
   };
 
   static defaultProps = {
-    userName: '用户昵称',
+    username: '用户昵称',
     userSignature: '个性签名',
     avatar: '/img/avatar.png',
     bookName: '书籍名称',
@@ -37,16 +39,29 @@ class BookCard extends Component {
   };
 
   render() {
+
+    const subtitleStyle = {
+      // overflow: 'hidden',
+      // textOverflow: 'ellipsis',
+      // whiteSpace: 'nowrap'
+    };
+
     return (
       <Link to="/share/book">
         <Card>
           <CardHeader
-            title={this.props.userName}
+            title={this.props.username}
             subtitle={this.props.userSignature}
             avatar={this.props.avatar}
           />
           <CardMedia
-            overlay={<CardTitle title={this.props.bookName} subtitle={this.props.bookIntro} />}
+            overlay={
+              <CardTitle
+                title={this.props.bookName}
+                subtitle={this.props.bookIntro}
+                subtitleStyle={subtitleStyle}
+              />
+            }
           >
             <img src={this.props.bookImg}/>
           </CardMedia>
@@ -59,6 +74,8 @@ class BookCard extends Component {
             <FlatButton label="查看"/>
           </CardActions>
         </Card>
+
+        <Divider />
       </Link>
     );
   }

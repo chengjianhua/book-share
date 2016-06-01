@@ -37,36 +37,39 @@ export default class ProfilePage extends Component {
 
   render() {
 
-    const textStyle = {
-      display: 'inline-block',
-      width: '50%',
-      margin: 0,
-      padding: '16px 0',
-      textAlign: 'center',
-    }, iconStyle = {
-      position: 'absolute',
-      top: '16px',
-      right: '16px',
+    const style = {
+      textStyle: {
+        display: 'inline-block',
+        width: '50%',
+        margin: 0,
+        padding: '16px 0',
+        textAlign: 'center',
+      },
+      iconStyle: {
+        position: 'absolute',
+        top: '16px',
+        right: '16px',
 
+      }
     };
 
     return (
-      <div style={{marginTop: '1rem'}}>
+      <div className={s.root}>
         <Card >
           <CardHeader
-            title={this.props.userName}
+            title={this.props.username}
             subtitle="Subtitle"
             avatar={this.props.avatar}
           >
             <Link to="/">
-              <IconButton style={iconStyle}>
+              <IconButton style={style.iconStyle}>
                 <ChevronRight color="#AAAAAA"/>
               </IconButton>
             </Link>
           </CardHeader>
 
-          <CardText style={textStyle}>书籍 12</CardText>
-          <CardText style={textStyle}>书单 5</CardText>
+          <CardText style={style.textStyle}>书籍 12</CardText>
+          <CardText style={style.textStyle}>书单 5</CardText>
         </Card>
 
         <Paper className={s.iconContainer}>

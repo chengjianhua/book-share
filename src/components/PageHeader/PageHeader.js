@@ -16,7 +16,6 @@ import s from './PageHeader.scss';
 
 class PageHeader extends Component {
 
-
   render() {
 
     const iconStyleRight = {}, titleStyle = {};
@@ -33,9 +32,9 @@ class PageHeader extends Component {
                 targetOrigin={{horizontal: 'right', vertical: 'top'}}
                 anchorOrigin={{horizontal: 'right', vertical: 'top'}}
               >
-                <MenuItem primaryText="Refresh" />
-                <MenuItem primaryText="Help" />
-                <MenuItem primaryText="Sign out" />
+                <MenuItem key={'refresh'} primaryText="Refresh" />
+                <MenuItem key={'help'} primaryText="Help" />
+                <MenuItem key={'sign out'} primaryText="Sign out" />
               </IconMenu>
             }
 

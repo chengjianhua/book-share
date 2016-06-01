@@ -1,7 +1,5 @@
 @import "../variables.scss";
 
-.root:after {
-  display: block;
-  height: 48px;
-  content: '';
+.root {
+  margin-top: 1rem;
 }

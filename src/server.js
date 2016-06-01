@@ -59,6 +59,16 @@ server.use(expressJwt({
 }));
 server.use(passport.initialize());
 
+//
+// Enable CORS
+// -----------------------------------------------------------------------------
+server.use(function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
+
+
 server.get('/login/facebook',
   passport.authenticate('facebook', {scope: ['email', 'user_location'], session: false})
 );
@@ -140,8 +150,6 @@ server.get('*', (req, res) => {
         <WithStylesContext onInsertCss={styles => css.push(styles._getCss())}>
           <RouterContext {...renderProps} />
         </WithStylesContext>);
-
-      // data.body = '';
 
       res.status(200).send(template(data));
     } else {
