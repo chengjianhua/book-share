@@ -42,5 +42,6 @@ export default ([
 
     <Route path="add" component={Share}>
     </Route>
+
   </Route>
 ]);
