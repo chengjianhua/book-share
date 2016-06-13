@@ -1,5 +1,7 @@
+@import '../variables.scss';
+
 .root {
-  padding: 1rem;
+  padding: $padding;
 }
 
 .bookInputContainer {

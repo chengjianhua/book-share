@@ -137,14 +137,9 @@ class Share extends Component {
     let book = this.state.bookSearchResult[selectedIndex];
 
     this.setState({
-      book: book
-    }, function () {
-      this.setState(function (previousState, currentProps) {
-        return {
-          bookTitle: book.title ? book.title : previousState.bookTitle
-        }
-      });
-    }.bind(this));
+      book: book,
+      bookTitle: book.title
+    });
 
   };
 

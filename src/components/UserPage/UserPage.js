@@ -8,7 +8,7 @@ import {Link} from 'react-router';
 
 import {Card, CardActions, CardHeader, CardTitle, CardText} from 'material-ui/Card';
 import FontIcon from 'material-ui/FontIcon';
-import colors from 'material-ui/styles/colors';
+import Divider from 'material-ui/Divider';
 import ChevronRight from 'material-ui/svg-icons/navigation/chevron-right';
 import IconButton from "material-ui/IconButton";
 import FlatButton from "material-ui/FlatButton";
@@ -16,7 +16,7 @@ import Paper from 'material-ui/Paper';
 
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 
-import s from './ProfilePage.scss';
+import s from './UserPage.scss';
 
 export default class ProfilePage extends Component {
 
@@ -61,12 +61,14 @@ export default class ProfilePage extends Component {
             subtitle="Subtitle"
             avatar={this.props.avatar}
           >
-            <Link to="/">
+            <Link to="/user/profile">
               <IconButton style={style.iconStyle}>
                 <ChevronRight color="#AAAAAA"/>
               </IconButton>
             </Link>
           </CardHeader>
+
+          <Divider />
 
           <CardText style={style.textStyle}>书籍 12</CardText>
           <CardText style={style.textStyle}>书单 5</CardText>

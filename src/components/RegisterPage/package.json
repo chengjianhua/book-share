@@ -2,5 +2,8 @@
   "name": "RegisterPage",
   "version": "0.0.0",
   "private": true,
-  "main": "./RegisterPage.js"
+  "main": "./RegisterPage.js",
+  "dependencies": {
+    "isomorphic-fetch": "latest"
+  }
 }

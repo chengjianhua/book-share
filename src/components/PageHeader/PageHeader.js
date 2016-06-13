@@ -9,12 +9,20 @@ import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import IconButton from 'material-ui/IconButton';
 import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
-import NavigationClose from 'material-ui/svg-icons/navigation/close';
+import ArrowBack from 'material-ui/svg-icons/navigation/arrow-back';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 
 import s from './PageHeader.scss';
 
 class PageHeader extends Component {
+
+  static contextTypes = {
+    router: PropTypes.object.isRequired
+  };
+
+  handleBackButtonTouchTap = ()=> {
+    this.context.router.goBack();
+  };
 
   render() {
 
@@ -25,7 +33,7 @@ class PageHeader extends Component {
         <div className={s.fixed}>
           <AppBar
             titleStyle={titleStyle}
-            iconElementLeft={<IconButton><NavigationClose /></IconButton>}
+            iconElementLeft={<IconButton onTouchTap={this.handleBackButtonTouchTap}><ArrowBack /></IconButton>}
             iconElementRight={
               <IconMenu
                 iconButtonElement={ <IconButton><MoreVertIcon /></IconButton> }

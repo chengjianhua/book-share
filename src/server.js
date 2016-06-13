@@ -10,6 +10,7 @@
 import 'babel-polyfill';
 import path from 'path';
 import express from 'express';
+import expressSession from 'express-session';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 import expressJwt from 'express-jwt';
@@ -18,6 +19,8 @@ import jwt from 'jsonwebtoken';
 import {renderToString} from 'react-dom/server';
 import PrettyError from 'pretty-error';
 import passport from './core/passport';
+
+
 import schema from './data/schema';
 import assets from './assets';
 import {port, auth, analytics} from './config';
@@ -27,6 +30,7 @@ import {match, RouterContext} from 'react-router';
 import routes from './router/routes';
 
 import indexRouter from './controller/index';
+import apiRouter from './controller/api';
 
 import WithStylesContext from "./components/WithStylesContext";
 
@@ -57,7 +61,6 @@ server.use(expressJwt({
   getToken: req => req.cookies.id_token,
   /* jscs:enable requireCamelCaseOrUpperCaseIdentifiers */
 }));
-server.use(passport.initialize());
 
 //
 // Enable CORS
@@ -69,18 +72,13 @@ server.use(function (req, res, next) {
 });
 
 
-server.get('/login/facebook',
-  passport.authenticate('facebook', {scope: ['email', 'user_location'], session: false})
-);
-server.get('/login/facebook/return',
-  passport.authenticate('facebook', {failureRedirect: '/login', session: false}),
-  (req, res) => {
-    const expiresIn = 60 * 60 * 24 * 180; // 180 days
-    const token = jwt.sign(req.user, auth.jwt.secret, {expiresIn});
-    res.cookie('id_token', token, {maxAge: 1000 * expiresIn, httpOnly: true});
-    res.redirect('/');
-  }
-);
+server.use(expressSession({
+  secret: 'book share',
+  resave: false,
+  saveUninitialized: false
+}));
+server.use(passport.initialize());
+server.use(passport.session());
 
 //
 // Register API middleware
@@ -93,41 +91,7 @@ server.use('/graphql', expressGraphQL(req => ({
 })));
 
 server.use('/manage', indexRouter);
-
-//
-// Register server-side rendering middleware
-// -----------------------------------------------------------------------------
-/*server.get('*', async(req, res, next) => {
- try {
- let statusCode = 200;
- const template = require('./views/index.jade');
- const data = {title: '', description: '', css: '', body: '', entry: assets.main.js};
-
- if (process.env.NODE_ENV === 'production') {
- data.trackingId = analytics.google.trackingId;
- }
-
- const css = [];
- const context = {
- insertCss: styles => css.push(styles._getCss()),
- onSetTitle: value => (data.title = value),
- onSetMeta: (key, value) => (data[key] = value),
- onPageNotFound: () => (statusCode = 404),
- };
-
- console.dir(`Server Render ${Router}`);
-
- await Router.dispatch({path: req.path, query: req.query, context}, (state, component) => {
- data.body = ReactDOM.renderToString(component);
- data.css = css.join('');
- });
-
- res.status(statusCode);
- res.send(template(data));
- } catch (err) {
- next(err);
- }
- });*/
+server.use('/api', apiRouter);
 
 server.get('*', (req, res) => {
 

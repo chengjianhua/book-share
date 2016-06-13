@@ -47,7 +47,7 @@ class BookCard extends Component {
     };
 
     return (
-      <Link to="/share/book">
+      <div>
         <Card>
           <CardHeader
             title={this.props.username}
@@ -76,7 +76,7 @@ class BookCard extends Component {
         </Card>
 
         <Divider />
-      </Link>
+      </div>
     );
   }
 }

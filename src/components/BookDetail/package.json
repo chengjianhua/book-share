@@ -2,5 +2,9 @@
   "name": "BookDetail",
   "version": "0.0.0",
   "private": true,
-  "main": "./BookDetail.js"
+  "main": "./BookDetail.js",
+  "dependencies": {
+    "isomorphic-fetch": "latest",
+    "react": "latest"
+  }
 }

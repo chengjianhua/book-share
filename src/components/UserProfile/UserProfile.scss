@@ -1,0 +1,58 @@
+@import '../variables.scss';
+
+.root {
+  //padding: $padding;
+  overflow: hidden;
+  text-align: center;
+  position: relative;
+}
+
+.avatarContainer {
+  position: relative;
+  height: 100vw;
+}
+
+.avatarContainer:before {
+  position: absolute;
+  content: '';
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  margin: -30px;
+  //noinspection CssUnknownTarget
+  background: url(/img/bg-book.jpg) no-repeat center center;
+  filter: blur(10px);
+  z-index: -1;
+}
+
+.avatar {
+  display: inline-block;
+  margin: 25vw auto auto;
+  width: 100px;
+  height: 100px;
+  border-radius: 50px;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.textContainer {
+  padding: $padding;
+}
+
+.text {
+  font-family: "Microsoft YaHei", "Arial", "serif";
+  font-size: 1.5rem;
+  color: #eeeeee;
+}
+
+
+.editButton {
+  position: absolute;
+  bottom: .5rem;
+  right: .5rem;
+}
+
+
+
+

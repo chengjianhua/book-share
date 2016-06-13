@@ -15,6 +15,11 @@ import BookCard from "../BookCard";
 import withStyles from "isomorphic-style-loader/lib/withStyles";
 import s from "./BookDetail.scss";
 
+import 'es6-promise';
+import fetch from 'isomorphic-fetch';
+
+import loadingGif from '../../public/img/loading.gif';
+
 const iconButtonElement = (
   <IconButton
     touch={true}
@@ -35,27 +40,60 @@ const rightIconMenu = (
 
 class BookDetail extends Component {
 
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      book: props.location.state ? props.location.state.book : null
+    };
+  }
+
+  static contextTypes = {
+    router: PropTypes.object.isRequired
+  };
+
   static propTypes = {
     avatar: PropTypes.string,
     username: PropTypes.string,
-    comment: PropTypes.string
+    comment: PropTypes.string,
   };
 
+
   static defaultProps = {
-    avatar: 'http://www.material-ui.com/images/ok-128.jpg',
-    username: 'Brendan Lim',
-    comment: 'I\'ll be in your neighborhood doing errands this weekend. Do you want to grab brunch?'
+    avatar: '/img/avatar.png',
+    username: 'Author',
+    comment: `Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+          Donec mattis pretium massa. Aliquam erat volutpat. Nulla facilisi.`,
   };
+
+  componentDidMount() {
+    console.log(this.props.params);
+    console.log(this.props);
+    console.log(this.context);
+    console.log(this.context.router);
+
+    fetch(`/api/share/book/${this.props.params.id}`, {
+      method: 'GET',
+      headers: {
+        "Content-Type": "application/json"
+      }
+    }).then(function (response) {
+      return response.json();
+    }).then(function (json) {
+      this.setState(function (previousState) {
+        return Object.assign({}, previousState, json.book);
+      });
+    }.bind(this));
+  }
 
   //noinspection JSMethodCanBeStatic
   render() {
 
     let commentList = [];
-
     for (let i = 0; i < 10; i++) {
-      commentList.push(
+      commentList.push([
         <ListItem
-          key={`listItem${i}`}
+          key={i}
           leftAvatar={<Avatar src={this.props.avatar} />}
           rightIconButton={rightIconMenu}
           primaryText={this.props.username}
@@ -66,23 +104,31 @@ class BookDetail extends Component {
             </p>
           }
           secondaryTextLines={2}
-        />
-      );
-
-      commentList.push(
-        <Divider key={`divider${i}`} inset={true}/>
-      );
-
+        />,
+        <Divider inset={true}/>
+      ]);
     }
+
+    let loading = '加载中……',
+      book = this.state.book,
+      bookDetail = book ? book.book : null;
 
     return (
       <div>
-        <BookCard />
+
+        <BookCard
+          bookName={book? book.bookTitle: loading}
+          bookIntro={bookDetail? bookDetail.summary.substr(0,100) + '...': loading}
+          bookImg={bookDetail? bookDetail.images.large: loadingGif}
+          title={book? book.shareTitle: loading}
+          description={book? book.shareContent: loading}
+        />
 
         <List>
           <Subheader>10 条评论 </Subheader>
           {commentList}
         </List>
+
       </div>
     );
   }

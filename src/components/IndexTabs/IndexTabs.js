@@ -6,7 +6,7 @@
 import React, {PropTypes} from "react";
 import Tabs from "material-ui/Tabs/Tabs";
 import Tab from "material-ui/Tabs/Tab";
-import ActionFlightTakeoff from "material-ui/svg-icons/action/flight-takeoff";
+import AccountBox from "material-ui/svg-icons/action/account-box";
 import ActionHome from "material-ui/svg-icons/action/home";
 import ActionFavorite from "material-ui/svg-icons/action/favorite";
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
@@ -65,20 +65,20 @@ class IndexTabs extends React.Component {
           />
 
           <Tab
-            value="/login"
+            value="/sign"
             style={tabStyle}
-            icon={ <ActionFlightTakeoff /> }
+            icon={ <ActionFavorite /> }
             linkButton
-            containerElement={<Link to="/login" />}
+            containerElement={<Link to="/sign" />}
             onActive={this.handleActive}
           />
 
           <Tab
-            value="/me"
+            value="/user"
             style={tabStyle}
-            icon={ <ActionFavorite /> }
+            icon={ <AccountBox /> }
             linkButton
-            containerElement={<Link to="/me" />}
+            containerElement={<Link to="/user" />}
             onActive={this.handleActive}
           />
 

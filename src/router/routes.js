@@ -3,17 +3,17 @@
  */
 
 //noinspection JSUnresolvedVariable
-import React from 'react';
-import {Route, IndexRoute} from 'react-router';
-import App from '../components/App/App';
-import LoginPage from '../components/LoginPage';
-import BookCardPage from '../components/BookCardPage';
-import ProfilePage from '../components/ProfilePage';
-import BookDetail from '../components/BookDetail';
-import Share from '../components/Share';
-
-import AppHeader from '../components/AppHeader';
-import PageHeader from '../components/PageHeader';
+import React from "react";
+import {Route, IndexRoute} from "react-router";
+import App from "../components/App/App";
+import SignPage from "../components/SignPage";
+import BookCardPage from "../components/BookCardPage";
+import UserPage from "../components/UserPage";
+import UserProfile from '../components/UserProfile';
+import BookDetail from "../components/BookDetail";
+import Share from "../components/Share";
+import AppHeader from "../components/AppHeader";
+import PageHeader from "../components/PageHeader";
 
 
 /**
@@ -32,16 +32,20 @@ const AppPage = (props)=>(
 export default ([
   <Route path="/" component={AppIndex}>
     <IndexRoute component={BookCardPage}/>
-    <Route path="login" component={LoginPage}/>
-    <Route path="me" component={ProfilePage}/>
+    <Route path="user" component={UserPage}/>
+  </Route>,
+  <Route component={AppPage}>
+
+    <Route path="share">
+      <Route path="add" component={Share}/>
+      
+      <Route path="book/:id" component={BookDetail}/>
+    </Route>
+
+    <Route path="/user/profile" component={UserProfile}/>
 
   </Route>,
-  <Route path="share" component={AppPage}>
-    <Route path="book" component={BookDetail}>
-    </Route>
-
-    <Route path="add" component={Share}>
-    </Route>
-
+  <Route component={App}>
+    <Route path="sign" component={SignPage}/>,
   </Route>
 ]);

@@ -23,7 +23,7 @@ class App extends Component {
   };
 
   static defaultProps = {
-    header: <AppHeader />
+    // header: <AppHeader />
   };
 
   static childContextTypes = {
@@ -39,7 +39,7 @@ class App extends Component {
 
     return !this.props.error ? (
       <div>
-        {this.props.header}
+        {this.props.header && this.props.header}
         {this.props.children}
       </div>
     ) : this.props.children;
