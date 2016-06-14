@@ -41,7 +41,7 @@ class BookCardPage extends Component {
 
       // 预加载
       this.setState({
-        books: books
+        books: books,
       });
 
       // --------------------------------------------------------------------------|
@@ -54,7 +54,7 @@ class BookCardPage extends Component {
             return response.json();
           }).then(function (json) {
             //noinspection UnnecessaryLocalVariableJS
-            let bookDetail = Object.assign({}, book, {book: json});
+            let bookDetail = Object.assign({}, book, {detail: json});
             // booksDetail.push(bookDetail);
             return bookDetail;
           })
@@ -80,7 +80,7 @@ class BookCardPage extends Component {
   render() {
 
     const bookCards = this.state.books.map(function (book, index) {
-      let bookDetail = book.book ? book.book : null,
+      let bookDetail = book.detail ? book.detail : null,
         loading = '加载中……';
 
       return (

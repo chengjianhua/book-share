@@ -78,7 +78,7 @@ class IndexTabs extends React.Component {
             style={tabStyle}
             icon={ <AccountBox /> }
             linkButton
-            containerElement={<Link to="/user" />}
+            containerElement={<Link to="/chengjianhua" />}
             onActive={this.handleActive}
           />
 

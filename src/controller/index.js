@@ -22,7 +22,7 @@ router.post('/share/add', function (req, res) {
 
   // 将要插入的数据
   let share = {
-    bookId: data.book ? data.book.id : null,
+    bookId: data.detail ? data.book.id : null,
     bookTitle: data.bookTitle,
     shareTitle: data.shareTitle,
     shareContent: data.shareContent
@@ -39,7 +39,7 @@ router.post('/share/add', function (req, res) {
 router.post('/comment/add/:id', function (req, res) {
 
   let shareId = req.params.id,
-    commentObject = req.body.comment,
+    commentObject = req.body,
     returnData = {};
 
   Book.addComment(shareId, commentObject, function (result) {

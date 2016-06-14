@@ -24,11 +24,21 @@ router.get('/share/book/:id', function (req, res) {
 
   let returnData = {};
 
-  Book.getSharedBookById(req.params.id, function (book) {
+  Book.getSharedBookByShareId(req.params.id, function (book) {
 
     returnData.book = book;
 
     res.send(JSON.stringify(returnData));
+  });
+});
+
+router.get('/:username/share/books', function (req, res) {
+  let returnData = {};
+  
+  Book.getShareBookSByUsername(req.params.username, function (books) {
+    returnData.books = books;
+    
+    res.end(JSON.stringify(returnData));
   });
 });
 

@@ -15,8 +15,7 @@ class BookDetailPage extends Component {
     super(props);
 
     this.state = {
-      book: props.location.state ? props.location.state.book : null,
-      comments: [],
+      book: props.location.state ? props.location.state.book ? props.location.state.book : null : null,
     };
   }
 
@@ -24,79 +23,108 @@ class BookDetailPage extends Component {
     router: PropTypes.object.isRequired
   };
 
-  handleComment = (comment) => {
+  handleComment = (commentContent) => {
 
-    this.setState(function (previousState) {
-      let commentsUpdated = previousState.comments;
-      commentsUpdated.push(comment);
+    const commentObject = {
+      content: commentContent,
+      user: 'chengjianhua',
+      date: new Date(),
+    };
 
-      return {
-        comments: commentsUpdated
-      };
-    });
+    // 将评论提交到服务器
+    fetch(`/manage/comment/add/${this.props.params.id}`, {
+      method: 'POST',
+      body: JSON.stringify(commentObject),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }).then(function (response) {
+      return response.json();
+    }).then(function (json) {
+
+      // 如果评论成功提交到了服务器
+      if (json.isSuccess) {
+        // 将当前的评论内容直接添加到评论列表的末尾
+        this.setState(function (previousState) {
+          let bookUpdated = previousState.book;
+          bookUpdated.comments.push(commentObject);
+
+          return {
+            book: bookUpdated
+          };
+        });
+        // this.setState: comments updated
+      }
+
+    }.bind(this));
+    // 评论提交到服务器
+
   };
 
   componentDidMount() {
-    // 如果当前是直接访问当前了链接，而不是从点击链接传递过来书籍数据，那么则根据 book 的 _id 来从数据库中请求数据
-    if (!this.state.book) {
-      // 从本地服务端获取数据库中的本书的数据
-      fetch(`/api/share/book/${this.props.params.id}`, {
-        method: 'GET',
-        headers: {
-          "Content-Type": "application/json"
+
+    // 从本地服务端获取数据库中的本书的数据
+    fetch(`/api/share/book/${this.props.params.id}`, {
+      method: 'GET',
+      headers: {
+        "Content-Type": "application/json"
+      }
+    }).then(function (response) {
+      return response.json();
+    }).then(function (json) {
+
+      this.setState(function (previousState) {
+
+        return {
+          // 将从本服务端获取到的 book 数据与 this.state 中已经存在的 book 合并并更新到 this.state 中去
+          book: Object.assign({}, previousState.book, json.book),
+        };
+
+      }, function () { // 更新本地服务器的数据到 state 以后如果数据 book 数据不够完整则执行以下步骤
+
+        let book = this.state.book;
+
+        // 如果从 location.state 中没有获取到 book 的详细信息就根据书本的豆瓣 ID 来获取到 book 的详细信息
+        if (!book.detail) {
+
+          // fetch
+          fetch('http://123.206.6.150:9000/v2/book/' + book.bookId).then(function (response) {
+            return response.json();
+          }).then(function (detail) {
+
+            this.setState(function (previousState) {
+              // 将从豆瓣 API 中获取到的数据添加到 book 中并更新到 this.state 中
+              let bookUpdated = previousState.book;
+              bookUpdated.detail = detail;
+              return {
+                book: bookUpdated
+              };
+            });
+
+          }.bind(this));
+          // fetch
+
         }
-      }).then(function (response) {
-        return response.json();
-      }).then(function (json) {
+        // 获取 book 完整数据结束
 
-        this.setState(function (previousState) {
-
-          return {
-            // 将从本服务端获取到的 book 数据与 this.state 中已经存在的 book 合并并更新到 this.state 中去
-            book: Object.assign({}, previousState, json.book)
-          };
-
-        }, function () { // 更新本地服务器的数据到 state 以后如果数据人不够完整则执行以下步骤
-
-          let book = this.state.book;
-
-          // 如果从 location.state 中没有获取到 book 的详细信息就根据书本的豆瓣 ID 来获取到 book 的详细信息
-          if (Object.is(book.book, null)) {
-
-            fetch('http://123.206.6.150:9000/v2/book/' + book.bookId).then(function (response) {
-              return response.json();
-            }).then(function (json) {
-
-              this.setState(function (previousState) {
-                // 将从豆瓣 API 中获取到的数据添加到 book 中并更新到 this.state 中
-                let bookUpdated = previousState.book;
-                bookUpdated.book = json;
-                return {
-                  book: bookUpdated
-                };
-              });
-
-            }.bind(this));
-
-          }
-        });
-      }.bind(this)); // fetch
-
-    }// if top
+      });
+    }.bind(this)); // fetch
 
   }// componentDidMount
 
   render() {
 
+    const book = this.state.book;
+
     return (
       <div>
 
         <BookDetailCard
-          book={this.state.book}
+          book={book}
         />
 
         <CommentBox
-          comments={this.state.comments}
+          comments={book? (book.hasOwnProperty('comments') ? book.comments: [])  : []}
           onComment={this.handleComment}
         />
 

@@ -22,10 +22,7 @@ class Book {
 
       db.collection('share_book').insertOne(share, function (err, result) {
         err && console.error(err);
-
         callback && callback(result);
-
-        db.close();
       });
     });
   }
@@ -42,22 +39,28 @@ class Book {
     connect.then(function (db) {
       db.collection('share_book').find({}, {comments: false}).skip(skip).limit(limit).toArray(function (err, documents) {
         err && console.error(err);
-
-        console.log(documents);
-
         callback && callback(documents);
       });
     });
   }
 
 
-  static getSharedBookById(id, callback) {
+  static getSharedBookByShareId(id, callback) {
     connect.then(function (db) {
       db.collection('share_book').find({'_id': ObjectId(id)}).limit(1).next(function (err, book) {
         err && console.log(err);
         callback && callback(book);
       });
     });
+  }
+
+  static getShareBookSByUsername(username, callback) {
+    connect.then(function (db) {
+      db.collection('share_book').find({username: username}).toArray(function (err, documents) {
+        err && console.error(err);
+        callback && callback(documents);
+      })
+    })
   }
 
 
@@ -69,23 +72,25 @@ class Book {
    * @param callback
    */
   static addComment(shareId, commentObject, callback) {
+
+    commentObject.date = new Date();
+
     connect.then(function (db) {
 
       db.collection('share_book').updateOne(
         {
-          '_id': ObjectId(shareId)
+          _id: ObjectId(shareId)
         },
         {
-          $push: {'comments': commentObject}
+          $push: {
+            comments: commentObject
+          }
         },
-        {},
+        {upsert: true},
         function (err, result) {
           err && console.error(err);
 
-          console.log("Database operation: ");
-          console.log(result);
-
-          callback && callaback(result);
+          callback && callback(result);
         }
       );
 

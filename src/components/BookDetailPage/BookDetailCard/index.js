@@ -22,24 +22,17 @@ class BookDetailCard extends Component {
 
   static defaultProps = {
     user: {
-      username: '用户名',
+      username: 'chengjianhua',
       signature: 'To be or not to be!',
       avatar: '/img/avatar.png'
     },
-    book: {
-      bookTitle: '书籍名称',
-      shareTitle: '分享标题',
-      shareContent: '分享内容',
-      book: null
-    }
   };
 
   render() {
-    console.log(this.props);
     const loading = '加载中……';
     const user = this.props.user;
     const book = this.props.book;
-    const bookDetail = book ? book.book : null;
+    const bookDetail = book ? book.detail : null;
 
     return (
       <div>
@@ -57,7 +50,7 @@ class BookDetailCard extends Component {
               />
             }
           >
-            <img src={bookDetail && bookDetail.images? bookDetail.images.large: loadingGif}/>
+            <img src={bookDetail ? bookDetail.images.large: loadingGif}/>
           </CardMedia>
 
           <CardTitle title={book? book.shareTitle: loading}/>

@@ -32,7 +32,7 @@ const AppPage = (props)=>(
 export default ([
   <Route path="/" component={AppIndex}>
     <IndexRoute component={BookCardPage}/>
-    <Route path="user" component={UserPage}/>
+    <Route path=":username" component={UserPage}/>
   </Route>,
   <Route component={AppPage}>
 
@@ -42,10 +42,11 @@ export default ([
       <Route path="book/:id" component={BookDetailPage}/>
     </Route>
 
-    <Route path="/user/profile" component={UserProfile}/>
+    <Route path="/:username/profile" component={UserProfile}/>
+
+    <Route path="sign" component={SignPage}/>
 
   </Route>,
   <Route component={App}>
-    <Route path="sign" component={SignPage}/>,
   </Route>
 ]);

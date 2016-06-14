@@ -9,7 +9,7 @@ import Divider from "material-ui/Divider";
 import Subheader from "material-ui/Subheader";
 import TextField from 'material-ui/TextField';
 import Avatar from "material-ui/Avatar";
-import {grey400} from "material-ui/styles/colors";
+import {grey400, darkBlack, grey300} from "material-ui/styles/colors";
 import IconButton from "material-ui/IconButton";
 import FlatButton from 'material-ui/FlatButton';
 import FontIcon from 'material-ui/FontIcon';
@@ -69,12 +69,8 @@ class CommentBox extends Component {
   static defaultProps = {
     user: {
       avatar: '/img/avatar.png',
-      username: '评论者',
+      username: 'chengjianhua',
     },
-    comment: `Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-          Donec mattis pretium massa. Aliquam erat volutpat. Nulla facilisi.
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-          Donec mattis pretium massa. Aliquam erat volutpat. Nulla facilisi.`,
   };
 
   handleCommentDialogOpen = () => {
@@ -92,14 +88,12 @@ class CommentBox extends Component {
   handleCommentDialogConfirm = () => {
     this.handleCommentDialogClose();
 
-    console.log(this.props.onComment);
-
     this.props.onComment && this.props.onComment(this.state.comment);
   };
 
   handleCommentChange = (event, value) => {
     this.setState({
-      comment: value
+      comment: value,
     });
   };
 
@@ -120,25 +114,31 @@ class CommentBox extends Component {
     ];
     // --------对话框的按钮-----------
 
-    let commentList = [];
-    for (let i = 0; i < 10; i++) {
-      commentList.push([
+    const props = this.props;
+
+    // 根据评论数据生成评论列表
+    const commentList = this.props.comments.map(function (comment, index) {
+      return ([
         <ListItem
-          key={i}
-          leftAvatar={<Avatar src={this.props.user.avatar} />}
+          key={index}
+          leftAvatar={<Avatar src={props.user.avatar} />}
           rightIconButton={rightIconMenu}
-          primaryText={this.props.user.username}
+          primaryText={
+            <p>
+              {props.user.username}
+              <span style={{color: grey300, fontSize: '0.5rem'}}> {new Date(comment.date).toDateString()}</span> <br />
+            </p>
+          }
           secondaryText={
             <p>
-              {/*<span style={{color: darkBlack}}>Brunch this weekend?</span><br />*/}
-              {this.props.comment}
+              {comment.content}
             </p>
           }
           secondaryTextLines={2}
         />,
         <Divider inset={true}/>
       ]);
-    }
+    });
 
     return (
       <div className={s.commentRoot}>
@@ -154,7 +154,7 @@ class CommentBox extends Component {
         </div>
 
         <List>
-          <Subheader>10 条评论 </Subheader>
+          <Subheader>{this.props.comments.length} 条评论 </Subheader>
           {commentList}
         </List>
 

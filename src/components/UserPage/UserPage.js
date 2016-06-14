@@ -18,7 +18,7 @@ import withStyles from 'isomorphic-style-loader/lib/withStyles';
 
 import s from './UserPage.scss';
 
-export default class ProfilePage extends Component {
+export default class UserPage extends Component {
 
   constructor(props) {
     super(props);
@@ -61,7 +61,7 @@ export default class ProfilePage extends Component {
             subtitle="Subtitle"
             avatar={this.props.avatar}
           >
-            <Link to="/user/profile">
+            <Link to="/chengjianhua/profile">
               <IconButton style={style.iconStyle}>
                 <ChevronRight color="#AAAAAA"/>
               </IconButton>
@@ -80,8 +80,8 @@ export default class ProfilePage extends Component {
             label="书籍"
             labelPosition="after"
             icon={ <FontIcon className="material-icons" color={"#FFF"}>book</FontIcon> }
-            linkButton
-            containerElement={<Link to="/" />}
+            // linkButton
+            // containerElement={<Link to="/" />}
           />
 
           <FlatButton
@@ -89,8 +89,8 @@ export default class ProfilePage extends Component {
             label="书单"
             labelPosition="after"
             icon={ <FontIcon className="material-icons" color={"rgba(100,0,100,0.87)"}>view_list</FontIcon> }
-            linkButton
-            containerElement={<Link className={s.iconButton} to="/" />}
+            // linkButton
+            // containerElement={<Link className={s.iconButton} to="/" />}
           />
 
           <FlatButton
@@ -98,8 +98,8 @@ export default class ProfilePage extends Component {
             label="分享"
             labelPosition="after"
             icon={ <FontIcon style={{width: '48px', height: '48px'}} className="material-icons">home</FontIcon> }
-            linkButton
-            containerElement={<Link to="/" />}
+            // linkButton
+            // containerElement={<Link to="/" />}
           />
 
         </Paper>
@@ -108,4 +108,4 @@ export default class ProfilePage extends Component {
   }
 }
 
-export default withStyles(s)(ProfilePage);
+export default withStyles(s)(UserPage);
