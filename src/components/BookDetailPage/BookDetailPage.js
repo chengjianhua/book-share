@@ -2,27 +2,12 @@
  * Created by cjh95414 on 2016/5/25.
  */
 import React, {PropTypes, Component} from "react";
-import {List, ListItem} from "material-ui/List";
-import Divider from "material-ui/Divider";
-import Subheader from "material-ui/Subheader";
-import Avatar from "material-ui/Avatar";
-import {Card, CardText, CardTitle, CardActions, CardMedia, CardHeader} from 'material-ui/Card';
-import {grey400} from "material-ui/styles/colors";
-import IconButton from "material-ui/IconButton";
-import FlatButton from 'material-ui/FlatButton';
-import FontIcon from 'material-ui/FontIcon';
-import RaisedButton from 'material-ui/RaisedButton';
-import MoreVertIcon from "material-ui/svg-icons/navigation/more-vert";
-import IconMenu from "material-ui/IconMenu";
-import MenuItem from "material-ui/MenuItem";
 import withStyles from "isomorphic-style-loader/lib/withStyles";
 import s from "./BookDetailPage.scss";
 import "es6-promise";
 import fetch from "isomorphic-fetch";
-import loadingGif from "../../public/img/loading.gif";
-
-import BookDetailCard from './BookDetailCard';
-import CommentBox from './CommentBox';
+import BookDetailCard from "./BookDetailCard";
+import CommentBox from "./CommentBox";
 
 class BookDetailPage extends Component {
 
@@ -30,12 +15,25 @@ class BookDetailPage extends Component {
     super(props);
 
     this.state = {
-      book: props.location.state ? props.location.state.book : null
+      book: props.location.state ? props.location.state.book : null,
+      comments: [],
     };
   }
 
   static contextTypes = {
     router: PropTypes.object.isRequired
+  };
+
+  handleComment = (comment) => {
+
+    this.setState(function (previousState) {
+      let commentsUpdated = previousState.comments;
+      commentsUpdated.push(comment);
+
+      return {
+        comments: commentsUpdated
+      };
+    });
   };
 
   componentDidMount() {
@@ -97,7 +95,10 @@ class BookDetailPage extends Component {
           book={this.state.book}
         />
 
-        <CommentBox />
+        <CommentBox
+          comments={this.state.comments}
+          onComment={this.handleComment}
+        />
 
       </div>
     );

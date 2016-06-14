@@ -42,6 +42,9 @@ class Book {
     connect.then(function (db) {
       db.collection('share_book').find({}, {comments: false}).skip(skip).limit(limit).toArray(function (err, documents) {
         err && console.error(err);
+
+        console.log(documents);
+
         callback && callback(documents);
       });
     });
@@ -78,10 +81,10 @@ class Book {
         {},
         function (err, result) {
           err && console.error(err);
-          
+
           console.log("Database operation: ");
           console.log(result);
-          
+
           callback && callaback(result);
         }
       );

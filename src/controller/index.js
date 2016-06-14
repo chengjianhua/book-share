@@ -32,7 +32,7 @@ router.post('/share/add', function (req, res) {
     returnData.id = result.insertedId;
     console.log(`[ObjectId = ${result.insertedId}]: Inserted ${JSON.stringify(share)} into mongodb!`);
     res.end(JSON.stringify(returnData));
-  })
+  });
 
 });
 

@@ -19,8 +19,6 @@ import IconMenu from "material-ui/IconMenu";
 import MenuItem from "material-ui/MenuItem";
 import withStyles from "isomorphic-style-loader/lib/withStyles";
 import s from "./index.scss";
-import "es6-promise";
-// import fetch from "isomorphic-fetch";
 
 const iconButtonElement = (
   <IconButton
@@ -54,34 +52,54 @@ class CommentBox extends Component {
     super(props);
 
     this.state = {
-      openCommentDialog: false
+      openCommentDialog: false,
+      comment: '',
     };
   }
 
   static propTypes = {
-    avatar: PropTypes.string,
-    username: PropTypes.string,
-    comment: PropTypes.string,
+    user: PropTypes.shape({
+      avatar: PropTypes.string,
+      username: PropTypes.string,
+    }),
+    onComment: PropTypes.func,
+    comments: PropTypes.array
   };
 
   static defaultProps = {
-    avatar: '/img/avatar.png',
-    username: '评论者',
+    user: {
+      avatar: '/img/avatar.png',
+      username: '评论者',
+    },
     comment: `Lorem ipsum dolor sit amet, consectetur adipiscing elit.
           Donec mattis pretium massa. Aliquam erat volutpat. Nulla facilisi.
           Lorem ipsum dolor sit amet, consectetur adipiscing elit.
           Donec mattis pretium massa. Aliquam erat volutpat. Nulla facilisi.`,
   };
 
-  handleCommentDialogClose = () => {
-    this.setState({
-      openCommentDialog: false
-    })
-  };
-
   handleCommentDialogOpen = () => {
     this.setState({
       openCommentDialog: true
+    });
+  };
+
+  handleCommentDialogClose = () => {
+    this.setState({
+      openCommentDialog: false
+    });
+  };
+
+  handleCommentDialogConfirm = () => {
+    this.handleCommentDialogClose();
+
+    console.log(this.props.onComment);
+
+    this.props.onComment && this.props.onComment(this.state.comment);
+  };
+
+  handleCommentChange = (event, value) => {
+    this.setState({
+      comment: value
     });
   };
 
@@ -97,7 +115,7 @@ class CommentBox extends Component {
         label="确认"
         keyboardFocused={true}
         secondary={true}
-        onTouchTap={this.handleCommentDialogClose}
+        onTouchTap={this.handleCommentDialogConfirm}
       />
     ];
     // --------对话框的按钮-----------
@@ -107,9 +125,9 @@ class CommentBox extends Component {
       commentList.push([
         <ListItem
           key={i}
-          leftAvatar={<Avatar src={this.props.avatar} />}
+          leftAvatar={<Avatar src={this.props.user.avatar} />}
           rightIconButton={rightIconMenu}
-          primaryText={this.props.username}
+          primaryText={this.props.user.username}
           secondaryText={
             <p>
               {/*<span style={{color: darkBlack}}>Brunch this weekend?</span><br />*/}
@@ -147,7 +165,6 @@ class CommentBox extends Component {
           actions={dialogActions}
           modal={true}
           open={this.state.openCommentDialog}
-          onRequestClose={this.handleCommentDialogClose}
           autoScrollBodyContent={true}
         >
           <TextField
@@ -156,6 +173,8 @@ class CommentBox extends Component {
             multiLine={true}
             rows={5}
             rowsMax={8}
+            value={this.state.comment}
+            onChange={this.handleCommentChange}
           />
         </Dialog>
 
