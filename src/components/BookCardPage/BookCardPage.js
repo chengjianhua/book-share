@@ -87,7 +87,7 @@ class BookCardPage extends Component {
         <Link
           key={index}
           to={{
-            pathname: `/share/book/${book.bookId}`,
+            pathname: `/share/book/${book._id}`,
             state: {
              book
             }

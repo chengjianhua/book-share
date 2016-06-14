@@ -36,6 +36,21 @@ router.post('/share/add', function (req, res) {
 
 });
 
+router.post('/comment/add/:id', function (req, res) {
+
+  let shareId = req.params.id,
+    commentObject = req.body.comment,
+    returnData = {};
+
+  Book.addComment(shareId, commentObject, function (result) {
+
+    returnData.isSuccess = result ? true : false;
+
+    res.send(JSON.stringify(returnData));
+  });
+
+});
+
 
 /**
  * [ /register ]: 注册用户

@@ -1,0 +1,12 @@
+@import '../../variables.scss';
+
+.commentRoot {
+  position: relative;
+}
+
+.commentButton {
+  display: inline-block;
+  position: absolute;
+  right: 0.5$padding;
+  top: 0.5$padding;
+}

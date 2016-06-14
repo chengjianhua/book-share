@@ -10,7 +10,7 @@ import SignPage from "../components/SignPage";
 import BookCardPage from "../components/BookCardPage";
 import UserPage from "../components/UserPage";
 import UserProfile from '../components/UserProfile';
-import BookDetail from "../components/BookDetail";
+import BookDetailPage from "../components/BookDetailPage";
 import Share from "../components/Share";
 import AppHeader from "../components/AppHeader";
 import PageHeader from "../components/PageHeader";
@@ -38,8 +38,8 @@ export default ([
 
     <Route path="share">
       <Route path="add" component={Share}/>
-      
-      <Route path="book/:id" component={BookDetail}/>
+
+      <Route path="book/:id" component={BookDetailPage}/>
     </Route>
 
     <Route path="/user/profile" component={UserProfile}/>

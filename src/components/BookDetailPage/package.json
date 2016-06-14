@@ -1,8 +1,8 @@
 {
-  "name": "BookDetail",
+  "name": "BookDetailPage",
   "version": "0.0.0",
   "private": true,
-  "main": "./BookDetail.js",
+  "main": "./BookDetailPage.js",
   "dependencies": {
     "isomorphic-fetch": "latest",
     "react": "latest"

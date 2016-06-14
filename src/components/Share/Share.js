@@ -280,8 +280,6 @@ class Share extends Component {
 
         </form>
 
-        {/* !Object.is(this.state.book, null) && <BookCard /> */}
-
         <Dialog
           key="searchResult"
           title="书籍搜索结果"
