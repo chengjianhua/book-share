@@ -83,8 +83,11 @@ router.post('/login',
   passport.authenticate('local'),
   function (req, res) {
 
+    console.log(req.user);
+
     let returnData = {
-      isSuccess: true
+      isSuccess: true,
+      uer: req.user
     };
 
     res.send(JSON.stringify(returnData));
