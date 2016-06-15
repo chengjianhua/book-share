@@ -74,6 +74,8 @@ class SignPage extends Component {
 
   render() {
 
+    console.log('进入登录/注册页面！');
+
     return (
       <div>
 

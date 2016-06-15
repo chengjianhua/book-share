@@ -20,7 +20,7 @@ class IndexTabs extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      value: "/"
+      value: 0
     };
   }
 
@@ -32,13 +32,6 @@ class IndexTabs extends React.Component {
     console.log(`Link has been changed from [${this.state.value}] to [${value}]`);
 
   };
-
-  handleActive = (value) => {
-
-    console.log(`${value} has been activated!`);
-
-  };
-
 
   render() {
 
@@ -56,30 +49,27 @@ class IndexTabs extends React.Component {
         >
 
           <Tab
-            value="/"
+            value={0}
             style={tabStyle}
             icon={ <ActionHome  /> }
             linkButton
             containerElement={<Link to="/" />}
-            onActive={this.handleActive}
           />
 
           <Tab
-            value="/sign"
+            value={1}
             style={tabStyle}
             icon={ <ActionFavorite /> }
             linkButton
             containerElement={<Link to="/sign" />}
-            onActive={this.handleActive}
           />
 
           <Tab
-            value="/user"
+            value={2}
             style={tabStyle}
             icon={ <AccountBox /> }
             linkButton
             containerElement={<Link to="/chengjianhua" />}
-            onActive={this.handleActive}
           />
 
         </Tabs>

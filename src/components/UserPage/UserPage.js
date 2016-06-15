@@ -25,13 +25,15 @@ export default class UserPage extends Component {
   }
 
   static propTypes = {
-    userName: PropTypes.string,
+    username: PropTypes.string,
     avatar: PropTypes.string,
+    signature: PropTypes.string
   };
 
   static defaultProps = {
-    userName: 'Cheng',
+    username: 'chengjianhua',
     avatar: 'http://lorempixel.com/100/100/nature/',
+    signature: 'To be or not to be!'
   };
 
 
@@ -58,7 +60,7 @@ export default class UserPage extends Component {
         <Card >
           <CardHeader
             title={this.props.username}
-            subtitle="Subtitle"
+            subtitle={this.props.signature}
             avatar={this.props.avatar}
           >
             <Link to="/chengjianhua/profile">
