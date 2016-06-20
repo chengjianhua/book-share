@@ -45,4 +45,14 @@ passport.deserializeUser(function (username, done) {
   });
 });
 
+passport.authenticateMiddleware = function authenticationMiddleware() {
+  return function (req, res, next) {
+    if (req.isAuthenticated()) {
+      return next();
+    }
+    res.redirect('/login');
+  }
+};
+
+
 export default passport;

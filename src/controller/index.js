@@ -12,6 +12,14 @@ var router = express.Router();
  * [ share/add ]： 处理添加分享的请求
  */
 router.post('/share/add', function (req, res) {
+
+  // console.log(req.user);
+  //
+  // console.log(req.sessionStore);
+  // console.log(req.session);
+  // console.log(req.session.passport.user);
+  // console.log(req.sessionID);
+
   // 定义将要返回的数据
   let returnData = {
     isSuccess: true,
@@ -20,12 +28,15 @@ router.post('/share/add', function (req, res) {
   // 请求中传入的数据
   let data = req.body;
 
+  console.log(data);
+
   // 将要插入的数据
   let share = {
-    bookId: data.detail ? data.book.id : null,
+    bookId: data.detail ? data.detail.id : null,
     bookTitle: data.bookTitle,
     shareTitle: data.shareTitle,
-    shareContent: data.shareContent
+    shareContent: data.shareContent,
+    username: req.user || 'chengjianhua'
   };
 
   Book.addShareBook(share, function (result) {
@@ -79,21 +90,56 @@ router.post('/register', function (req, res) {
 
 });
 
-router.post('/login',
-  passport.authenticate('local'),
-  function (req, res) {
+router.post('/login', passport.authenticate('local'), function (req, res) {
 
-    console.log(req.user);
 
-    let returnData = {
-      isSuccess: true,
-      uer: req.user
-    };
+  console.log("-------login-----------");
+  console.log(req.user);
+  console.log("-------login-----------");
 
-    res.send(JSON.stringify(returnData));
 
-  });
+  console.log(req.session);
+  console.log(req.sessionStore);
+  let returnData = {
+    isSuccess: true,
+    uer: req.user
+  };
+
+  res.send(JSON.stringify(returnData));
+});
+
+
+router.get('/test/1', function (req, res) {
+
+  console.log(req.user);
+
+  console.log(req.sessionStore);
+  console.log(req.session.passport.user);
+
+  res.send(JSON.stringify({message: '/test/1'}));
+
+});
+
+router.get('/test/2', passport.authenticateMiddleware(), function (req, res) {
+
+  console.log(req.user);
+
+  console.log(req.sessionStore);
+  console.log(req.session.passport.user);
+
+  res.send(JSON.stringify({message: '/test/2'}));
+
+});
+
+router.get('/test/3', passport.authenticate('local'), function (req, res) {
+
+  console.log(req.user);
+
+  console.log(req.sessionStore);
+  console.log(req.session.passport.user);
+
+  res.send(JSON.stringify({message: '/test/3'}));
+
+});
 
 export default router;
-
-

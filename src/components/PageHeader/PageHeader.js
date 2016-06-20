@@ -3,6 +3,7 @@
  */
 
 import React, {PropTypes, Component} from 'react';
+import {Link} from 'react-router';
 import AppBar from 'material-ui/AppBar';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 
@@ -40,9 +41,9 @@ class PageHeader extends Component {
                 targetOrigin={{horizontal: 'right', vertical: 'top'}}
                 anchorOrigin={{horizontal: 'right', vertical: 'top'}}
               >
-                <MenuItem key={'refresh'} primaryText="Refresh" />
-                <MenuItem key={'help'} primaryText="Help" />
-                <MenuItem key={'sign out'} primaryText="Sign out" />
+                <Link to="/share/add">
+                <MenuItem key={'refresh'} primaryText="添加" />
+                </Link>
               </IconMenu>
             }
 

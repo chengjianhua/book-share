@@ -50,20 +50,13 @@ class Share extends Component {
       bookTitle: '',
       shareTitle: '',
       shareContent: '',
-      book: null,
-      selectedIndex: null,
+      detail: null,
+      selectedIndex: 0,
     };
   }
 
   static contextTypes = {
     router: PropTypes.object.isRequired
-  };
-
-
-  handleSelectBook = (index) => {
-    this.setState({
-      selectedIndex: index
-    })
   };
 
   handleOpenSearchDialog = ()=> {
@@ -127,19 +120,26 @@ class Share extends Component {
     });
   };
 
+  handleSelectBook = (index) => {
+    this.setState({
+      selectedIndex: index
+    })
+  };
+
   handleConfirmDialog = ()=> {
-    this.handleCloseDialog();
 
     let selectedIndex = this.state.selectedIndex;
 
     console.log(selectedIndex);
 
-    let book = this.state.bookSearchResult[selectedIndex];
+    let detail = this.state.bookSearchResult[selectedIndex];
 
     this.setState({
-      book: book,
-      bookTitle: book.title
+      detail: detail,
+      bookTitle: detail.title
     });
+
+    this.handleCloseDialog();
 
   };
 
@@ -149,7 +149,7 @@ class Share extends Component {
 
     // the data will be posted to server
     let data = {
-      book: this.state.book,
+      detail: this.state.detail,
       bookTitle: this.state.bookTitle,
       shareTitle: this.state.shareTitle,
       shareContent: this.state.shareContent

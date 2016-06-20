@@ -14,8 +14,6 @@ class User {
     connect.then(function (db) {
       db.collection('user').find({username: username}).limit(1).next(function (err, user) {
 
-        console.log(user);
-
         console.log(`[ Collection : "user"] find: ${JSON.stringify(user)}`);
 
         if (user) {

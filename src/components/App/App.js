@@ -1,14 +1,10 @@
 import React, {Component, PropTypes} from "react";
-
-import baseTheme from 'material-ui/styles/baseThemes/lightBaseTheme';
-import getMuiTheme from 'material-ui/styles/getMuiTheme';
-
-import emptyFunction from "fbjs/lib/emptyFunction";
-import withStyles from 'isomorphic-style-loader/lib/withStyles';
-import '../../../node_modules/normalize.css/normalize.css';
+import baseTheme from "material-ui/styles/baseThemes/lightBaseTheme";
+import getMuiTheme from "material-ui/styles/getMuiTheme";
+import withStyles from "isomorphic-style-loader/lib/withStyles";
+import "../../../node_modules/normalize.css/normalize.css";
 import s from "./App.scss";
-import AppHeader from "../AppHeader";
-// import PageHeader from '../PageHeader';
+import auth from "../../core/auth";
 
 class App extends Component {
 
@@ -22,17 +18,15 @@ class App extends Component {
     header: PropTypes.element,
   };
 
-  static defaultProps = {
-    // header: <AppHeader />
-  };
-
   static childContextTypes = {
     muiTheme: PropTypes.object.isRequired,
   };
 
   //noinspection JSMethodCanBeStatic
   getChildContext() {
-    return {muiTheme: getMuiTheme(baseTheme)};
+    return {
+      muiTheme: getMuiTheme(baseTheme),
+    };
   }
 
   render() {

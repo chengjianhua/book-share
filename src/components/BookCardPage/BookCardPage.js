@@ -96,8 +96,8 @@ class BookCardPage extends Component {
           <BookCard
             key={index}
             bookName={book.bookTitle}
-            bookIntro={bookDetail ? bookDetail.summary.substr(0,100) + '...' : loading}
-            bookImg={bookDetail? bookDetail.images.large: loadingGif}
+            bookIntro={bookDetail ? bookDetail.summary ? bookDetail.summary.substr(0,100): loading + '...' : loading}
+            bookImg={bookDetail? bookDetail.images ? bookDetail.images.large : loading : loadingGif}
             title={book.shareTitle}
             description={book.shareContent}
           />

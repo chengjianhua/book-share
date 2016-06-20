@@ -47,11 +47,11 @@ class LoginPage extends Component {
       return response.json();
     }).then(function (data) {
 
-
-      console.log(data);
-
       // If server return a message that indicates the submit is successful, then switching to homepage.
       if (data.isSuccess) {
+        
+        localStorage.user = data.user;
+        
         // 打开成功的提示弹窗并在定时时间后自动跳转到主页
         this.setState({
           openAlertDialog: true
