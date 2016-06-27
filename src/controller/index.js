@@ -14,7 +14,7 @@ var router = express.Router();
 router.post('/share/add', function (req, res) {
 
   // console.log(req.user);
-  //
+  // 
   // console.log(req.sessionStore);
   // console.log(req.session);
   // console.log(req.session.passport.user);
