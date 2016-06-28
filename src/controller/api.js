@@ -9,10 +9,10 @@ import User from '../model/User';
 var router = express.Router();
 
 router.get('/share/books', function (req, res) {
-  let {page} = req.body;
+  let {page} = req.query;
   let returnData = {};
 
-  Book.getSharedBooksWithAll({page}, function (books) {
+  Book.getSharedBooksWithAll({page: Number(page)}, function (books) {
     returnData.books = books;
 
     res.send(JSON.stringify(returnData));
@@ -34,10 +34,10 @@ router.get('/share/book/:id', function (req, res) {
 
 router.get('/:username/share/books', function (req, res) {
   let returnData = {};
-  
+
   Book.getShareBookSByUsername(req.params.username, function (books) {
     returnData.books = books;
-    
+
     res.end(JSON.stringify(returnData));
   });
 });

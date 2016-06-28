@@ -4,6 +4,7 @@
 
 //noinspection JSUnresolvedVariable,NpmUsedModulesInstalled
 import React, {Component} from "react";
+import RaisedButton from 'material-ui/RaisedButton'
 import {Link} from 'react-router';
 import BookCard from "../BookCard";
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
@@ -23,13 +24,25 @@ class BookCardPage extends Component {
     super(props);
 
     this.state = {
-      books: []
+      books: [],
+      page: 0,
     };
   }
 
   componentDidMount() {
+    this.loadBooksByPage();
+  }
 
-    fetch('/api/share/books', {
+  handleLoadMore = () => {
+    this.loadBooksByPage();
+  };
+
+  loadBooksByPage() {
+
+    // 获得当前数据的页数
+    const page = this.state.page;
+
+    fetch(`/api/share/books?page=${page + 1}`, {
       method: 'GET',
       headers: {
         "Content-Type": "application/json"
@@ -39,10 +52,13 @@ class BookCardPage extends Component {
     }).then(function (json) {
       let books = json.books;
 
-      // 预加载
-      this.setState({
-        books: books,
-      });
+      // 当初次加载数据的时候
+      if (page === 0) {
+        // 预加载
+        this.setState({
+          books: books,
+        });
+      }
 
       // --------------------------------------------------------------------------|
       // 在数据全部加载完成以后将结果添加到 state 中
@@ -62,12 +78,28 @@ class BookCardPage extends Component {
         // ---------------------------------------------------------------------|
 
       })).then(function (books) {
-        console.table(books);
+
+        // 入股获取到的数据不为空则 页号+1
+        if (books.length > 0) {
+          this.setState({
+            page: page + 1
+          });
+        }
 
         // 将添加了豆瓣API中书籍详情的新books对象更新到this.state中
-        this.setState({
-          books: books
-        });
+        if (page === 0) {
+          this.setState({
+            books: books
+          });
+        } else if (page > 0) {
+          this.setState(function (previousState) {
+
+            // 将当前获取到的新一页的数据追加到 state 中的 books 数组当中
+            return {
+              books: previousState.books.concat(books),
+            }
+          });
+        }
 
       }.bind(this));
       // ---------------------------------------------------------------------------|
@@ -75,6 +107,7 @@ class BookCardPage extends Component {
     }.bind(this)).catch(function (ex) {
       console.error('首页数据加载失败:\n', ex)
     });
+
   }
 
   render() {
@@ -108,6 +141,14 @@ class BookCardPage extends Component {
     return (
       <div className={s.root}>
         {bookCards}
+
+        <RaisedButton
+          label="LOAD MORE"
+          onTouchTap={this.handleLoadMore}
+          primary={true}
+          fullWidth={true}
+          style={{marginTop: '1rem', width: '100%'}}
+        />
       </div>
     );
   }
