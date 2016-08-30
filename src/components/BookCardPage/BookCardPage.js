@@ -52,6 +52,13 @@ class BookCardPage extends Component {
     }).then(function (json) {
       let books = json.books;
 
+      // 入股获取到的数据不为空则 页号+1
+      if (books.length > 0) {
+        this.setState({
+          page: page + 1
+        });
+      }
+
       // 当初次加载数据的时候
       if (page === 0) {
         // 预加载
@@ -78,13 +85,6 @@ class BookCardPage extends Component {
         // ---------------------------------------------------------------------|
 
       })).then(function (books) {
-
-        // 入股获取到的数据不为空则 页号+1
-        if (books.length > 0) {
-          this.setState({
-            page: page + 1
-          });
-        }
 
         // 将添加了豆瓣API中书籍详情的新books对象更新到this.state中
         if (page === 0) {

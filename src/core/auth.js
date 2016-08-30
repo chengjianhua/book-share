@@ -7,51 +7,83 @@ import 'es6-promise';
 
 const sessionStorage = typeof window !== 'undefined' ? window.sessionStorage : null;
 
-const user = 'user';
+const USER = 'user';
 
 console.log(sessionStorage);
 
 const auth = {
 
-  login(user, cb) {
-    cb = arguments[arguments.length - 1];
+  login(username, password, callback) {
+    callback = arguments[arguments.length - 1];
 
-    if (sessionStorage.getItem('user')) {
-      if (cb) cb(true);
-      this.onChange(true);
+    let user = sessionStorage.getItem(USER);
+
+    console.log('typeof user' + typeof user);
+    // 如果用户已经登录了，则不请求，直接 return 跳出函数体的执行
+    if (user && user != 'undefined' && user != 'null') {
+      if (callback) callback(true);
+      return 1;
     }
 
+    // 将传入的用户名、密码传递到服务器进行验证，并在 then 中对服务器返回的数据进行处理
+    requestForAuthentication(username, password).then(function (res) {
+      // 验证成功的话则将数用户数据存储到 sessionStorage 并执行传入 login 的 callback 函数
+      if (res.authenticated) {
+        sessionStorage.setItem(USER, JSON.stringify(res.user));
+        callback && callback(true);
+      } else {
+        callback && callback(false);
+      }
+
+    });
+
   },
 
-  getToken() {
-    return sessionStorage.token
+  logout(callback) {
+    sessionStorage.removeItem(USER);
+    callback && callback();
   },
 
-  logout(cb) {
-    delete sessionStorage.token;
-    if (cb) cb();
-    this.onChange(false)
+  getUser() {
+    return sessionStorage.getItem(USER);
   },
 
   isAuthenticated() {
-    return !!sessionStorage.token
+    return sessionStorage && !!sessionStorage.getItem(USER);
   },
 
-  onChange() {
-  }
 };
 
-function pretendRequest(email, pass, cb) {
-  setTimeout(() => {
-    if (email === 'joe@example.com' && pass === 'password1') {
-      cb({
-        authenticated: true,
-        token: Math.random().toString(36).substring(7)
-      })
-    } else {
-      cb({authenticated: false})
-    }
-  }, 0)
+function requestForAuthentication(username, password) {
+
+  // 将要传递到服务器验证的用户名、密码
+  const postData = {username, password};
+
+  return (
+
+    fetch(`/manage/login`, {
+      method: 'POST',
+      body: JSON.stringify(postData),
+      headers: {
+        "Content-Type": "application/json"
+      },
+    }).then(function (response) {
+      return response.json();
+    }).then(function (data) {
+
+      console.log(data);
+
+      return {
+        authenticated: data.isSuccess,
+        token: data.token,
+        user: data.user
+      };
+
+    }).catch(function (ex) {
+      console.warn('登录操作失败!', ex);
+    })
+  );
+
 }
 
 export default auth;

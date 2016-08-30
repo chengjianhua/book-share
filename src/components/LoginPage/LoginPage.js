@@ -11,6 +11,8 @@ import s from "./LoginPage.scss";
 import fetch from "isomorphic-fetch";
 import "es6-promise";
 
+import auth from '../../core/auth';
+
 class LoginPage extends Component {
 
   constructor(props) {
@@ -23,50 +25,31 @@ class LoginPage extends Component {
     };
   }
 
-  static contextTypes={
+  static contextTypes = {
     router: PropTypes.object.isRequired
   };
 
   handleFormSubmit = (event) => {
     event.preventDefault();
-    console.log('登录表单已被拦截');
+    console.log('--------------登录表单已被拦截--------------');
 
-    let postData = {
-      username: this.state.username,
-      password: this.state.password
-    };
+    auth.login(this.state.username, this.state.password, function (isLoggedIn) {
 
-    //noinspection JSUnresolvedFunction
-    fetch(`/manage/login`, {
-      method: 'POST',
-      body: JSON.stringify(postData),
-      headers: {
-        "Content-Type": "application/json"
-      },
-    }).then(function (response) {
-      return response.json();
-    }).then(function (data) {
-
-      // If server return a message that indicates the submit is successful, then switching to homepage.
-      if (data.isSuccess) {
-        
-        localStorage.user = data.user;
-        
+      // 如果登录成功则执行以下操作
+      if (isLoggedIn) {
         // 打开成功的提示弹窗并在定时时间后自动跳转到主页
         this.setState({
           openAlertDialog: true
         }, function () {
 
-          setTimeout(function () {
+          /*setTimeout(function () {
             this.context.router.push('/');
-          }.bind(this), 2000);
+          }.bind(this), 2000);*/
 
         });
       }
 
-    }.bind(this)).catch(function (ex) {
-      console.log('提交分享表单失败', ex);
-    });
+    }.bind(this));
 
   };
 

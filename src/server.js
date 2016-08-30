@@ -13,9 +13,8 @@ import express from 'express';
 import expressSession from 'express-session';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
-import expressJwt from 'express-jwt';
+import cors from 'cors';
 import expressGraphQL from 'express-graphql';
-import jwt from 'jsonwebtoken';
 import {renderToString} from 'react-dom/server';
 import PrettyError from 'pretty-error';
 import passport from './core/passport';
@@ -47,35 +46,39 @@ global.navigator.userAgent = global.navigator.userAgent || 'all';
 // Register Node.js middleware
 // -----------------------------------------------------------------------------
 server.use(express.static(path.join(__dirname, 'public')));
-server.use(cookieParser());
+server.use(cookieParser(auth.session.secret));
 server.use(bodyParser.urlencoded({extended: true}));
 server.use(bodyParser.json());
 
 //
 // Authentication
 // -----------------------------------------------------------------------------
-server.use(expressJwt({
-  secret: auth.jwt.secret,
-  credentialsRequired: false,
-  /* jscs:disable requireCamelCaseOrUpperCaseIdentifiers */
-  getToken: req => req.cookies.id_token,
-  /* jscs:enable requireCamelCaseOrUpperCaseIdentifiers */
-}));
+/*
+ server.use(expressJwt({
+ secret: auth.jwt.secret,
+ credentialsRequired: false,
+ /!* jscs:disable requireCamelCaseOrUpperCaseIdentifiers *!/
+ getToken: req => req.cookies.id_token,
+ /!* jscs:enable requireCamelCaseOrUpperCaseIdentifiers *!/
+ }));
+ */
 
 //
 // Enable CORS
 // -----------------------------------------------------------------------------
-server.use(function (req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  next();
-});
+// server.use(function (req, res, next) {
+//   res.header("Access-Control-Allow-Origin", "*");
+//   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+//   next();
+// });
 
+server.use(cors());
 
 server.use(expressSession({
-  secret: 'book share',
-  resave: false,
-  saveUninitialized: false
+  name: 'sessionId',
+  secret: auth.session.secret,
+  resave: true,
+  saveUninitialized: true
 }));
 server.use(passport.initialize());
 server.use(passport.session());

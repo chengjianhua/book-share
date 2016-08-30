@@ -14,7 +14,7 @@ var router = express.Router();
 router.post('/share/add', function (req, res) {
 
   // console.log(req.user);
-  // 
+  //
   // console.log(req.sessionStore);
   // console.log(req.session);
   // console.log(req.session.passport.user);
@@ -66,7 +66,6 @@ router.post('/comment/add/:id', function (req, res) {
 /**
  * [ /register ]: 注册用户
  */
-
 router.post('/register', function (req, res) {
 
   console.log("The handler to handle [ /register ] has been triggered!");
@@ -93,16 +92,19 @@ router.post('/register', function (req, res) {
 router.post('/login', passport.authenticate('local'), function (req, res) {
 
 
-  console.log("-------login-----------");
+  console.log("-------------------- req.user -----------------------");
   console.log(req.user);
-  console.log("-------login-----------");
+  console.log("-------------------- req.user -----------------------");
 
 
+  console.log("%c-------------------- req.session -----------------------", {color: 'green'});
   console.log(req.session);
-  console.log(req.sessionStore);
+  console.log("-------------------- req.session -----------------------");
+
   let returnData = {
     isSuccess: true,
-    uer: req.user
+    user: req.user,
+    token: req.sessionID
   };
 
   res.send(JSON.stringify(returnData));
