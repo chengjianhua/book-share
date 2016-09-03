@@ -45,6 +45,7 @@ global.navigator.userAgent = global.navigator.userAgent || 'all';
 //
 // Register Node.js middleware
 // -----------------------------------------------------------------------------
+server.enable('trust proxy');
 server.use(express.static(path.join(__dirname, 'public')));
 server.use(cookieParser(auth.session.secret));
 server.use(bodyParser.urlencoded({extended: true}));
