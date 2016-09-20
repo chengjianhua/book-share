@@ -21,5 +21,3 @@ export default class WithStylesContext extends Component {
     return Children.only(this.props.children);
   }
 }
-
-export default WithStylesContext;

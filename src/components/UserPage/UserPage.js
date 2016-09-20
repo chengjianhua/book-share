@@ -18,7 +18,7 @@ import withStyles from 'isomorphic-style-loader/lib/withStyles';
 
 import s from './UserPage.scss';
 
-export default class UserPage extends Component {
+class UserPage extends Component {
 
   constructor(props) {
     super(props);

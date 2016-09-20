@@ -1,8 +1,6 @@
 /**
  * Created by cjh95414 on 2016/5/21.
  */
-
-//noinspection NpmUsedModulesInstalled,JSUnresolvedVariable
 import React, {Component, PropTypes} from 'react';
 import {Link} from 'react-router';
 
@@ -11,15 +9,15 @@ import Subheader from 'material-ui/Subheader';
 import {Card, CardActions, CardHeader, CardTitle, CardText} from 'material-ui/Card';
 import FontIcon from 'material-ui/FontIcon';
 import Divider from 'material-ui/Divider';
-import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert'
+import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import ChevronRight from 'material-ui/svg-icons/navigation/chevron-right';
 import ImageEdit from 'material-ui/svg-icons/image/edit';
 import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
-import IconButton from "material-ui/IconButton";
-import FlatButton from "material-ui/FlatButton";
+import IconButton from 'material-ui/IconButton';
+import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
-import {fullWhite, grey300, grey400} from 'material-ui/styles/colors';
+import {grey300, grey400} from 'material-ui/styles/colors';
 
 import Paper from 'material-ui/Paper';
 import {Tabs, Tab} from 'material-ui/Tabs';
@@ -35,11 +33,11 @@ import avatar from '../../public/img/avatar.png';
 
 const iconButtonElement = (
   <IconButton
-    touch={true}
+    touch
     tooltip="more"
     tooltipPosition="bottom-left"
   >
-    <MoreVertIcon color={grey400}/>
+    <MoreVertIcon color={grey400} />
   </IconButton>
 );
 
@@ -49,16 +47,7 @@ const rightIconMenu = (
   </IconMenu>
 );
 
-export default class UserProfile extends Component {
-
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      tab: 0,
-      books: [],
-    };
-  }
+class UserProfile extends Component {
 
   static propTypes = {
     user: PropTypes.shape({
@@ -73,44 +62,50 @@ export default class UserProfile extends Component {
     user: {
       username: 'chengjianhua',
       avatar: 'http://lorempixel.com/100/100/nature/',
-      signature: 'To be or not to be !'
+      signature: 'To be or not to be !',
     },
 
   };
 
-  handleTabChange = (value) => {
-    this.setState({
-      tab: value
-    })
-  };
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      tab: 0,
+      books: [],
+    };
+  }
 
   componentDidMount() {
-
     fetch(`/api/${this.props.params.username}/share/books`).then(function (response) {
       return response.json();
     }).then(function (json) {
       const books = json.books;
 
       this.setState({
-        books: books,
+        books,
       });
     }.bind(this));
-
   }
 
-  render() {
+  handleTabChange = (value) => {
+    this.setState({
+      tab: value,
+    });
+  };
 
+  render() {
     const style = {
       editButton: {
         // borderRadius: '5px'
-      }
+      },
     };
 
     const user = this.props.user;
 
     const bookList = this.state.books.map(function (book, index) {
       return ([(
-        <Link to={{pathname: "/share/book/" + book._id, state:{book}}}>
+        <Link to={{pathname: '/share/book/' + book._id, state: {book}}}>
           <ListItem
             key={index}
             // leftAvatar={<Avatar src={user.avatar} />}
@@ -131,7 +126,7 @@ export default class UserProfile extends Component {
           />
         </Link>
       ),
-        <Divider inset={true}/>
+        <Divider inset />,
       ]);
     });
 
@@ -141,7 +136,7 @@ export default class UserProfile extends Component {
         <div className={s.avatarContainer}>
 
           <div className={s.avatar}>
-            <img src={avatar} alt="avatar"/>
+            <img src={avatar} alt="avatar" />
           </div>
 
           <div className={s.textContainer}>
@@ -153,7 +148,7 @@ export default class UserProfile extends Component {
               label="编辑"
               labelPosition="before"
               style={style.editButton}
-              primary={true}
+              primary
             />
           </div>
 

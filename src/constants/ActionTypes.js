@@ -10,5 +10,11 @@
 import keyMirror from 'fbjs/lib/keyMirror';
 
 export default keyMirror({
+  FETCH_BOOK_LIST_DOING: null,
+  FETCH_BOOK_LIST_SUCCESS: null,
+  FETCH_BOOK_LIST_FAILURE: null,
 
+  FETCH_BOOK_DOING: null,
+  FETCH_BOOK_SUCCESS: null,
+  FETCH_BOOK_FAILURE: null,
 });

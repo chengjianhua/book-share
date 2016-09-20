@@ -13,7 +13,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import ActionSearch from 'material-ui/svg-icons/action/search';
 import Dialog from 'material-ui/Dialog';
 
-import  {Tab, Tabs} from 'material-ui/Tabs';
+import {Tab, Tabs} from 'material-ui/Tabs';
 import Divider from 'material-ui/Divider';
 import Avatar from 'material-ui/Avatar';
 import {darkBlack, lightBlack} from 'material-ui/styles/colors';
@@ -26,9 +26,9 @@ import BookCard from '../BookCard';
 import LoginPage from '../LoginPage';
 import RegisterPage from '../RegisterPage';
 
-//noinspection NpmUsedModulesInstalled
+// noinspection NpmUsedModulesInstalled
 import 'es6-promise';
-//noinspection NpmUsedModulesInstalled
+// noinspection NpmUsedModulesInstalled
 import fetch from 'isomorphic-fetch';
 
 import s from './SignPage.scss';
@@ -41,19 +41,19 @@ class SignPage extends Component {
 
     this.state = {
       tab: 0,
-      openAlertDialog: false
+      openAlertDialog: false,
     };
   }
 
   static contextTypes = {
-    router: PropTypes.object.isRequired
+    router: PropTypes.object.isRequired,
   };
 
 
   // an alert dialog that remind user who have post submit successfully.
   handleOpenAlertDialog = () => {
     this.setState({
-      openAlertDialog: true
+      openAlertDialog: true,
     });
 
     // 2000ms later, the view switched to homepage.
@@ -68,12 +68,11 @@ class SignPage extends Component {
    */
   handleTabChange = (value) => {
     this.setState({
-      tab: value
+      tab: value,
     });
   };
 
   render() {
-
     console.log('进入登录/注册页面！');
 
     return (
