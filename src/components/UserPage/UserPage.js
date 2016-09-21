@@ -73,7 +73,7 @@ class UserPage extends Component {
             className={s.iconButton}
             label="书籍"
             labelPosition="after"
-            icon={ <FontIcon className="material-icons" color={"#FFF"}>book</FontIcon> }
+            icon={ <FontIcon className="material-icons">book</FontIcon> }
             // linkButton
             // containerElement={<Link to="/" />}
           />
@@ -82,7 +82,7 @@ class UserPage extends Component {
             className={s.iconButton}
             label="书单"
             labelPosition="after"
-            icon={ <FontIcon className="material-icons" color={"rgba(100,0,100,0.87)"}>view_list</FontIcon> }
+            icon={ <FontIcon className="material-icons" color={"rgba(50,100,250,0.87)"}>view_list</FontIcon> }
             // linkButton
             // containerElement={<Link className={s.iconButton} to="/" />}
           />
@@ -91,7 +91,7 @@ class UserPage extends Component {
             className={s.iconButton}
             label="分享"
             labelPosition="after"
-            icon={ <FontIcon style={{width: '48px', height: '48px'}} className="material-icons">home</FontIcon> }
+            icon={ <FontIcon className="material-icons">home</FontIcon> }
             // linkButton
             // containerElement={<Link to="/" />}
           />

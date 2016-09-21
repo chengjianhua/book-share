@@ -9,9 +9,9 @@ const sessionStorage = typeof window !== 'undefined' ? window.sessionStorage : n
 const USER = 'user';
 
 /* eslint-disable no-console */
-console.group('SessionStorage');
+// console.group('SessionStorage');
 console.log(sessionStorage);
-console.groupEnd();
+// console.groupEnd();
 
 function requestForAuthentication(username, password) {
   // 将要传递到服务器验证的用户名、密码
