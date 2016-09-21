@@ -1,8 +1,6 @@
 /**
  * Created by cjh95414 on 2016/6/11.
  */
-
-
 import connect from '../database/db';
 
 import {ObjectId} from 'mongodb';
@@ -15,12 +13,11 @@ class Book {
    * @param callback(result) 成功插入数据以后需要执行的操作,参数为插入到mongodb后返回的结果
    */
   static addShareBook(share, callback) {
-    connect.then(function (db) {
-
+    connect.then(db => {
       // 为分享默认添加一个空的评论数组
-      share.comments = [];
+      const insertObject = Object.assign({}, share, {comments: []});
 
-      db.collection('share_book').insertOne(share, function (err, result) {
+      db.collection('share_book').insertOne(insertObject, (err, result) => {
         err && console.error(err);
         callback && callback(result);
       });
@@ -35,9 +32,9 @@ class Book {
    */
   static getSharedBooksWithAll({page = 1, limit = 10} = {}, callback) {
     // 获得需要跳过的 documents 的个数
-    let skip = page > 0 ? (page - 1) * limit : 0;
-    connect.then(function (db) {
-      db.collection('share_book').find({}, {comments: false}).skip(skip).limit(limit).toArray(function (err, documents) {
+    const skip = page > 0 ? (page - 1) * limit : 0;
+    connect.then((db) => {
+      db.collection('share_book').find({}, {comments: false}).skip(skip).limit(limit).toArray((err, documents) => {
         err && console.error(err);
         callback && callback(documents);
       });
@@ -46,8 +43,8 @@ class Book {
 
 
   static getSharedBookByShareId(id, callback) {
-    connect.then(function (db) {
-      db.collection('share_book').find({'_id': ObjectId(id)}).limit(1).next(function (err, book) {
+    connect.then((db) => {
+      db.collection('share_book').find({_id: ObjectId(id)}).limit(1).next((err, book) => {
         err && console.log(err);
         callback && callback(book);
       });
@@ -56,11 +53,11 @@ class Book {
 
   static getShareBookSByUsername(username, callback) {
     connect.then(function (db) {
-      db.collection('share_book').find({username: username}).toArray(function (err, documents) {
+      db.collection('share_book').find({username}).toArray((err, documents) => {
         err && console.error(err);
         callback && callback(documents);
-      })
-    })
+      });
+    });
   }
 
 
@@ -72,28 +69,24 @@ class Book {
    * @param callback
    */
   static addComment(shareId, commentObject, callback) {
-
     commentObject.date = new Date();
 
-    connect.then(function (db) {
-
+    connect.then((db) => {
       db.collection('share_book').updateOne(
         {
-          _id: ObjectId(shareId)
+          _id: ObjectId(shareId),
         },
         {
           $push: {
-            comments: commentObject
-          }
+            comments: commentObject,
+          },
         },
         {upsert: true},
-        function (err, result) {
+        (err, result) => {
           err && console.error(err);
-
           callback && callback(result);
         }
       );
-
     });
   }
 

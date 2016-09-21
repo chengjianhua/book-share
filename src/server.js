@@ -1,12 +1,3 @@
-/**
- * React Starter Kit (https://www.reactstarterkit.com/)
- *
- * Copyright © 2014-2016 Kriasoft, LLC. All rights reserved.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE.txt file in the root directory of this source tree.
- */
-
 import 'babel-polyfill';
 import path from 'path';
 import express from 'express';
@@ -22,16 +13,19 @@ import passport from './core/passport';
 
 import schema from './data/schema';
 import assets from './assets';
-import {port, auth, analytics} from './config';
+import {port, auth} from './config';
 
 import React from 'react';
 import {match, RouterContext} from 'react-router';
 import routes from './router/routes';
 
+import {Provider} from 'react-redux';
+import Store from './stores/Store';
+
 import indexRouter from './controller/index';
 import apiRouter from './controller/api';
 
-import WithStylesContext from "./components/WithStylesContext";
+import WithStylesContext from './components/WithStylesContext';
 
 const server = global.server = express();
 
@@ -64,22 +58,13 @@ server.use(bodyParser.json());
  }));
  */
 
-//
-// Enable CORS
-// -----------------------------------------------------------------------------
-// server.use(function (req, res, next) {
-//   res.header("Access-Control-Allow-Origin", "*");
-//   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-//   next();
-// });
-
 server.use(cors());
 
 server.use(expressSession({
   name: 'sessionId',
   secret: auth.session.secret,
   resave: true,
-  saveUninitialized: true
+  saveUninitialized: true,
 }));
 server.use(passport.initialize());
 server.use(passport.session());
@@ -98,36 +83,32 @@ server.use('/manage', indexRouter);
 server.use('/api', apiRouter);
 
 server.get('*', (req, res) => {
-
   match({routes, location: req.url}, (err, redirectLocation, renderProps) => {
-
-    console.log("Starting to render the react router!");
+    console.log('Starting to render the react router!'); //eslint-disable-line
 
     const template = require('./views/index.jade');
-    const data = {title: '', description: '', css: '', body: '', entry: assets.main.js};
+    const data = {title: 'Book Share', description: '', css: '', body: '', entry: assets.main.js};
 
     if (err) {
-
       res.status(500).send(err.message);
     } else if (redirectLocation) {
-
       res.redirect(302, redirectLocation.pathname + redirectLocation.search);
-    } else if (renderProps || true) {
-
+    } else if (renderProps || true) { // eslint-disable-line
       const css = [];
-      //noinspection JSCheckFunctionSignatures
+
       data.body = renderToString(
-        <WithStylesContext onInsertCss={styles => css.push(styles._getCss())}>
-          <RouterContext {...renderProps} />
-        </WithStylesContext>);
+        <Provider store={Store}>
+          <WithStylesContext onInsertCss={styles => css.push(styles._getCss())}>
+            <RouterContext {...renderProps} />
+          </WithStylesContext>
+        </Provider>
+      );
 
       res.status(200).send(template(data));
     } else {
-
       res.status(404).send('Not found');
     }
   }); // ~match
-
 });
 
 //

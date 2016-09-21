@@ -1,8 +1,6 @@
 /**
  * Created by cjh95414 on 2016/5/21.
  */
-
-//noinspection NpmUsedModulesInstalled,JSUnresolvedVariable
 import React, {Component, PropTypes} from 'react';
 import {Link} from 'react-router';
 
@@ -10,8 +8,8 @@ import {Card, CardActions, CardHeader, CardTitle, CardText} from 'material-ui/Ca
 import FontIcon from 'material-ui/FontIcon';
 import Divider from 'material-ui/Divider';
 import ChevronRight from 'material-ui/svg-icons/navigation/chevron-right';
-import IconButton from "material-ui/IconButton";
-import FlatButton from "material-ui/FlatButton";
+import IconButton from 'material-ui/IconButton';
+import FlatButton from 'material-ui/FlatButton';
 import Paper from 'material-ui/Paper';
 
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
@@ -20,25 +18,19 @@ import s from './UserPage.scss';
 
 class UserPage extends Component {
 
-  constructor(props) {
-    super(props);
-  }
-
   static propTypes = {
     username: PropTypes.string,
     avatar: PropTypes.string,
-    signature: PropTypes.string
+    signature: PropTypes.string,
   };
 
   static defaultProps = {
     username: 'chengjianhua',
     avatar: 'http://lorempixel.com/100/100/nature/',
-    signature: 'To be or not to be!'
+    signature: 'To be or not to be!',
   };
 
-
   render() {
-
     const style = {
       textStyle: {
         display: 'inline-block',
@@ -52,7 +44,7 @@ class UserPage extends Component {
         top: '16px',
         right: '16px',
 
-      }
+      },
     };
 
     return (
@@ -65,7 +57,7 @@ class UserPage extends Component {
           >
             <Link to="/chengjianhua/profile">
               <IconButton style={style.iconStyle}>
-                <ChevronRight color="#AAAAAA"/>
+                <ChevronRight color="#AAAAAA" />
               </IconButton>
             </Link>
           </CardHeader>

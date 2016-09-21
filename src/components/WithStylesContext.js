@@ -1,7 +1,7 @@
 /**
  * Created by cjh95414 on 2016/5/20.
  */
-import { Component, PropTypes, Children } from 'react';
+import {Component, PropTypes, Children} from 'react';
 
 export default class WithStylesContext extends Component {
   static propTypes = {
@@ -14,7 +14,7 @@ export default class WithStylesContext extends Component {
   };
 
   getChildContext() {
-    return { insertCss: this.props.onInsertCss };
+    return {insertCss: this.props.onInsertCss};
   }
 
   render() {

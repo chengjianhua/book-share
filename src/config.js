@@ -13,7 +13,10 @@
 export const port = process.env.PORT || 3000;
 export const host = process.env.WEBSITE_HOSTNAME || `localhost:${port}`;
 
-export const databaseUrl = process.env.DATABASE_URL || 'postgresql://demo:Lqk62xg6TBm5UhfR@demo.ctbl5itzitm4.us-east-1.rds.amazonaws.com:5432/membership01';
+export const mongodbUrl = 'mongodb://123.206.6.150:27017/book_share';
+
+export const doubanAPI = 'http://123.206.6.150:9000/v2/book';
+// export const doubanAPI = 'https://api.douban.com';
 
 export const analytics = {
 

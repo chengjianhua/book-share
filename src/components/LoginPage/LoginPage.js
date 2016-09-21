@@ -1,19 +1,21 @@
 /**
  * Created by Cheng jianhua at 11:10 on 2016/6/6
  */
-
-import React, {Component, PropTypes} from "react";
-import TextField from "material-ui/TextField";
+import React, {Component, PropTypes} from 'react';
+import TextField from 'material-ui/TextField';
 import Dialog from 'material-ui/Dialog';
-import RaisedButton from "material-ui/RaisedButton";
-import withStyles from "isomorphic-style-loader/lib/withStyles";
-import s from "./LoginPage.scss";
-import fetch from "isomorphic-fetch";
-import "es6-promise";
+import RaisedButton from 'material-ui/RaisedButton';
+import withStyles from 'isomorphic-style-loader/lib/withStyles';
+
+import s from './LoginPage.scss';
 
 import auth from '../../core/auth';
 
 class LoginPage extends Component {
+
+  static contextTypes = {
+    router: PropTypes.object.isRequired,
+  };
 
   constructor(props) {
     super(props);
@@ -21,43 +23,34 @@ class LoginPage extends Component {
     this.state = {
       username: '',
       password: '',
-      openAlertDialog: false
+      openAlertDialog: false,
     };
   }
 
-  static contextTypes = {
-    router: PropTypes.object.isRequired
-  };
-
   handleFormSubmit = (event) => {
     event.preventDefault();
-    console.log('--------------登录表单已被拦截--------------');
 
-    auth.login(this.state.username, this.state.password, function (isLoggedIn) {
-
+    const {username, password} = this.state;
+    auth.login(username, password, (isLoggedIn) => {
       // 如果登录成功则执行以下操作
       if (isLoggedIn) {
         // 打开成功的提示弹窗并在定时时间后自动跳转到主页
         this.setState({
-          openAlertDialog: true
-        }, function () {
-
-          /*setTimeout(function () {
+          openAlertDialog: true,
+        }, () => {
+          setTimeout(() => {
             this.context.router.push('/');
-          }.bind(this), 2000);*/
-
+          }, 2000);
         });
       }
-
-    }.bind(this));
-
+    });
   };
 
   handleUsernameChange = (event, value) => {
     event.stopPropagation();
 
     this.setState({
-      username: value
+      username: value,
     });
   };
 
@@ -65,11 +58,12 @@ class LoginPage extends Component {
     event.stopPropagation();
 
     this.setState({
-      password: value
+      password: value,
     });
   };
 
   render() {
+    const {username, password, openAlertDialog} = this.state;
     return (
       <div className={s.root}>
 
@@ -77,24 +71,24 @@ class LoginPage extends Component {
           <TextField
             key="login-username"
             hintText="请输入您的用户名"
-            fullWidth={true}
-            value={this.state.username}
+            fullWidth
+            value={username}
             onChange={this.handleUsernameChange}
           />
 
           <TextField
             key="login-password"
+            fullWidth
             hintText="请输入您的密码"
-            fullWidth={true}
             type="password"
-            value={this.state.password}
+            value={password}
             onChange={this.handlePasswordChange}
           />
 
           <RaisedButton
             key="login-button"
+            primary
             label="登录"
-            primary={true}
             type="submit"
             style={{width: '100%'}}
           />
@@ -103,9 +97,9 @@ class LoginPage extends Component {
         <Dialog
           key="submitResult"
           modal={false}
-          open={this.state.openAlertDialog}
+          open={openAlertDialog}
         >
-          您已登录成功，用户名为[{this.state.username}]，即将跳转到主页.
+          您已登录成功，用户名为[{username}]，即将跳转到主页.
         </Dialog>
 
       </div>

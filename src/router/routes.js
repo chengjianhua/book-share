@@ -1,19 +1,17 @@
 /**
  * Created by cjh95414 on 2016/5/6.
  */
-
-//noinspection JSUnresolvedVariable
-import React from "react";
-import {Route, IndexRoute} from "react-router";
-import App from "../components/App/App";
-import SignPage from "../components/SignPage";
-import BookCardPage from "../components/BookCardPage";
-import UserPage from "../components/UserPage";
+import React from 'react';
+import {Route, IndexRoute} from 'react-router';
+import App from '../components/App/App';
+import SignPage from '../components/SignPage';
+import BookCardPage from '../components/BookCardPage';
+import UserPage from '../components/UserPage';
 import UserProfile from '../components/UserProfile';
-import BookDetailPage from "../components/BookDetailPage";
-import Share from "../components/Share";
-import AppHeader from "../components/AppHeader";
-import PageHeader from "../components/PageHeader";
+import BookDetailPage from '../components/BookDetailPage';
+import Share from '../components/Share';
+import AppHeader from '../components/AppHeader';
+import PageHeader from '../components/PageHeader';
 
 import auth from '../core/auth';
 
@@ -28,7 +26,7 @@ function redirectToLogin(nextState, replace) {
     // 重定向到登录页面
     replace({
       pathname: '/sign',
-      state: {nextPathname: nextState.location.pathname}
+      state: {nextPathname: nextState.location.pathname},
     });
   }
 }
@@ -38,34 +36,34 @@ function redirectToLogin(nextState, replace) {
  * @param props
  * @constructor
  */
-const AppIndex = (props)=> (
+const AppIndex = (props) => (
   <App header={<AppHeader />} {...props} />
 );
 
-const AppPage = (props)=>(
+const AppPage = (props) => (
   <App header={<PageHeader />} {...props} />
 );
 
 export default ([
   <Route component={App}>
-    <Route path="/sign" component={SignPage}/>
+    <Route path="/sign" component={SignPage} />
   </Route>,
 
   <Route path="/" component={AppIndex}>s
-    <IndexRoute component={BookCardPage}/>
-    <Route path=":username" component={UserPage} onEnter={redirectToLogin}/>
+    <IndexRoute component={BookCardPage} />
+    <Route path=":username" component={UserPage} onEnter={redirectToLogin} />
   </Route>,
 
   <Route component={AppPage}>
 
     <Route path="share">
-      <Route path="add" component={Share}/>
+      <Route path="add" component={Share} />
 
-      <Route path="book/:id" component={BookDetailPage}/>
+      <Route path="book/:id" component={BookDetailPage} />
     </Route>
 
-    <Route path="/:username/profile" component={UserProfile}/>
+    <Route path="/:username/profile" component={UserProfile} />
 
-  </Route>
+  </Route>,
 
 ]);

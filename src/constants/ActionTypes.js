@@ -17,4 +17,7 @@ export default keyMirror({
   FETCH_BOOK_DOING: null,
   FETCH_BOOK_SUCCESS: null,
   FETCH_BOOK_FAILURE: null,
+
+  ADD_COMMENT_SUCCESS: null,
+  ADD_COMMENT_FAILURE: null,
 });

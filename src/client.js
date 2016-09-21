@@ -1,24 +1,18 @@
-/**
- * React Starter Kit (https://www.reactstarterkit.com/)
- *
- * Copyright © 2014-2016 Kriasoft, LLC. All rights reserved.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE.txt file in the root directory of this source tree.
- */
+import 'babel-polyfill';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import FastClick from 'fastclick';
+import Location from './core/Location';
+import {addEventListener, removeEventListener} from './core/DOMUtils';
+import injectTapEventPlugin from 'react-tap-event-plugin';
 
-import "babel-polyfill";
-import React from "react";
-import ReactDOM from "react-dom";
-import FastClick from "fastclick";
-import Location from "./core/Location";
-import {addEventListener, removeEventListener} from "./core/DOMUtils";
-import injectTapEventPlugin from "react-tap-event-plugin";
+import {Router, browserHistory} from 'react-router';
+import routes from './router/routes';
 
-import {Router, browserHistory, match} from "react-router";
-import routes from "./router/routes";
+import {Provider} from 'react-redux';
+import Store from './stores/Store';
 
-import WithStylesContext from "./components/WithStylesContext";
+import WithStylesContext from './components/WithStylesContext';
 
 injectTapEventPlugin();
 
@@ -29,7 +23,6 @@ const appContainer = document.getElementById('app');
 let trackPageview = () => (trackPageview = () => window.ga('send', 'pageview'));
 
 function render(state) {
-
   if (state.scrollY !== undefined) {
     window.scrollTo(state.scrollX, state.scrollY);
   } else {
@@ -38,14 +31,16 @@ function render(state) {
 
   trackPageview();
 
-  /*match({ browserHistory, routes }, (error, redirectLocation, renderProps) => {
-   ReactDOM.render(<Router  history={browserHistory} routes={routes} {...renderProps} />, appContainer);
-   });*/
+  // match({ browserHistory, routes }, (error, redirectLocation, renderProps) => {
+  //  ReactDOM.render(<Router  history={browserHistory} routes={routes} {...renderProps} />, appContainer);
+  //  });
 
   ReactDOM.render(
-    <WithStylesContext onInsertCss={styles => styles._insertCss()}>
-      <Router history={browserHistory} routes={routes}/>
-    </WithStylesContext>, appContainer
+    <Provider store={Store}>
+      <WithStylesContext onInsertCss={styles => styles._insertCss()}>
+        <Router history={browserHistory} routes={routes} />
+      </WithStylesContext>
+    </Provider>, appContainer
   );
 }
 
@@ -89,8 +84,7 @@ function run() {
     unlisten();
   });
 
-  console.log("Client script is running !");
-
+  console.log('Client script is running !'); // eslint-disable-line
 }
 
 // Run the application when both DOM is ready and page content is loaded
