@@ -1,7 +1,6 @@
 /**
  * Created by cjh95414 on 2016/5/3.
  */
-
 import React, {PropTypes, Component} from 'react';
 import {Link} from 'react-router';
 import AppBar from 'material-ui/AppBar';
@@ -18,38 +17,39 @@ import s from './PageHeader.scss';
 class PageHeader extends Component {
 
   static contextTypes = {
-    router: PropTypes.object.isRequired
+    router: PropTypes.object.isRequired,
   };
 
-  handleBackButtonTouchTap = ()=> {
+  handleBackButtonTouchTap = () => {
     this.context.router.goBack();
   };
 
   render() {
+    const iconElementRight = (
+      <IconMenu
+        iconButtonElement={ <IconButton><MoreVertIcon /></IconButton> }
+        targetOrigin={{horizontal: 'right', vertical: 'top'}}
+        anchorOrigin={{horizontal: 'right', vertical: 'top'}}
+      >
+        <Link to="/share/add">
+        <MenuItem key={'refresh'} primaryText="添加" />
+        </Link>
+      </IconMenu>
+    );
 
-    const iconStyleRight = {}, titleStyle = {};
+    const iconElementLeft = (
+      <IconButton onTouchTap={this.handleBackButtonTouchTap}>
+        <ArrowBack />
+      </IconButton>
+    );
 
     return (
       <div className={s.root}>
         <div className={s.fixed}>
           <AppBar
-            titleStyle={titleStyle}
-            iconElementLeft={<IconButton onTouchTap={this.handleBackButtonTouchTap}><ArrowBack /></IconButton>}
-            iconElementRight={
-              <IconMenu
-                iconButtonElement={ <IconButton><MoreVertIcon /></IconButton> }
-                targetOrigin={{horizontal: 'right', vertical: 'top'}}
-                anchorOrigin={{horizontal: 'right', vertical: 'top'}}
-              >
-                <Link to="/share/add">
-                <MenuItem key={'refresh'} primaryText="添加" />
-                </Link>
-              </IconMenu>
-            }
-
-            iconStyleRight={iconStyleRight}
-          >
-          </AppBar>
+            iconElementLeft={iconElementLeft}
+            iconElementRight={iconElementRight}
+          />
         </div>
       </div>
     );

@@ -6,30 +6,31 @@ import {Link} from 'react-router';
 
 import {List, ListItem} from 'material-ui/List';
 import Subheader from 'material-ui/Subheader';
-import {Card, CardActions, CardHeader, CardTitle, CardText} from 'material-ui/Card';
+// import {Card, CardActions, CardHeader, CardTitle, CardText} from 'material-ui/Card';
 import FontIcon from 'material-ui/FontIcon';
 import Divider from 'material-ui/Divider';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
-import ChevronRight from 'material-ui/svg-icons/navigation/chevron-right';
-import ImageEdit from 'material-ui/svg-icons/image/edit';
+// import ChevronRight from 'material-ui/svg-icons/navigation/chevron-right';
+// import ImageEdit from 'material-ui/svg-icons/image/edit';
 import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
 import IconButton from 'material-ui/IconButton';
-import FlatButton from 'material-ui/FlatButton';
+// import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import {grey300, grey400} from 'material-ui/styles/colors';
-
-import Paper from 'material-ui/Paper';
+// import Paper from 'material-ui/Paper';
 import {Tabs, Tab} from 'material-ui/Tabs';
 
-import fetch from 'isomorphic-fetch';
-import 'es6-promise';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+import * as accountsActions from '../../actions/Accounts';
 
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
-
 import s from './UserProfile.scss';
+import LoadingOverlay from '../LoadingOverlay';
 
 import avatar from '../../public/img/avatar.png';
+
 
 const iconButtonElement = (
   <IconButton
@@ -55,7 +56,6 @@ class UserProfile extends Component {
       avatar: PropTypes.string,
       signature: PropTypes.string,
     }),
-
   };
 
   static defaultProps = {
@@ -64,7 +64,6 @@ class UserProfile extends Component {
       avatar: 'http://lorempixel.com/100/100/nature/',
       signature: 'To be or not to be !',
     },
-
   };
 
   constructor(props) {
@@ -72,20 +71,14 @@ class UserProfile extends Component {
 
     this.state = {
       tab: 0,
-      books: [],
     };
   }
 
   componentDidMount() {
-    fetch(`/api/${this.props.params.username}/share/books`).then(function (response) {
-      return response.json();
-    }).then(function (json) {
-      const books = json.books;
+    const {actions, params} = this.props;
+    const {username} = params;
 
-      this.setState({
-        books,
-      });
-    }.bind(this));
+    actions.fetchUserBooks(username);
   }
 
   handleTabChange = (value) => {
@@ -95,40 +88,41 @@ class UserProfile extends Component {
   };
 
   render() {
-    const style = {
-      editButton: {
-        // borderRadius: '5px'
-      },
-    };
+    const {books, isLoading} = this.props;
 
-    const user = this.props.user;
+    const bookList = books.map((book, index) => {
+      const shareTitle = book.get('shareTitle');
+      const bookTitle = book.get('bookTitle');
+      const shareContent = book.get('shareContent');
 
-    const bookList = this.state.books.map(function (book, index) {
-      return ([(
-        <Link to={{pathname: '/share/book/' + book._id, state: {book}}}>
+      const primaryText = (
+        <p>
+          {shareTitle}
+          <span style={{color: grey300, fontSize: '0.5rem'}}> - {bookTitle}</span>
+        </p>
+      );
+
+      const secondaryText = (
+        <p>
+          {shareContent ? shareContent.substr(0, 50) : '加载中...'}
+        </p>
+      );
+      return [(
+        <Link to={{pathname: `/share/book/${book.get('_id')}`, state: {book}}}>
           <ListItem
             key={index}
             // leftAvatar={<Avatar src={user.avatar} />}
+            secondaryTextLines={1}
             leftIcon={<FontIcon className="material-icons">book</FontIcon>}
             rightIconButton={rightIconMenu}
-            primaryText={
-            <p>
-              {book.shareTitle}
-              <span style={{color: grey300, fontSize: '0.5rem'}}> - {book.bookTitle}</span> <br />
-            </p>
-          }
-            secondaryText={
-            <p>
-              {book.shareContent.substr(0, 50)}
-            </p>
-          }
-            secondaryTextLines={1}
+            primaryText={primaryText}
+            secondaryText={secondaryText}
           />
         </Link>
       ),
         <Divider inset />,
-      ]);
-    });
+      ];
+    }).toJS();
 
     return (
       <div className={s.root}>
@@ -147,7 +141,6 @@ class UserProfile extends Component {
             <RaisedButton
               label="编辑"
               labelPosition="before"
-              style={style.editButton}
               primary
             />
           </div>
@@ -162,24 +155,37 @@ class UserProfile extends Component {
             value={0}
             icon={<FontIcon className="material-icons">share</FontIcon>}
           >
-
             <List>
-              <Subheader>{this.state.books.length} 个分享</Subheader>
+              <Subheader>{books.size} 个分享</Subheader>
               {bookList}
             </List>
-
           </Tab>
 
-          <Tab
+          <Tab //eslint-disable-line
             value={1}
             icon={<FontIcon className="material-icons">favorite</FontIcon>}
           >
 
           </Tab>
         </Tabs>
+
+        <LoadingOverlay show={isLoading} />
       </div>
     );
   }
 }
 
-export default withStyles(s)(UserProfile);
+function mapStateToProps(state) {
+  return {
+    isLoading: state.accounts.getIn(['books', 'isLoading']),
+    books: state.accounts.getIn(['books', 'data']),
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    actions: bindActionCreators(Object.assign({}, accountsActions), dispatch),
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(s)(UserProfile));

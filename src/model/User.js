@@ -11,8 +11,8 @@ class User {
    * @param callback 所需的回调函数
    */
   static findUniqueUserByUsername(username, callback) {
-    connect.then(function (db) {
-      db.collection('user').find({username: username}).limit(1).next(function (err, user) {
+    connect.then((db) => {
+      db.collection('user').find({username: username}).limit(1).next((err, user) => {
 
         console.log(`[ Collection : "user"] find: ${JSON.stringify(user)}`);
 
@@ -35,8 +35,8 @@ class User {
    * @param callback(result) 插入成功后要执行的操作
    */
   static addUser(user, callback) {
-    connect.then(function (db) {
-      db.collection('user').insertOne(user, function (err, result) {
+    connect.then((db) => {
+      db.collection('user').insertOne(user, (err, result) => {
         // 如果有错误则输出错误
         err && console.error(err);
         // 执行数据库操作完成以后所需的操作

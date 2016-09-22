@@ -19,6 +19,15 @@ router.get('/share/books', (req, res) => {
   });
 });
 
+router.get('/share/books/:username', (req, res) => {
+  const returnData = {};
+
+  Book.getShareBookSByUsername(req.params.username, (books) => {
+    returnData.books = books;
+
+    res.end(JSON.stringify(returnData));
+  });
+});
 
 router.get('/share/book/:id', (req, res) => {
   const returnData = {};
@@ -30,7 +39,7 @@ router.get('/share/book/:id', (req, res) => {
   });
 });
 
-router.get('/:username/share/books', (req, res) => {
+router.get('/accounts/:username/books', (req, res) => {
   const returnData = {};
 
   Book.getShareBookSByUsername(req.params.username, (books) => {

@@ -1,7 +1,6 @@
 /**
  * Created by cjh95414 on 2016/5/3.
  */
-
 import React, {Component} from 'react';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import {Tab, Tabs} from 'material-ui/Tabs';

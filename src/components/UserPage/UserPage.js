@@ -43,7 +43,6 @@ class UserPage extends Component {
         position: 'absolute',
         top: '16px',
         right: '16px',
-
       },
     };
 
