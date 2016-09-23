@@ -9,7 +9,7 @@ import expressGraphQL from 'express-graphql';
 import {renderToString} from 'react-dom/server';
 import PrettyError from 'pretty-error';
 import passport from './core/passport';
-
+import jwt from 'jwtwebtoken';
 
 import schema from './data/schema';
 import assets from './assets';
