@@ -10,6 +10,10 @@
 import keyMirror from 'fbjs/lib/keyMirror';
 
 export default keyMirror({
+  AUTHENTICATE_USER_DOING: null,
+  AUTHENTICATE_USER_SUCCESS: null,
+  AUTHENTICATE_USER_FAILURE: null,
+
   FETCH_BOOK_LIST_DOING: null,
   FETCH_BOOK_LIST_SUCCESS: null,
   FETCH_BOOK_LIST_FAILURE: null,

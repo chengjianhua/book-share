@@ -2,44 +2,50 @@
  * Created by cjh95414 on 2016/6/1.
  */
 import express from 'express';
-import passport from '../core/passport';
+import log4js from 'log4js';
+import jwt from 'jsonwebtoken';
+
+import {auth} from '../config';
 import Book from '../model/Book';
 import User from '../model/User';
 
+import {formatJson} from './utils';
+import {authenticateToken} from './middlewares';
+
+const logger = log4js.getLogger('controller/index.js');
+
 const router = new express.Router();
+
+router.use(authenticateToken.unless({
+  useOriginalUrl: false,
+  path: ['/register', '/authenticate'],
+}));
 
 /**
  * [ share/add ]： 处理添加分享的请求
  */
 router.post('/share/add', (req, res) => {
-  // console.log(req.user);
-  //
-  // console.log(req.sessionStore);
-  // console.log(req.session);
-  // console.log(req.session.passport.user);
-  // console.log(req.sessionID);
-
   // 定义将要返回的数据
-  const returnData = {
-    isSuccess: true,
-  };
+  const returnData = {};
+
+  const {username} = req.user;
 
   // 请求中传入的数据
-  const data = req.body;
+  const {detail, bookTitle, shareTitle, shareContent} = req.body;
 
   // 将要插入的数据
   const share = {
-    bookId: data.detail ? data.detail.id : null,
-    bookTitle: data.bookTitle,
-    shareTitle: data.shareTitle,
-    shareContent: data.shareContent,
-    username: req.user || 'chengjianhua',
+    bookId: detail ? detail.id : null,
+    bookTitle,
+    shareTitle,
+    shareContent,
+    username,
   };
 
   Book.addShareBook(share, (result) => {
     returnData.id = result.insertedId;
-    console.log(`[ObjectId = ${result.insertedId}]: Inserted ${JSON.stringify(share)} into mongodb!`);
-    res.end(JSON.stringify(returnData));
+    logger.info(`[ObjectId = ${result.insertedId}]: Inserted a book into mongodb.`);
+    res.json(formatJson(true, 'Add a book share successfully.', returnData));
   });
 });
 
@@ -51,7 +57,7 @@ router.post('/comment/add/:id', (req, res) => {
   Book.addComment(shareId, commentObject, (result) => {
     returnData.isSuccess = !!result;
 
-    res.send(JSON.stringify(returnData));
+    res.json(returnData);
   });
 });
 
@@ -60,8 +66,6 @@ router.post('/comment/add/:id', (req, res) => {
  * [ /register ]: 注册用户
  */
 router.post('/register', (req, res) => {
-  console.log('The handler to handle [ /register ] has been triggered!');
-
   const {username, password} = req.body;
   const user = {
     username,
@@ -74,57 +78,47 @@ router.post('/register', (req, res) => {
     returnData.id = result.insertedId;
     returnData.isSuccess = true;
 
-    console.log(`[ObjectId = ${result.insertedId}]: Inserted [${JSON.stringify(user)}] into mongodb!`);
+    logger.info(`[ObjectId = ${result.insertedId}]: Inserted [${JSON.stringify(user)}] into mongodb!`);
 
-    res.end(JSON.stringify(returnData));
+    res.json(returnData);
   });
 });
 
-router.post('/login', passport.authenticate('local'), (req, res) => {
-  console.log('-------------------- req.user -----------------------');
-  console.log(req.user);
-  console.log('-------------------- req.user -----------------------');
+router.post('/authenticate', (req, res) => {
+  const {secret} = auth.jwt;
+  const {username, password} = req.body;
+  User.findUniqueUserByUsername(username, (err, user) => {
+    if (err) {
+      logger.error(`Fetching user named ${username} from database failed.`);
+      throw err;
+    }
+    if (!user) {
+      res.json({
+        success: false,
+        message: 'Authentication failed. User not found.',
+      });
+    } else {
+      if (user.password !== password) {
+        res.send({
+          success: false,
+          message: 'Authentication failed. Wrong password.',
+        });
+      } else {
+        const payload = {
+          username,
+        };
+        const token = jwt.sign(payload, secret, {
+          expiresIn: '7 days',
+        });
 
-
-  console.log('%c-------------------- req.session -----------------------', {color: 'green'});
-  console.log(req.session);
-  console.log('-------------------- req.session -----------------------');
-
-  const returnData = {
-    isSuccess: true,
-    user: req.user,
-    token: req.sessionID,
-  };
-
-  res.send(JSON.stringify(returnData));
-});
-
-
-router.get('/test/1', (req, res) => {
-  console.log(req.user);
-
-  console.log(req.sessionStore);
-  console.log(req.session.passport.user);
-
-  res.send(JSON.stringify({message: '/test/1'}));
-});
-
-router.get('/test/2', passport.authenticateMiddleware(), (req, res) => {
-  console.log(req.user);
-
-  console.log(req.sessionStore);
-  console.log(req.session.passport.user);
-
-  res.send(JSON.stringify({message: '/test/2'}));
-});
-
-router.get('/test/3', passport.authenticate('local'), (req, res) => {
-  console.log(req.user);
-
-  console.log(req.sessionStore);
-  console.log(req.session.passport.user);
-
-  res.send(JSON.stringify({message: '/test/3'}));
+        res.json({
+          success: true,
+          message: 'Enjoy yourself in this awesome app.',
+          token,
+        });
+      }
+    }
+  });
 });
 
 export default router;

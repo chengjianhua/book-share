@@ -1,38 +1,34 @@
 /**
  * Created by cjh95414 on 2016/6/11.
  */
-
 import express from 'express';
 import Book from '../model/Book';
 import User from '../model/User'; // eslint-disable-line
+import {authenticateToken} from './middlewares';
+import {formatJson} from './utils';
 
 const router = new express.Router();
 
+router.use(authenticateToken.unless({
+  useOriginalUrl: false,
+  path: ['/share/books', '/share/book/:id'],
+}));
+
 router.get('/share/books', (req, res) => {
   const {page} = req.query;
-  const returnData = {};
 
   Book.getSharedBooksWithAll({page: Number(page)}, (books) => {
-    returnData.books = books;
-
-    res.send(JSON.stringify(returnData));
-  });
-});
-
-router.get('/share/books/:username', (req, res) => {
-  const returnData = {};
-
-  Book.getShareBookSByUsername(req.params.username, (books) => {
-    returnData.books = books;
-
-    res.end(JSON.stringify(returnData));
+    res.json(formatJson(true, `Fetching books page No.${page} successfully.`, {
+      books,
+    }));
   });
 });
 
 router.get('/share/book/:id', (req, res) => {
+  const {id} = req.params;
   const returnData = {};
 
-  Book.getSharedBookByShareId(req.params.id, (book) => {
+  Book.getSharedBookByShareId(id, (book) => {
     returnData.book = book;
 
     res.send(JSON.stringify(returnData));
@@ -40,12 +36,14 @@ router.get('/share/book/:id', (req, res) => {
 });
 
 router.get('/accounts/:username/books', (req, res) => {
-  const returnData = {};
+  const {username} = req.params;
 
-  Book.getShareBookSByUsername(req.params.username, (books) => {
-    returnData.books = books;
-
-    res.end(JSON.stringify(returnData));
+  Book.getShareBookSByUsername(username, (books) => {
+    res.json(formatJson(
+      true, `Get all shared books by ${username} successfully.`), {
+        books,
+      }
+    );
   });
 });
 

@@ -1,15 +1,14 @@
 import 'babel-polyfill';
 import path from 'path';
 import express from 'express';
-import expressSession from 'express-session';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import expressGraphQL from 'express-graphql';
 import {renderToString} from 'react-dom/server';
 import PrettyError from 'pretty-error';
-import passport from './core/passport';
-import jwt from 'jwtwebtoken';
+
+import mongoose from 'mongoose';
 
 import schema from './data/schema';
 import assets from './assets';
@@ -24,6 +23,8 @@ import Store from './stores/Store';
 
 import indexRouter from './controller/index';
 import apiRouter from './controller/api';
+import testRouter from './controller/test';
+import {loggerAccess} from './controller/middlewares';
 
 import WithStylesContext from './components/WithStylesContext';
 
@@ -45,29 +46,16 @@ server.use(cookieParser(auth.session.secret));
 server.use(bodyParser.urlencoded({extended: true}));
 server.use(bodyParser.json());
 
+
 //
 // Authentication
 // -----------------------------------------------------------------------------
-/*
- server.use(expressJwt({
- secret: auth.jwt.secret,
- credentialsRequired: false,
- /!* jscs:disable requireCamelCaseOrUpperCaseIdentifiers *!/
- getToken: req => req.cookies.id_token,
- /!* jscs:enable requireCamelCaseOrUpperCaseIdentifiers *!/
- }));
- */
+server.set('secret', auth.jwt.secret);
+mongoose.connect(auth.jwt.database);
 
 server.use(cors());
 
-server.use(expressSession({
-  name: 'sessionId',
-  secret: auth.session.secret,
-  resave: true,
-  saveUninitialized: true,
-}));
-server.use(passport.initialize());
-server.use(passport.session());
+server.use(loggerAccess);
 
 //
 // Register API middleware
@@ -81,11 +69,10 @@ server.use('/graphql', expressGraphQL(req => ({
 
 server.use('/manage', indexRouter);
 server.use('/api', apiRouter);
+server.use('/test', testRouter);
 
 server.get('*', (req, res) => {
   match({routes, location: req.url}, (err, redirectLocation, renderProps) => {
-    console.log('Starting to render the react router!'); //eslint-disable-line
-
     const template = require('./views/index.jade');
     const data = {title: 'Book Share', description: '', css: '', body: '', entry: assets.main.js};
 
