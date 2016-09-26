@@ -15,15 +15,30 @@ import PageHeader from '../components/PageHeader';
 
 import auth from '../core/auth';
 
+import store from '../stores/Store';
+
 /**
  * @description 如果用户没有登录则重定向到登录页面
  * @param nextState
  * @param replace
  */
+
+
+// function redirectToLogin(nextState, replace) {
+//   // 如果当前用户没有在本地有验证过的记录
+//   if (!auth.isAuthenticated()) {
+//     // 重定向到登录页面
+//     replace({
+//       pathname: '/sign',
+//       state: {nextPathname: nextState.location.pathname},
+//     });
+//   }
+// }
+
 function redirectToLogin(nextState, replace) {
-  // 如果当前用户没有在本地有验证过的记录
-  if (!auth.isAuthenticated()) {
-    // 重定向到登录页面
+  const {token} = store.getState().auth;
+  if (token) {
+      // 重定向到登录页面
     replace({
       pathname: '/sign',
       state: {nextPathname: nextState.location.pathname},

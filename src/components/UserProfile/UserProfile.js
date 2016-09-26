@@ -96,8 +96,8 @@ class UserProfile extends Component {
       const shareContent = book.get('shareContent');
 
       const primaryText = (
-        <p>
-          {shareTitle}
+        <p className={s.shareTitle}>
+          <Link to={{pathname: `/share/book/${book.get('_id')}`, state: {book}}}>{shareTitle}</Link>
           <span style={{color: grey300, fontSize: '0.5rem'}}> - {bookTitle}</span>
         </p>
       );
@@ -108,17 +108,14 @@ class UserProfile extends Component {
         </p>
       );
       return [(
-        <Link to={{pathname: `/share/book/${book.get('_id')}`, state: {book}}}>
-          <ListItem
-            key={index}
-            // leftAvatar={<Avatar src={user.avatar} />}
-            secondaryTextLines={1}
-            leftIcon={<FontIcon className="material-icons">book</FontIcon>}
-            rightIconButton={rightIconMenu}
-            primaryText={primaryText}
-            secondaryText={secondaryText}
-          />
-        </Link>
+        <ListItem
+          key={index}
+          secondaryTextLines={1}
+          leftIcon={<FontIcon className="material-icons">book</FontIcon>}
+          rightIconButton={rightIconMenu}
+          primaryText={primaryText}
+          secondaryText={secondaryText}
+        />
       ),
         <Divider inset />,
       ];

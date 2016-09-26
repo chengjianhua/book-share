@@ -24,7 +24,10 @@ class BookCardPage extends Component {
   // }
 
   componentDidMount() {
-    this.loadBooksByPage(1);
+    const {page} = this.props;
+    if (page === 1) {
+      this.loadBooksByPage(1);
+    }
   }
 
   handleLoadMore = () => {
@@ -40,10 +43,9 @@ class BookCardPage extends Component {
   render() {
     const {bookList} = this.props;
     const bookCards = bookList.map((book, index) => {
-      const detail = book.get('detail');
       const bookName = book.get('bookTitle');
-      const bookIntro = detail.get('summary');
-      const bookImg = detail.getIn(['images', 'large']);
+      const bookIntro = book.get(['detail', 'summary']);
+      const bookImg = book.getIn(['detail', 'images', 'large']);
       const title = book.get('shareTitle');
       const description = book.get('shareContent');
       const loading = '加载中……';

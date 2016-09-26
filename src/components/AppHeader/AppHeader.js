@@ -3,6 +3,7 @@
  */
 import React, {Component} from 'react';
 import {Link} from 'react-router';
+import {connect} from 'react-redux';
 
 import AppBar from 'material-ui/AppBar';
 import IconButton from 'material-ui/IconButton';
@@ -19,6 +20,16 @@ import withStyles from 'isomorphic-style-loader/lib/withStyles';
 
 import s from './AppHeader.scss';
 
+const style = {
+  appBar: {
+    flexWrap: 'wrap',
+  },
+  tabs: {
+    width: '100%',
+    marginTop: '-20px',
+  },
+};
+
 class AppHeader extends Component {
   constructor(props) {
     super(props);
@@ -34,15 +45,7 @@ class AppHeader extends Component {
   };
 
   render() {
-    const style = {
-      appBar: {
-        flexWrap: 'wrap',
-      },
-      tabs: {
-        width: '100%',
-        marginTop: '-20px',
-      },
-    };
+    const {username} = this.props;
 
     const iconElementRight = (
       <IconMenu
@@ -87,7 +90,7 @@ class AppHeader extends Component {
                 value={2}
                 icon={ <AccountBox /> }
                 linkButton
-                containerElement={<Link to="/chengjianhua" />}
+                containerElement={<Link to={`/${username}`} />}
               />
             </Tabs>
           </AppBar>
@@ -97,4 +100,10 @@ class AppHeader extends Component {
   }
 }
 
-export default withStyles(s)(AppHeader);
+function mapStateToProps(state) {
+  return {
+    username: state.auth.get('username'),
+  };
+}
+
+export default connect(mapStateToProps)(withStyles(s)(AppHeader));

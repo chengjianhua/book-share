@@ -2,6 +2,9 @@
  * Created by cjh95414 on 2016/6/7.
  */
 import connect from '../database/db';
+import log4js from 'log4js';
+
+const logger = log4js.getLogger('Model[User]');
 
 class User {
 
@@ -12,20 +15,16 @@ class User {
    */
   static findUniqueUserByUsername(username, callback) {
     connect.then((db) => {
-      db.collection('user').find({username: username}).limit(1).next((err, user) => {
-
-        console.log(`[ Collection : "user"] find: ${JSON.stringify(user)}`);
+      db.collection('user').find({username}).limit(1).next((err, user) => {
+        logger.info(`Find ${username}'s information.'`);
 
         if (user) {
           return callback(null, user);
         }
 
         return callback(null);
-
       });
-
     });
-
   }
 
 
@@ -37,8 +36,10 @@ class User {
   static addUser(user, callback) {
     connect.then((db) => {
       db.collection('user').insertOne(user, (err, result) => {
-        // 如果有错误则输出错误
-        err && console.error(err);
+        if (err) {
+          logger.error(`Add user ${user.username} failed.`, err);
+        }
+
         // 执行数据库操作完成以后所需的操作
         callback(result);
 

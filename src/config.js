@@ -1,15 +1,3 @@
-/**
- * React Starter Kit (https://www.reactstarterkit.com/)
- *
- * Copyright © 2014-2016 Kriasoft, LLC. All rights reserved.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE.txt file in the root directory of this source tree.
- */
-
-/* eslint-disable max-len */
-/* jscs:disable maximumLineLength */
-
 export const port = process.env.PORT || 3000;
 export const host = process.env.WEBSITE_HOSTNAME || `localhost:${port}`;
 
@@ -30,11 +18,12 @@ export const analytics = {
 export const auth = {
 
   jwt: {
-    secret: process.env.JWT_SECRET || 'Book share',
+    secret: process.env.JWT_SECRET || 'bookshare',
+    database: 'mongodb://chengjianhua:950414@ds035806.mlab.com:35806/book-share',
   },
 
   session: {
-    secret: 'book share',
+    secret: 'bookshare',
   },
 
   // https://developers.facebook.com/

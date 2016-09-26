@@ -1,5 +1,6 @@
 import ActionTypes from '../constants/ActionTypes';
-import fetch from 'isomorphic-fetch';
+import isomorphicFetch from 'isomorphic-fetch';
+import fetch, {fetchJson} from '../core/fetch';
 
 import {fromJS} from 'immutable';
 
@@ -11,27 +12,32 @@ export function fetchBookList(page) {
       type: ActionTypes.FETCH_BOOK_LIST_DOING,
     });
 
-    return fetch(`/api/share/books?page=${page}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-    .then((response) => response.json())
+    return fetchJson(`/api/share/books?page=${page}`)
+    // .then((response) => response.json())
     .then((json) => {
       const {books} = json;
 
+      const promises = [];
+
+      books.forEach(book => {
+        if (book.bookId) {
+          promises.push(
+            isomorphicFetch(`${doubanAPI}/${book.bookId}`, {
+              mode: 'cors',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            })
+            .then(response => response.json())
+            .then(detail => Object.assign({}, book, {detail}))
+          );
+        } else {
+          promises.push(Promise.resolve(book));
+        }
+      });
+
       // 将返回带有结果的 Promise 对象添加到数组当中，为了传递给 Promise.all
-      Promise.all(books.map(
-        book => fetch(`${doubanAPI}/${book.bookId}`, {
-          mode: 'cors',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        })
-        .then(response => response.json())
-        .then(detail => Object.assign({}, book, {detail}))
-      ))
+      Promise.all(promises)
       .then(bookList => {
         dispatch({
           type: ActionTypes.FETCH_BOOK_LIST_SUCCESS,
@@ -51,17 +57,10 @@ export function fetchBookList(page) {
 
 export function fetchBook(bookId) {
   return function (dispatch) {
-    return fetch(`/api/share/book/${bookId}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-    .then(response => response.json())
+    return fetchJson(`/api/share/book/${bookId}`)
     .then(json => {
       const {book} = json;
-      fetch(`${doubanAPI}/${bookId}`)
-      .then(response => response.json())
+      fetchJson(`${doubanAPI}/${book.bookId}`)
       .then(detail => {
         const bookDetail = Object.assign({}, book, {detail});
         dispatch({
@@ -75,14 +74,13 @@ export function fetchBook(bookId) {
 
 export function addComment(shareId, comment) {
   return function (dispatch) {
-    return fetch(`/manage/comment/add/${shareId}`, {
+    return fetchJson(`/manage/comment/add/${shareId}`, {
       method: 'POST',
-      body: JSON.stringify(comment),
       headers: {
         'Content-Type': 'application/json',
       },
+      body: JSON.stringify(comment),
     })
-    .then(response => response.json())
     .then(() => {
       dispatch({
         type: ActionTypes.ADD_COMMENT_SUCCESS,
