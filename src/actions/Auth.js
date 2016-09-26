@@ -8,14 +8,17 @@ export function readToken() {
   return function (dispatch) {
     if (canUseDOM) {
       const token = localStorage.getItem('token');
-      dispatch({
-        type: ActionTypes.READ_TOKEN_SUCCESS,
-        token,
-        username: jwtDecode(token).username,
-      });
-      dispatch({
-        type: ActionTypes.AUTHENTICATE_USER_SUCCESS,
-      });
+      if (token) {
+        const decoded = jwtDecode(token);
+        dispatch({
+          type: ActionTypes.READ_TOKEN_SUCCESS,
+          token,
+          username: decoded ? decoded.username : '',
+        });
+        dispatch({
+          type: ActionTypes.AUTHENTICATE_USER_SUCCESS,
+        });
+      }
     }
   };
 }

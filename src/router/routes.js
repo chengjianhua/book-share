@@ -36,8 +36,8 @@ import store from '../stores/Store';
 // }
 
 function redirectToLogin(nextState, replace) {
-  const {token} = store.getState().auth;
-  if (token) {
+  const token = store.getState().auth.get('token');
+  if (!token) {
       // 重定向到登录页面
     replace({
       pathname: '/sign',
