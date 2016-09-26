@@ -8,8 +8,6 @@ import expressGraphQL from 'express-graphql';
 import {renderToString} from 'react-dom/server';
 import PrettyError from 'pretty-error';
 
-import mongoose from 'mongoose';
-
 import schema from './data/schema';
 import assets from './assets';
 import {port, auth} from './config';
@@ -51,7 +49,6 @@ server.use(bodyParser.json());
 // Authentication
 // -----------------------------------------------------------------------------
 server.set('secret', auth.jwt.secret);
-mongoose.connect(auth.jwt.database);
 
 server.use(cors());
 

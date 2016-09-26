@@ -48,6 +48,7 @@ function mapStateToProps(state) {
   return {
     isAuthenticated: state.auth.get('isAuthenticated'),
     token: state.auth.get('token'),
+    username: state.auth.get('username'),
   };
 }
 

@@ -1,5 +1,6 @@
 import ActionTypes from '../constants/ActionTypes';
-import fetch from 'isomorphic-fetch';
+// import isomorphicFetch from 'isomorphic-fetch';
+import fetch, {fetchJson} from '../core/fetch';
 
 import {fromJS} from 'immutable';
 
@@ -10,11 +11,9 @@ export function fetchUserBooks(username) {
     dispatch({
       type: ActionTypes.FETCH_USER_BOOKS_DOING,
     });
-    fetch(`/api/accounts/${username}/books`)
-    .then(response => response.json())
+    fetchJson(`/api/accounts/${username}/books`)
     .then(json => {
       const {books} = json;
-      console.log('sss', json);
       dispatch({
         type: ActionTypes.FETCH_USER_BOOKS_SUCCESS,
         data: fromJS(books),

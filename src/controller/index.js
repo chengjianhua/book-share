@@ -51,10 +51,11 @@ router.post('/share/add', (req, res) => {
 
 router.post('/comment/add/:id', (req, res) => {
   const shareId = req.params.id;
-  const commentObject = req.body;
+  const comment = req.body;
+  comment.user = req.user.username;
   const returnData = {};
 
-  Book.addComment(shareId, commentObject, (result) => {
+  Book.addComment(shareId, comment, (result) => {
     returnData.isSuccess = !!result;
 
     res.json(returnData);
@@ -87,7 +88,6 @@ router.post('/register', (req, res) => {
 router.post('/authenticate', (req, res) => {
   const {secret} = auth.jwt;
   const {username, password} = req.body;
-  console.log(req.body);
   User.findUniqueUserByUsername(username, (err, user) => {
     if (err) {
       logger.error(`Fetching user named ${username} from database failed.`);
@@ -109,7 +109,7 @@ router.post('/authenticate', (req, res) => {
           username,
         };
         const token = jwt.sign(payload, secret, {
-          expiresIn: '7 days',
+          expiresIn: '1 days',
         });
 
         res.json({

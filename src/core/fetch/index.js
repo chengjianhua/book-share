@@ -1,10 +1,15 @@
 import isomorphicFetch from 'isomorphic-fetch';
+import {canUseDOM} from 'exenv';
 
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-else-return */
 
 function addAuthorizationHeader(options) {
-  const {headers, token} = options;
+  const {headers} = options;
+  let token = '';
+  if (canUseDOM) {
+    token = localStorage.getItem('token');
+  }
   const authenticationHeader = {
     ['Authorization']: `Bearer ${token}`,
   };
@@ -30,13 +35,14 @@ function parseJson(response) {
   return response.json();
 }
 
-function fetch(url, options) {
+function fetch(url, options = {}) {
   addAuthorizationHeader(options);
   return isomorphicFetch(url, options)
-    .then(checkStatus);
+    .then(checkStatus)
+    .then(parseJson);
 }
 
-function fetchJson(url, options) {
+function fetchJson(url, options = {}) {
   addAuthorizationHeader(options);
   return isomorphicFetch(url, options)
     .then(checkStatus)

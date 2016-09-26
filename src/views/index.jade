@@ -17,3 +17,7 @@ html(class="no-js", lang="")
       ga('create','#{trackingId}','auto');ga('send','pageview')
     if trackingId
       script(src="https://www.google-analytics.com/analytics.js", async=true, defer=true)
+    script.
+      var Globals = {
+        token: localStorage.getItem('token')
+      };

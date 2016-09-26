@@ -40,10 +40,11 @@ router.get('/accounts/:username/books', (req, res) => {
 
   Book.getShareBookSByUsername(username, (books) => {
     res.json(formatJson(
-      true, `Get all shared books by ${username} successfully.`), {
+      true,
+      `Get all shared books by ${username} successfully.`, {
         books,
       }
-    );
+    ));
   });
 });
 

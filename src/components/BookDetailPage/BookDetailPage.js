@@ -27,7 +27,6 @@ class BookDetailPage extends Component {
     const {actions, params} = this.props;
     const comment = {
       content: commentContent,
-      user: 'chengjianhua',
       date: new Date(),
     };
 

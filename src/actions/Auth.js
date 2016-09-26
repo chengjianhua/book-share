@@ -1,7 +1,7 @@
 import ActionTypes from '../constants/ActionTypes';
-import {fromJS} from 'immutable';
 import {fetchJson} from '../core/fetch';
 import {canUseDOM} from 'exenv';
+import jwtDecode from 'jwt-decode';
 
 /* eslint-disable consistent-return */
 export function readToken() {
@@ -11,6 +11,10 @@ export function readToken() {
       dispatch({
         type: ActionTypes.READ_TOKEN_SUCCESS,
         token,
+        username: jwtDecode(token).username,
+      });
+      dispatch({
+        type: ActionTypes.AUTHENTICATE_USER_SUCCESS,
       });
     }
   };
@@ -51,9 +55,7 @@ export function authenticate(username, password) {
       },
     }).then(json => {
       dispatch(writeToken(json.token));
-      dispatch({
-        type: ActionTypes.AUTHENTICATE_USER_SUCCESS,
-      });
+      dispatch(readToken());
       return json;
     });
   };
