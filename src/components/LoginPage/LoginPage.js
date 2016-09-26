@@ -2,6 +2,9 @@
  * Created by Cheng jianhua at 11:10 on 2016/6/6
  */
 import React, {Component, PropTypes} from 'react';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+
 import TextField from 'material-ui/TextField';
 import Dialog from 'material-ui/Dialog';
 import RaisedButton from 'material-ui/RaisedButton';
@@ -9,7 +12,7 @@ import withStyles from 'isomorphic-style-loader/lib/withStyles';
 
 import s from './LoginPage.scss';
 
-import auth from '../../core/auth';
+import {authenticate} from '../../actions/Auth';
 
 class LoginPage extends Component {
 
@@ -29,20 +32,18 @@ class LoginPage extends Component {
 
   handleFormSubmit = (event) => {
     event.preventDefault();
-
+    const {actions} = this.props;
     const {username, password} = this.state;
-    auth.login(username, password, (isLoggedIn) => {
-      // 如果登录成功则执行以下操作
-      if (isLoggedIn) {
-        // 打开成功的提示弹窗并在定时时间后自动跳转到主页
-        this.setState({
-          openAlertDialog: true,
-        }, () => {
-          setTimeout(() => {
-            this.context.router.push('/');
-          }, 2000);
-        });
-      }
+
+    actions.authenticate(username, password)
+    .then(() => {
+      this.setState({
+        openAlertDialog: true,
+      }, () => {
+        setTimeout(() => {
+          this.context.router.push('/');
+        }, 2000);
+      });
     });
   };
 
@@ -66,7 +67,6 @@ class LoginPage extends Component {
     const {username, password, openAlertDialog} = this.state;
     return (
       <div className={s.root}>
-
         <form method="post" action="" onSubmit={this.handleFormSubmit}>
           <TextField
             key="login-username"
@@ -101,11 +101,16 @@ class LoginPage extends Component {
         >
           您已登录成功，用户名为[{username}]，即将跳转到主页.
         </Dialog>
-
       </div>
     );
   }
 
 }
 
-export default withStyles(s)(LoginPage);
+function mapDispatchToProps(dispatch) {
+  return {
+    actions: bindActionCreators(Object.assign({}, {authenticate}), dispatch),
+  };
+}
+
+export default connect(null, mapDispatchToProps)(withStyles(s)(LoginPage));

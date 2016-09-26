@@ -1,10 +1,14 @@
 import React, {Component, PropTypes} from 'react';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+
 import baseTheme from 'material-ui/styles/baseThemes/lightBaseTheme';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import '../../../node_modules/normalize.css/normalize.css';
 import s from './App.scss';
-import auth from '../../core/auth';
+
+import {readToken} from '../../actions/Auth';
 
 class App extends Component {
 
@@ -24,6 +28,11 @@ class App extends Component {
     };
   }
 
+  componentWillMount() {
+    const {actions} = this.props;
+    actions.readToken();
+  }
+
   render() {
     return !this.props.error ? (
       <div>
@@ -35,4 +44,17 @@ class App extends Component {
 
 }
 
-export default withStyles(s)(App);
+function mapStateToProps(state) {
+  return {
+    isAuthenticated: state.auth.get('isAuthenticated'),
+    token: state.auth.get('token'),
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    actions: bindActionCreators(Object.assign({}, {readToken}), dispatch),
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(s)(App));

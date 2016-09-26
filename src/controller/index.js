@@ -87,19 +87,20 @@ router.post('/register', (req, res) => {
 router.post('/authenticate', (req, res) => {
   const {secret} = auth.jwt;
   const {username, password} = req.body;
+  console.log(req.body);
   User.findUniqueUserByUsername(username, (err, user) => {
     if (err) {
       logger.error(`Fetching user named ${username} from database failed.`);
       throw err;
     }
     if (!user) {
-      res.json({
+      res.status(400).json({
         success: false,
         message: 'Authentication failed. User not found.',
       });
     } else {
       if (user.password !== password) {
-        res.send({
+        res.statue(400).send({
           success: false,
           message: 'Authentication failed. Wrong password.',
         });

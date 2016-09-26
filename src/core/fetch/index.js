@@ -12,7 +12,7 @@ function addAuthorizationHeader(options) {
   if (!headers) {
     options.headers = authenticationHeader;
   } else {
-    options.headers = Object({}, headers, authenticationHeader);
+    options.headers = Object.assign({}, headers, authenticationHeader);
   }
 }
 

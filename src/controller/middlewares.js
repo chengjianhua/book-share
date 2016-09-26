@@ -14,14 +14,14 @@ function authenticateToken(req, res, next) {
   if (authorizationHeader) {
     const infos = authorizationHeader.split(' ');
     const schema = infos[0];
+    token = infos[1];
 
     if (schema !== 'Bearer') {
-      return res.json({
+      return res.statue(403).json({
         success: false,
         message: `Wrong schema "${schema}" request header "Authorization".`,
       });
     }
-    token = infos[1];
   } else {
     token = req.body.token || req.query.token || req.headers['x-access-token'];
   }
@@ -29,7 +29,7 @@ function authenticateToken(req, res, next) {
   if (token) {
     jwt.verify(token, secret, (err, decoded) => {
       if (err) {
-        return res.json({
+        return res.statue(403).json({
           success: false,
           message: 'Failed to authenticate token.',
         });
