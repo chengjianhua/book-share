@@ -25,9 +25,6 @@ router.use(authenticateToken.unless({
  * [ share/add ]： 处理添加分享的请求
  */
 router.post('/share/add', (req, res) => {
-  // 定义将要返回的数据
-  const returnData = {};
-
   const {username} = req.user;
 
   // 请求中传入的数据
@@ -43,22 +40,23 @@ router.post('/share/add', (req, res) => {
   };
 
   Book.addShareBook(share, (result) => {
-    returnData.id = result.insertedId;
     logger.info(`[ObjectId = ${result.insertedId}]: Inserted a book into mongodb.`);
-    res.json(formatJson(true, 'Add a book share successfully.', returnData));
+    res.json(formatJson(true, 'Add a book share successfully.', {
+      id: result.insertedId,
+    }));
   });
 });
 
 router.post('/comment/add/:id', (req, res) => {
   const shareId = req.params.id;
-  const comment = req.body;
-  comment.user = req.user.username;
-  const returnData = {};
+  const comment = Object.assign({}, req.body, {user: req.user.username});
 
   Book.addComment(shareId, comment, (result) => {
-    returnData.isSuccess = !!result;
-
-    res.json(returnData);
+    if (!!result) {
+      res.json(formatJson(true, `Comment on book:${shareId} successfully.`));
+    } else {
+      res.json(formatJson(false, `Comment on book:${shareId} failed.`));
+    }
   });
 });
 
@@ -73,15 +71,11 @@ router.post('/register', (req, res) => {
     password,
     registerDate: new Date(),
   };
-  const returnData = {};
 
   User.addUser(user, (result) => {
-    returnData.id = result.insertedId;
-    returnData.isSuccess = true;
-
     logger.info(`[ObjectId = ${result.insertedId}]: Inserted [${JSON.stringify(user)}] into mongodb!`);
 
-    res.json(returnData);
+    res.json(formatJson(true, `User ${username} registerd successfully.`));
   });
 });
 
@@ -100,7 +94,7 @@ router.post('/authenticate', (req, res) => {
       });
     } else {
       if (user.password !== password) {
-        res.statue(400).send({
+        res.statue(400).json({
           success: false,
           message: 'Authentication failed. Wrong password.',
         });

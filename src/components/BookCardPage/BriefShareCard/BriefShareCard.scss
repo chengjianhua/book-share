@@ -1,0 +1,59 @@
+.root {
+  height: 8rem;
+  overflow: hidden;
+  position: relative;
+  padding: 0.5rem;
+
+  & div {
+    box-sizing: border-box;
+  }
+}
+
+.imgBox {
+  display: inline-block;
+  width: 8rem;
+  float: left;
+}
+
+.img {
+  display: block;
+  height: 7rem;
+  overflow: hidden;
+  max-width: 7rem;
+  margin: auto;
+  padding: 0.5rem
+}
+
+.contentBox {
+  margin-left: 8rem;
+  height: 8rem;
+  overflow: hidden;
+  padding: 0.5rem 0;
+}
+
+.header {
+
+  & p {
+    margin: 0;
+  }
+}
+
+.content {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  font-size: 0.85rem;
+  margin-top: 1rem;
+}
+
+.iconContainer {
+  border-top: 1px solid #EBEBEB;
+  padding: 0.5rem 1rem;
+  display: flex;
+}
+
+.iconButton {
+  flex: 1 1 auto;
+  align-self: center;
+}

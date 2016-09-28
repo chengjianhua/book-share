@@ -11,11 +11,13 @@ import {bindActionCreators} from 'redux';
 
 import {fetchBookList} from '../../actions/Book';
 
-import BookCard from '../BookCard';
+// import BookCard from '../BookCard';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import s from './BookCardPage.scss';
 
 import loadingGif from '../../public/img/loading.gif';
+
+import BriefShareCard from './BriefShareCard';
 
 class BookCardPage extends Component {
 
@@ -47,8 +49,9 @@ class BookCardPage extends Component {
       const bookIntro = book.get(['detail', 'summary']);
       const bookImg = book.getIn(['detail', 'images', 'large']);
       const title = book.get('shareTitle');
-      const description = book.get('shareContent');
+      const content = book.get('shareContent');
       const loading = '加载中……';
+      const commentsCount = book.get('comments');
 
       return (
         <Link
@@ -57,12 +60,15 @@ class BookCardPage extends Component {
             pathname: `/share/book/${book.get('_id')}`,
           }}
         >
-        <BookCard
-          key={index}
-          { ...{bookName, title, description}}
-          bookIntro={bookIntro ? bookIntro.substr(0, 100).concat('...') : loading}
-          bookImg={!bookImg ? loadingGif : bookImg}
-        />
+          <BriefShareCard
+            key={index}
+            img={bookImg}
+            title={title}
+            content={content}
+            username={'chengjianhua'}
+            bookName={bookName}
+            commentsCount={commentsCount}
+            />
         </Link>
       );
     });
@@ -70,14 +76,15 @@ class BookCardPage extends Component {
     return (
       <div className={s.root}>
         {bookCards}
-
-        <RaisedButton
-          label="LOAD MORE"
-          onTouchTap={this.handleLoadMore}
-          primary
-          fullWidth
-          style={{marginTop: '1rem', width: '100%'}}
-        />
+        <div className={s.loadButton}>
+          <RaisedButton
+            label="LOAD MORE"
+            onTouchTap={this.handleLoadMore}
+            primary
+            fullWidth
+            style={{marginTop: '1rem', width: '100%'}}
+          />
+        </div>
       </div>
     );
   }

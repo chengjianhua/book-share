@@ -28,7 +28,7 @@ class App extends Component {
     };
   }
 
-  componentWillMount() {
+  componentDidMount() {
     const {actions} = this.props;
     actions.readToken();
   }

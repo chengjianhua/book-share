@@ -17,7 +17,7 @@ function authenticateToken(req, res, next) {
     token = infos[1];
 
     if (schema !== 'Bearer') {
-      return res.statue(403).json({
+      return res.status(403).json({
         success: false,
         message: `Wrong schema "${schema}" request header "Authorization".`,
       });
@@ -29,7 +29,7 @@ function authenticateToken(req, res, next) {
   if (token) {
     jwt.verify(token, secret, (err, decoded) => {
       if (err) {
-        return res.statue(403).json({
+        return res.status(403).json({
           success: false,
           message: 'Failed to authenticate token.',
         });

@@ -13,8 +13,6 @@ import Share from '../components/Share';
 import AppHeader from '../components/AppHeader';
 import PageHeader from '../components/PageHeader';
 
-import auth from '../core/auth';
-
 import store from '../stores/Store';
 
 /**
@@ -22,19 +20,6 @@ import store from '../stores/Store';
  * @param nextState
  * @param replace
  */
-
-
-// function redirectToLogin(nextState, replace) {
-//   // 如果当前用户没有在本地有验证过的记录
-//   if (!auth.isAuthenticated()) {
-//     // 重定向到登录页面
-//     replace({
-//       pathname: '/sign',
-//       state: {nextPathname: nextState.location.pathname},
-//     });
-//   }
-// }
-
 function redirectToLogin(nextState, replace) {
   const token = store.getState().auth.get('token');
   if (!token) {

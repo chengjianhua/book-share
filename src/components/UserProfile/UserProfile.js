@@ -27,7 +27,7 @@ import * as accountsActions from '../../actions/Accounts';
 
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import s from './UserProfile.scss';
-import LoadingOverlay from '../LoadingOverlay';
+import LoadingOverlay from '../common/LoadingOverlay';
 
 import avatar from '../../public/img/avatar.png';
 
