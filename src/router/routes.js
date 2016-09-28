@@ -3,11 +3,13 @@
  */
 import React from 'react';
 import {Route, IndexRoute} from 'react-router';
+
 import App from '../components/App/App';
 import SignPage from '../components/SignPage';
 import BookCardPage from '../components/BookCardPage';
 import UserPage from '../components/UserPage';
 import UserProfile from '../components/UserProfile';
+import ProfileSettings from '../components/UserProfile/Settings';
 import BookDetailPage from '../components/BookDetailPage';
 import Share from '../components/Share';
 import AppHeader from '../components/AppHeader';
@@ -49,9 +51,9 @@ export default ([
     <Route path="/sign" component={SignPage} />
   </Route>,
 
-  <Route path="/" component={AppIndex}>s
+  <Route path="/" component={AppIndex}>
     <IndexRoute component={BookCardPage} />
-    <Route path=":username" component={UserPage} onEnter={redirectToLogin} />
+    <Route path="user" component={UserPage} onEnter={redirectToLogin} />
   </Route>,
 
   <Route component={AppPage}>
@@ -62,7 +64,10 @@ export default ([
       <Route path="book/:id" component={BookDetailPage} />
     </Route>
 
-    <Route path="/:username/profile" component={UserProfile} />
+    <Route path="/user">
+      <Route path="profile" component={UserProfile} />
+      <Route path="settings" component={ProfileSettings} onEnter={() => {console.log('enter route profile settings.');}} />
+    </Route>
 
   </Route>,
 

@@ -90,7 +90,7 @@ class AppHeader extends Component {
                 value={2}
                 icon={ <AccountBox /> }
                 linkButton
-                containerElement={<Link to={`/${username}`} />}
+                containerElement={<Link to="/user" />}
               />
             </Tabs>
           </AppBar>

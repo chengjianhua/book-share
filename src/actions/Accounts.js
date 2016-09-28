@@ -1,10 +1,10 @@
 import ActionTypes from '../constants/ActionTypes';
 // import isomorphicFetch from 'isomorphic-fetch';
-import fetch, {fetchJson} from '../core/fetch';
+import fetch, {fetchJson} from '../core/fetch'; // eslint-disable-line
 
 import {fromJS} from 'immutable';
 
-import {doubanAPI} from '../config';
+import {doubanAPI} from '../config'; // eslint-disable-line
 
 export function fetchUserBooks(username) {
   return function (dispatch) {
@@ -21,6 +21,27 @@ export function fetchUserBooks(username) {
     }).catch(error => {
       dispatch({
         type: ActionTypes.FETCH_USER_BOOKS_FAILURE,
+        error,
+      });
+    });
+  };
+}
+
+export function fetchUserProfile(username) {
+  return function (dispatch) {
+    dispatch({
+      type: ActionTypes.FETCH_USER_PROFILE_DOING,
+    });
+    fetchJson(`/api/accounts/${username}/profile`)
+    .then(json => {
+      dispatch({
+        type: ActionTypes.FETCH_USER_PROFILE_SUCCESS,
+        data: fromJS(json.profile),
+      });
+    })
+    .catch(error => {
+      dispatch({
+        type: ActionTypes.FETCH_USER_PROFILE_FAILURE,
         error,
       });
     });

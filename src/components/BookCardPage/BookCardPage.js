@@ -2,6 +2,7 @@
  * Created by cjh95414 on 2016/5/5.
  */
 import React, {Component} from 'react';
+import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import RaisedButton from 'material-ui/RaisedButton';
 import {Link} from 'react-router';
 import {connect} from 'react-redux';
@@ -10,14 +11,8 @@ import {bindActionCreators} from 'redux';
 // import {List, Map} from 'immutable';
 
 import {fetchBookList} from '../../actions/Book';
-
-// import BookCard from '../BookCard';
-import withStyles from 'isomorphic-style-loader/lib/withStyles';
-import s from './BookCardPage.scss';
-
-import loadingGif from '../../public/img/loading.gif';
-
 import BriefShareCard from './BriefShareCard';
+import s from './BookCardPage.scss';
 
 class BookCardPage extends Component {
 
@@ -46,12 +41,10 @@ class BookCardPage extends Component {
     const {bookList} = this.props;
     const bookCards = bookList.map((book, index) => {
       const bookName = book.get('bookTitle');
-      const bookIntro = book.get(['detail', 'summary']);
       const bookImg = book.getIn(['detail', 'images', 'large']);
       const title = book.get('shareTitle');
       const content = book.get('shareContent');
-      const loading = '加载中……';
-      const commentsCount = book.get('comments');
+      const commentsCount = book.get('commentsCount');
 
       return (
         <Link
@@ -62,13 +55,14 @@ class BookCardPage extends Component {
         >
           <BriefShareCard
             key={index}
+            id={book.get('_id')}
             img={bookImg}
             title={title}
             content={content}
             username={'chengjianhua'}
             bookName={bookName}
             commentsCount={commentsCount}
-            />
+          />
         </Link>
       );
     });

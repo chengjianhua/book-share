@@ -4,7 +4,6 @@
 import React, {Component, PropTypes} from 'react';
 import {Link} from 'react-router';
 
-import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
 import Paper from 'material-ui/Paper';
 import FlatButton from 'material-ui/FlatButton';
 import Divider from 'material-ui/Divider';
@@ -13,7 +12,7 @@ import FontIcon from 'material-ui/FontIcon';
 import ActionThumbUp from 'material-ui/svg-icons/action/thumb-up';
 import ComunicateComment from 'material-ui/svg-icons/communication/comment';
 
-import {grey500, grey700, blue500} from 'material-ui/styles/colors';
+import {grey500, blue500} from 'material-ui/styles/colors';
 
 import s from './BriefShareCard.scss';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
@@ -48,10 +47,8 @@ class BriefShareCard extends Component {
   render() {
     const style = {
       actions: {
-        like: {
-          label: {
-            color: '#A8AAAB',
-          },
+        label: {
+          color: '#A8AAAB',
         },
       },
       root: {
@@ -90,13 +87,13 @@ class BriefShareCard extends Component {
           <FlatButton
             className={s.iconButton}
             label={`${10} 喜欢`}
-            labelStyle={style.actions.like.label}
+            labelStyle={style.actions.label}
             icon={<ActionThumbUp color="#A8AAAB" />}
           />
           <FlatButton
             className={s.iconButton}
             label={`${commentsCount} 评论`}
-            labelStyle={style.actions.like.label}
+            labelStyle={style.actions.label}
             icon={<ComunicateComment color="#A8AAAB" />}
           />
         </div>

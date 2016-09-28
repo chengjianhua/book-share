@@ -48,4 +48,23 @@ router.get('/accounts/:username/books', (req, res) => {
   });
 });
 
+router.get('/accounts/:username/profile', (req, res) => {
+  const {username} = req.params;
+
+  User.findUniqueUserByUsername(username, profile => {
+    if (!profile) {
+      res.status(404).json(formatJson(
+        false,
+        `Fetch ${username}'s profile failed.'`,
+      ));
+    } else {
+      res.json(formatJson(
+        true,
+        `Fetch ${username}'s profile successfully.'`,
+        profile
+      ));
+    }
+  });
+});
+
 export default router;

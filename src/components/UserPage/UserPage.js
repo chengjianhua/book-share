@@ -54,7 +54,7 @@ class UserPage extends Component {
             subtitle={this.props.signature}
             avatar={this.props.avatar}
           >
-            <Link to="/chengjianhua/profile">
+            <Link to="/user/profile">
               <IconButton style={style.iconStyle}>
                 <ChevronRight color="#AAAAAA" />
               </IconButton>
@@ -73,17 +73,13 @@ class UserPage extends Component {
             label="书籍"
             labelPosition="after"
             icon={ <FontIcon className="material-icons">book</FontIcon> }
-            // linkButton
-            // containerElement={<Link to="/" />}
           />
 
           <FlatButton
             className={s.iconButton}
             label="书单"
             labelPosition="after"
-            icon={ <FontIcon className="material-icons" color={"rgba(50,100,250,0.87)"}>view_list</FontIcon> }
-            // linkButton
-            // containerElement={<Link className={s.iconButton} to="/" />}
+            icon={ <FontIcon className="material-icons" color="rgba(50,100,250,0.87)">view_list</FontIcon> }
           />
 
           <FlatButton
@@ -91,8 +87,6 @@ class UserPage extends Component {
             label="分享"
             labelPosition="after"
             icon={ <FontIcon className="material-icons">home</FontIcon> }
-            // linkButton
-            // containerElement={<Link to="/" />}
           />
 
         </Paper>

@@ -6,19 +6,14 @@ import {Link} from 'react-router';
 
 import {List, ListItem} from 'material-ui/List';
 import Subheader from 'material-ui/Subheader';
-// import {Card, CardActions, CardHeader, CardTitle, CardText} from 'material-ui/Card';
 import FontIcon from 'material-ui/FontIcon';
 import Divider from 'material-ui/Divider';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
-// import ChevronRight from 'material-ui/svg-icons/navigation/chevron-right';
-// import ImageEdit from 'material-ui/svg-icons/image/edit';
 import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
 import IconButton from 'material-ui/IconButton';
-// import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import {grey300, grey400} from 'material-ui/styles/colors';
-// import Paper from 'material-ui/Paper';
 import {Tabs, Tab} from 'material-ui/Tabs';
 
 import {connect} from 'react-redux';
@@ -30,7 +25,6 @@ import s from './UserProfile.scss';
 import LoadingOverlay from '../common/LoadingOverlay';
 
 import avatar from '../../public/img/avatar.png';
-
 
 const iconButtonElement = (
   <IconButton
@@ -75,8 +69,7 @@ class UserProfile extends Component {
   }
 
   componentDidMount() {
-    const {actions, params} = this.props;
-    const {username} = params;
+    const {actions, username} = this.props;
 
     actions.fetchUserBooks(username);
   }
@@ -135,11 +128,13 @@ class UserProfile extends Component {
           </div>
 
           <div className={s.editButton}>
-            <RaisedButton
-              label="编辑"
-              labelPosition="before"
-              primary
-            />
+            <Link to="/user/settings">
+              <RaisedButton
+                label="编辑"
+                labelPosition="before"
+                primary
+              />
+            </Link>
           </div>
 
         </div>
@@ -176,6 +171,7 @@ function mapStateToProps(state) {
   return {
     isLoading: state.accounts.getIn(['books', 'isLoading']),
     books: state.accounts.getIn(['books', 'data']),
+    username: state.auth.get('username'),
   };
 }
 

@@ -1,12 +1,14 @@
 /**
  * Created by cjh95414 on 2016/6/11.
  */
-import connect from '../database/db';
+import log4js from 'log4js';
+const logger = log4js.getLogger('Model [Book]');
 
 import {ObjectId} from 'mongodb';
+import connect from '../database/db';
 
+/* eslint-disable no-unused-expressions */
 class Book {
-
   /**
    *
    * @param share 将要插入的数据
@@ -18,7 +20,9 @@ class Book {
       const insertObject = Object.assign({}, share, {comments: []});
 
       db.collection('share_book').insertOne(insertObject, (err, result) => {
-        err && console.error(err);
+        if (err) {
+          logger.error('Insert a share book into db failed.', err);
+        }
         callback && callback(result);
       });
     });
@@ -34,8 +38,22 @@ class Book {
     // 获得需要跳过的 documents 的个数
     const skip = page > 0 ? (page - 1) * limit : 0;
     connect.then((db) => {
-      db.collection('share_book').find({}, {comments: false}).skip(skip).limit(limit).toArray((err, documents) => {
-        err && console.error(err);
+      db.collection('share_book').aggregate([
+        {
+          $project: {
+            username: true,
+            bookId: true,
+            bookTitle: true,
+            shareTitle: true,
+            shareContent: true,
+            commentsCount: {$size: '$comments'},
+          },
+        },
+      ])
+      .skip(skip).limit(limit).toArray((err, documents) => {
+        if (err) {
+          logger.error(`Query shared books with {page: ${page}, limit: ${limit}} failed.`, err);
+        }
         callback && callback(documents);
       });
     });
@@ -44,17 +62,21 @@ class Book {
 
   static getSharedBookByShareId(id, callback) {
     connect.then((db) => {
-      db.collection('share_book').find({_id: ObjectId(id)}).limit(1).next((err, book) => {
-        err && console.log(err);
+      db.collection('share_book').find({_id: new ObjectId(id)}).limit(1).next((err, book) => {
+        if (err) {
+          logger.error(`Query one share book with {id: ${id}} failed.`, err);
+        }
         callback && callback(book);
       });
     });
   }
 
   static getShareBookSByUsername(username, callback) {
-    connect.then(function (db) {
+    connect.then((db) => {
       db.collection('share_book').find({username}).toArray((err, documents) => {
-        err && console.error(err);
+        if (err) {
+          logger.error(`Query share books by "${username}" failed.`, err);
+        }
         callback && callback(documents);
       });
     });
@@ -69,21 +91,23 @@ class Book {
    * @param callback
    */
   static addComment(shareId, commentObject, callback) {
-    commentObject.date = new Date();
-
+    const comment = Object.assign({}, commentObject, {date: new Date()});
     connect.then((db) => {
       db.collection('share_book').updateOne(
         {
-          _id: ObjectId(shareId),
+          _id: new ObjectId(shareId),
         },
         {
           $push: {
-            comments: commentObject,
+            comments: comment,
           },
         },
-        {upsert: true},
-        (err, result) => {
-          err && console.error(err);
+        {
+          upsert: true,
+        }, (err, result) => {
+          if (err) {
+            logger.error(`Insert a comment into {share book: ${shareId}} failed.`, err);
+          }
           callback && callback(result);
         }
       );
