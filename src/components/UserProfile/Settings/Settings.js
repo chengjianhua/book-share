@@ -28,6 +28,7 @@ import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import s from './Settings.scss';
 import LoadingOverlay from '../../common/LoadingOverlay';
 
+import {withRouter} from 'react-router';
 
 const iconButtonElement = (
   <IconButton
@@ -63,14 +64,21 @@ class Settings extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const {username, signature, gender} = nextProps;
+    const {username, profile} = nextProps;
+    const signature = profile.get('signature');
     this.setState({
-      username, signature, gender,
+      username, signature,
     });
   }
 
   handleFormSubmit = (event) => {
     event.preventDefault();
+    const {username, actions, router} = this.props;
+    const profile = Object.assign({}, this.state, {username});
+    actions.updateUserProfile(profile)
+    .then(() => {
+      router.goBack();
+    });
   }
 
   handleUsernameChange = (event, value) => {
@@ -86,14 +94,16 @@ class Settings extends Component {
   }
 
   render() {
-    const {username, signature, gender} = this.state;
+    const {username, signature} = this.state;
     return (
       <div className={s.root}>
-        <form method="post" action="" onSubmit={this.handleFormSubmit}>
+        <form onSubmit={this.handleFormSubmit}>
           <TextField
             fullWidth
             key="username"
             hintText="用户名"
+            floatingLabelFixed
+            floatingLabelText="用户名"
             value={username}
             onChange={this.handleUsernameChange}
           />
@@ -101,7 +111,9 @@ class Settings extends Component {
           <TextField
             fullWidth
             key="signature"
-            hintText="请输入您的密码"
+            hintText="请输入您的签名"
+            floatingLabelFixed
+            floatingLabelText="签名"
             value={signature}
             onChange={this.handleSignatureChange}
           />
@@ -132,4 +144,4 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(s)(Settings));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(s)(withRouter(Settings)));

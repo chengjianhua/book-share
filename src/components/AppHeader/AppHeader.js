@@ -45,8 +45,6 @@ class AppHeader extends Component {
   };
 
   render() {
-    const {username} = this.props;
-
     const iconElementRight = (
       <IconMenu
         iconButtonElement={

@@ -47,3 +47,28 @@ export function fetchUserProfile(username) {
     });
   };
 }
+
+export function updateUserProfile(profile) {
+  const {username} = profile;
+  return function (dispatch) {
+    dispatch({
+      type: ActionTypes.UPDATE_USER_PROFILE_DOING,
+    });
+    return fetchJson(`/api/accounts/${username}/profile`, {
+      method: 'POST',
+      body: JSON.stringify(profile),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+    .then(() => {
+      dispatch({
+        type: ActionTypes.UPDATE_USET_PROFILE_SUCCESS,
+      });
+    }).catch(() => {
+      dispatch({
+        type: ActionTypes.UPDATE_USER_PROFILE_FAILURE,
+      });
+    });
+  };
+}

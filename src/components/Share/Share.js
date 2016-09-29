@@ -1,9 +1,7 @@
 /**
  * Created by cjh95414 on 2016/5/3.
  */
-
 import React, {PropTypes, Component} from 'react';
-import {findDOMNode} from 'react-dom';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 
 import TextField from 'material-ui/TextField';
@@ -19,20 +17,16 @@ import {darkBlack, lightBlack} from 'material-ui/styles/colors';
 import {ListItem} from 'material-ui/List';
 
 import SelectableList from '../common/SelectableList';
-import BookCard from '../BookCard';
 
-//noinspection NpmUsedModulesInstalled
 import 'es6-promise';
-//noinspection NpmUsedModulesInstalled
 import fetch from 'isomorphic-fetch';
 
 import s from './Share.scss';
 
-
 function getStyles() {
   return {
-    smallIcon: {width: 36, height: 36,},
-    small: {width: 72, height: 72, padding: 16,},
+    smallIcon: {width: 36, height: 36},
+    small: {width: 72, height: 72, padding: 16},
     dialogContent: {width: '100%', maxWidth: 'none'},
     avatar: {borderRadius: 0, height: '55px', backgroundRepeat: 'no-repeat', backgroundPosition: 'center'},
   };
@@ -56,10 +50,10 @@ class Share extends Component {
   }
 
   static contextTypes = {
-    router: PropTypes.object.isRequired
+    router: PropTypes.object.isRequired,
   };
 
-  handleOpenSearchDialog = ()=> {
+  handleOpenSearchDialog = () => {
     // the text which user inputted
     const searchText = this.state.bookTitle;
 
@@ -71,20 +65,18 @@ class Share extends Component {
       // if fetch the books' data correctly, then store the result list of search.
       if (!json.msg) {
         this.setState({
-          bookSearchResult: json.books
+          bookSearchResult: json.books,
         });
-
       } else {
         // if fetch the books' data incorrectly, the json data will contain a property 'msg', it's the error info.
-        console.log('Fetching data failed!')
+        console.log('Fetching data failed!');
       }
-
     }.bind(this)).catch(function (ex) {
-      console.log('parsing failed', ex)
+      console.log('parsing failed', ex);
     });
 
     this.setState({
-      openSearchDialog: true
+      openSearchDialog: true,
     });
   };
 
@@ -95,16 +87,16 @@ class Share extends Component {
     });
   };
 
-  handleCancelDialog = ()=> {
+  handleCancelDialog = () => {
     this.handleCloseDialog();
     this.setState({
-      bookSearchResult: []
+      bookSearchResult: [],
     });
   };
 
   handleBookTitleChange = (event, value) => {
     this.setState({
-      bookTitle: value
+      bookTitle: value,
     });
   };
 
@@ -122,12 +114,11 @@ class Share extends Component {
 
   handleSelectBook = (index) => {
     this.setState({
-      selectedIndex: index
-    })
+      selectedIndex: index,
+    });
   };
 
-  handleConfirmDialog = ()=> {
-
+  handleConfirmDialog = () => {
     let selectedIndex = this.state.selectedIndex;
 
     console.log(selectedIndex);
@@ -135,12 +126,11 @@ class Share extends Component {
     let detail = this.state.bookSearchResult[selectedIndex];
 
     this.setState({
-      detail: detail,
-      bookTitle: detail.title
+      detail,
+      bookTitle: detail.title,
     });
 
     this.handleCloseDialog();
-
   };
 
 
@@ -152,26 +142,23 @@ class Share extends Component {
       detail: this.state.detail,
       bookTitle: this.state.bookTitle,
       shareTitle: this.state.shareTitle,
-      shareContent: this.state.shareContent
+      shareContent: this.state.shareContent,
     };
 
     // interact with the server and post the "share" to server then handle returned result.
-    fetch(`/manage/share/add`, {
+    fetch('/manage/share/add', {
       method: 'POST',
       body: JSON.stringify(data),
       headers: {
-        "Content-Type": "application/json"
+        'Content-Type': 'application/json',
       },
     }).then(function (response) {
       return response.json();
     }).then(function (data) {
-
       // If server return a message that indicates the submit is successful, then switching to homepage.
       if (data.isSuccess) {
-
         this.handleOpenAlertDialog();
       }
-
     }.bind(this)).catch(function (ex) {
       console.log('提交分享表单失败', ex);
     });
@@ -180,7 +167,7 @@ class Share extends Component {
   // an alert dialog that remind user who have post submit successfully.
   handleOpenAlertDialog = () => {
     this.setState({
-      openAlertDialog: true
+      openAlertDialog: true,
     });
 
     // 2000ms later, the view switched to homepage.
@@ -190,7 +177,6 @@ class Share extends Component {
   };
 
   render() {
-
     let styles = getStyles();
 
     const dialogActions = [
@@ -200,10 +186,10 @@ class Share extends Component {
       />,
       <FlatButton
         label="确认"
-        keyboardFocused={true}
-        secondary={true}
+        keyboardFocused
+        secondary
         onTouchTap={this.handleConfirmDialog}
-      />
+      />,
     ];
 
     const listItems = this.state.bookSearchResult.map(function (book, index, array) {
@@ -216,15 +202,14 @@ class Share extends Component {
           secondaryText={
               <p>
                 <span style={{color: darkBlack}}>{book.author}</span>
-                  <br/>
+                  <br />
                   {book.publisher}
               </p>
             }
           secondaryTextLines={2}
         />,
-        index + 1 < array.length && <Divider inset={true}/>
+        index + 1 < array.length && <Divider inset />,
       ]);
-
     });
 
     return (
@@ -236,7 +221,7 @@ class Share extends Component {
               value={this.state.bookTitle}
               hintText="告诉大家您想分享的书籍~"
               floatingLabelText="书籍名称"
-              fullWidth={true}
+              fullWidth
               onChange={this.handleBookTitleChange}
             />
             <div className={s.iconSearch}>
@@ -254,7 +239,7 @@ class Share extends Component {
             key="shareTitle"
             hintText="给您的分享一个具有极大吸引力的标题吧~"
             floatingLabelText="分享标题"
-            fullWidth={true}
+            fullWidth
             value={this.state.shareTitle}
             onChange={this.handleShareTitleChange}
           />
@@ -262,8 +247,8 @@ class Share extends Component {
           <TextField
             key="shareContent"
             hintText="将这本令你禁不住分享的书籍中您觉得的很棒的推荐理由告诉大家吧……"
-            fullWidth={true}
-            multiLine={true}
+            fullWidth
+            multiLine
             style={{marginTop: '1rem'}}
             value={this.state.shareContent}
             onChange={this.handleShareContentChange}
@@ -272,7 +257,7 @@ class Share extends Component {
           <div className={s.fixBottom}>
             <RaisedButton
               label="分享"
-              primary={true}
+              primary
               type="submit"
               style={{width: '100%'}}
             />
@@ -285,10 +270,10 @@ class Share extends Component {
           title="书籍搜索结果"
           contentStyle={styles.dialogContent}
           actions={dialogActions}
-          modal={true}
+          modal
           open={this.state.openSearchDialog}
           onRequestClose={this.handleCancelDialog}
-          autoScrollBodyContent={true}
+          autoScrollBodyContent
         >
           <SelectableList ref="bookList" onSelected={this.handleSelectBook}>
             {listItems}
@@ -297,7 +282,7 @@ class Share extends Component {
 
         <Dialog
           key="submitResult"
-          modal={true}
+          modal
           open={this.state.openAlertDialog}
         >
           分享成功

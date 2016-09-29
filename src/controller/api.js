@@ -51,7 +51,7 @@ router.get('/accounts/:username/books', (req, res) => {
 router.get('/accounts/:username/profile', (req, res) => {
   const {username} = req.params;
 
-  User.findUniqueUserByUsername(username, profile => {
+  User.findUniqueUserByUsername(username, (err, profile) => {
     if (!profile) {
       res.status(404).json(formatJson(
         false,
@@ -60,10 +60,24 @@ router.get('/accounts/:username/profile', (req, res) => {
     } else {
       res.json(formatJson(
         true,
-        `Fetch ${username}'s profile successfully.'`,
-        profile
+        `Fetch ${username}'s profile successfully.`, {
+          profile,
+        }
       ));
     }
+  });
+});
+
+router.post('/accounts/:username/profile', (req, res) => {
+  const profile = req.body;
+  console.log(req.body);
+  console.log(profile);
+  User.updateUser(profile)
+  .then(() => {
+    res.json(formatJson(true, `Update ${profile.username}'s profile successfully.'`));
+  })
+  .catch(err => {
+    res.json(formatJson(false, err.message));
   });
 });
 

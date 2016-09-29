@@ -66,7 +66,7 @@ export default ([
 
     <Route path="/user">
       <Route path="profile" component={UserProfile} />
-      <Route path="settings" component={ProfileSettings} onEnter={() => {console.log('enter route profile settings.');}} />
+      <Route path="settings" component={ProfileSettings} />
     </Route>
 
   </Route>,
