@@ -71,7 +71,7 @@ class UserProfile extends Component {
   componentDidMount() {
     const {actions, username} = this.props;
 
-    actions.fetchUserBooks(username);
+    actions.fetchUserBooks(Globals.profile.username);
   }
 
   handleTabChange = (value) => {
@@ -81,7 +81,7 @@ class UserProfile extends Component {
   };
 
   render() {
-    const {books, isLoading} = this.props;
+    const {books, isLoading, profile} = this.props;
 
     const bookList = books.map((book, index) => {
       const shareTitle = book.get('shareTitle');
@@ -124,7 +124,7 @@ class UserProfile extends Component {
           </div>
 
           <div className={s.textContainer}>
-            <p className={s.text}>To be or not to be!</p>
+            <p className={s.text}>{profile.get('signature')}</p>
           </div>
 
           <div className={s.editButton}>
@@ -153,11 +153,11 @@ class UserProfile extends Component {
             </List>
           </Tab>
 
-          <Tab //eslint-disable-line
+          <Tab
             value={1}
             icon={<FontIcon className="material-icons">favorite</FontIcon>}
           >
-
+            {null}
           </Tab>
         </Tabs>
 
@@ -171,6 +171,7 @@ function mapStateToProps(state) {
   return {
     isLoading: state.accounts.getIn(['books', 'isLoading']),
     books: state.accounts.getIn(['books', 'data']),
+    profile: state.accounts.get('profile'),
     username: state.auth.get('username'),
   };
 }

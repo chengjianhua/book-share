@@ -34,10 +34,11 @@ export function removeToken() {
   };
 }
 
-export function writeToken(token) {
+export function writeAuthorization({token, profile}) {
   return function (dispatch) {
     if (canUseDOM) {
       localStorage.setItem('token', token);
+      localStorage.setItem('profile', JSON.stringify(profile));
       dispatch({
         token,
         type: ActionTypes.WRITE_TOKEN_SUCCESS,
@@ -57,7 +58,7 @@ export function authenticate(username, password) {
         'Content-Type': 'application/json',
       },
     }).then(json => {
-      dispatch(writeToken(json.token));
+      dispatch(writeAuthorization(json));
       dispatch(readToken());
       return json;
     });

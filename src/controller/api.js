@@ -70,15 +70,19 @@ router.get('/accounts/:username/profile', (req, res) => {
 
 router.post('/accounts/:username/profile', (req, res) => {
   const profile = req.body;
-  console.log(req.body);
-  console.log(profile);
   User.updateUser(profile)
-  .then(() => {
-    res.json(formatJson(true, `Update ${profile.username}'s profile successfully.'`));
-  })
-  .catch(err => {
-    res.json(formatJson(false, err.message));
-  });
+    .then(() => {
+      res.json(
+        formatJson(
+          true,
+          `Update ${profile.username}'s profile successfully.'`,
+          {profile}
+        )
+      );
+    })
+    .catch(err => {
+      res.json(formatJson(false, err.message));
+    });
 });
 
 export default router;

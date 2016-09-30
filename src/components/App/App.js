@@ -31,15 +31,17 @@ class App extends Component {
   componentDidMount() {
     const {actions} = this.props;
     actions.readToken();
+    console.log(`App.js initialize the app's token.`);
   }
 
   render() {
-    return !this.props.error ? (
+    const {header, children, error} = this.props;
+    return !error ? (
       <div>
-        {this.props.header && this.props.header}
-        {this.props.children}
+        {header}
+        {children}
       </div>
-    ) : this.props.children;
+    ) : children;
   }
 
 }

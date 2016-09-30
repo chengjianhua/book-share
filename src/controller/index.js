@@ -100,8 +100,12 @@ router.post('/authenticate', (req, res) => {
         });
       } else {
         const payload = {
-          username,
+          username: user.username,
+          signature: user.signature,
+          gender: user.gender,
+          id: user._id,
         };
+
         const token = jwt.sign(payload, secret, {
           expiresIn: '1 days',
         });
@@ -110,6 +114,7 @@ router.post('/authenticate', (req, res) => {
           success: true,
           message: 'Enjoy yourself in this awesome app.',
           token,
+          profile: payload,
         });
       }
     }

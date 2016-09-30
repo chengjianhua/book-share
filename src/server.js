@@ -17,7 +17,7 @@ import {match, RouterContext} from 'react-router';
 import routes from './router/routes';
 
 import {Provider} from 'react-redux';
-import Store from './stores/Store';
+import store from './stores/Store';
 
 import indexRouter from './controller/index';
 import apiRouter from './controller/api';
@@ -71,7 +71,7 @@ server.use('/test', testRouter);
 server.get('*', (req, res) => {
   match({routes, location: req.url}, (err, redirectLocation, renderProps) => {
     const template = require('./views/index.jade');
-    const data = {title: 'Book Share', description: '', css: '', body: '', entry: assets.main.js};
+    const data = {title: '图书分享', description: '', css: '', body: '', entry: assets.main.js};
 
     if (err) {
       res.status(500).send(err.message);
@@ -80,8 +80,10 @@ server.get('*', (req, res) => {
     } else if (renderProps || true) { // eslint-disable-line
       const css = [];
 
+      console.log(store.getState());
+
       data.body = renderToString(
-        <Provider store={Store}>
+        <Provider store={store}>
           <WithStylesContext onInsertCss={styles => css.push(styles._getCss())}>
             <RouterContext {...renderProps} />
           </WithStylesContext>

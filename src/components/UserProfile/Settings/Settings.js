@@ -2,7 +2,6 @@ import React, {Component, PropTypes} from 'react';
 import {Link} from 'react-router';
 
 import {List, ListItem} from 'material-ui/List';
-import Subheader from 'material-ui/Subheader';
 // import {Card, CardActions, CardHeader, CardTitle, CardText} from 'material-ui/Card';
 import FontIcon from 'material-ui/FontIcon';
 import Divider from 'material-ui/Divider';
@@ -17,6 +16,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import {grey300, grey400} from 'material-ui/styles/colors';
 // import Paper from 'material-ui/Paper';
 import {Tabs, Tab} from 'material-ui/Tabs';
+import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
 
 import TextField from 'material-ui/TextField';
 
@@ -59,15 +59,14 @@ class Settings extends Component {
   }
 
   componentDidMount() {
-    const {actions, username} = this.props;
-    actions.fetchUserProfile(username);
+    const {actions} = this.props;
+    actions.fetchUserProfile(Globals.profile.username);
   }
 
   componentWillReceiveProps(nextProps) {
-    const {username, profile} = nextProps;
-    const signature = profile.get('signature');
+    const {profile} = nextProps;
     this.setState({
-      username, signature,
+      ...profile.toJS(),
     });
   }
 
@@ -93,8 +92,24 @@ class Settings extends Component {
     });
   }
 
+  handleGenderChange = (event, gender) => {
+    this.setState({
+      gender,
+    });
+  }
+
   render() {
-    const {username, signature} = this.state;
+    const {username, signature, gender} = this.state;
+
+    const styles = {
+      radioButton: {
+        display: 'inline-block',
+        width: '50%',
+      },
+      radioButtonGroup: {
+        padding: '1rem',
+      },
+    };
     return (
       <div className={s.root}>
         <form onSubmit={this.handleFormSubmit}>
@@ -117,6 +132,24 @@ class Settings extends Component {
             value={signature}
             onChange={this.handleSignatureChange}
           />
+
+          <RadioButtonGroup
+            name="gender"
+            style={styles.radioButtonGroup}
+            onChange={this.handleGenderChange}
+            defaultSelected={gender}
+          >
+            <RadioButton
+              value="male"
+              label="男同学"
+              style={styles.radioButton}
+            />
+            <RadioButton
+              value="female"
+              label="女同学"
+              style={styles.radioButton}
+            />
+          </RadioButtonGroup>
 
           <RaisedButton
             key="login-button"

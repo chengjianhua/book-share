@@ -20,7 +20,7 @@ class BookCardPage extends Component {
   //   super(props);
   // }
 
-  componentDidMount() {
+  componentWillMount() {
     const {page} = this.props;
     if (page === 1) {
       this.loadBooksByPage(1);

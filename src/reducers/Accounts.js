@@ -9,6 +9,7 @@ const defaultState = new Map({
   profile: new Map({
     username: '',
     signature: '',
+    gender: '',
   }),
 });
 

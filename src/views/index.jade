@@ -11,13 +11,18 @@ html(class="no-js", lang="")
     style#css!= css
   body
     #app!= body
+    script.
+      var Globals = {
+        get token() {
+          return localStorage.getItem('token');
+        },
+        get profile() {
+          return JSON.parse(localStorage.getItem('profile'));
+        }
+      };
     script(src=entry)
     script.
       window.ga=function(){ga.q.push(arguments)};ga.q=[];ga.l=+new Date;
       ga('create','#{trackingId}','auto');ga('send','pageview')
     if trackingId
       script(src="https://www.google-analytics.com/analytics.js", async=true, defer=true)
-    script.
-      var Globals = {
-        token: localStorage.getItem('token')
-      };

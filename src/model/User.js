@@ -55,7 +55,11 @@ class User {
           username,
         },
         {
-          $set: user,
+          $set: {
+            username,
+            signature: user.signature,
+            gender: user.gender,
+          },
         },
         (err, result) => {
           if (err) {

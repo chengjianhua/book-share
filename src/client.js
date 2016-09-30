@@ -14,6 +14,8 @@ import Store from './stores/Store';
 
 import WithStylesContext from './components/WithStylesContext';
 
+import {fetchJson} from './core/fetch';
+
 injectTapEventPlugin();
 
 const appContainer = document.getElementById('app');
@@ -42,6 +44,11 @@ function render(state) {
       </WithStylesContext>
     </Provider>, appContainer
   );
+}
+
+function initProfile() {
+  const
+  fetchJson('/api/')
 }
 
 function run() {
@@ -83,8 +90,6 @@ function run() {
     removeEventListener(window, 'scroll', setPageOffset);
     unlisten();
   });
-
-  console.log('Client script is running !'); // eslint-disable-line
 }
 
 // Run the application when both DOM is ready and page content is loaded

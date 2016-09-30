@@ -6,6 +6,8 @@ import {fromJS} from 'immutable';
 
 import {doubanAPI} from '../config'; // eslint-disable-line
 
+import {canUseDOM} from 'exenv';
+
 export function fetchUserBooks(username) {
   return function (dispatch) {
     dispatch({
@@ -61,7 +63,10 @@ export function updateUserProfile(profile) {
         'Content-Type': 'application/json',
       },
     })
-    .then(() => {
+    .then((json) => {
+      if (canUseDOM) {
+        localStorage.setItem('profile', JSON.stringify(json.profile));
+      }
       dispatch({
         type: ActionTypes.UPDATE_USET_PROFILE_SUCCESS,
       });
