@@ -14,7 +14,7 @@ import Store from './stores/Store';
 
 import WithStylesContext from './components/WithStylesContext';
 
-import {fetchJson} from './core/fetch';
+// import {fetchJson} from './core/fetch';
 
 injectTapEventPlugin();
 
@@ -44,11 +44,6 @@ function render(state) {
       </WithStylesContext>
     </Provider>, appContainer
   );
-}
-
-function initProfile() {
-  const
-  fetchJson('/api/')
 }
 
 function run() {

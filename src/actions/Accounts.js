@@ -36,6 +36,9 @@ export function fetchUserProfile(username) {
     });
     fetchJson(`/api/accounts/${username}/profile`)
     .then(json => {
+      if (canUseDOM) {
+        localStorage.setItem('profile', JSON.stringify(json.profile));
+      }
       dispatch({
         type: ActionTypes.FETCH_USER_PROFILE_SUCCESS,
         data: fromJS(json.profile),
@@ -69,6 +72,7 @@ export function updateUserProfile(profile) {
       }
       dispatch({
         type: ActionTypes.UPDATE_USET_PROFILE_SUCCESS,
+        data: fromJS(json.profile),
       });
     }).catch(() => {
       dispatch({

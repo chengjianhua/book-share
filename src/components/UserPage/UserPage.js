@@ -16,6 +16,8 @@ import withStyles from 'isomorphic-style-loader/lib/withStyles';
 
 import s from './UserPage.scss';
 
+import {connect} from 'react-redux';
+
 class UserPage extends Component {
 
   static propTypes = {
@@ -25,9 +27,7 @@ class UserPage extends Component {
   };
 
   static defaultProps = {
-    username: 'chengjianhua',
     avatar: 'http://lorempixel.com/100/100/nature/',
-    signature: 'To be or not to be!',
   };
 
   render() {
@@ -46,13 +46,16 @@ class UserPage extends Component {
       },
     };
 
+    const {avatar, profile} = this.props;
+    const {username, signature} = profile;
+
     return (
       <div className={s.root}>
         <Card >
           <CardHeader
-            title={this.props.username}
-            subtitle={this.props.signature}
-            avatar={this.props.avatar}
+            title={username}
+            subtitle={signature}
+            avatar={avatar}
           >
             <Link to="/user/profile">
               <IconButton style={style.iconStyle}>
@@ -95,4 +98,6 @@ class UserPage extends Component {
   }
 }
 
-export default withStyles(s)(UserPage);
+export default connect(state => ({
+  profile: state.accounts.get('profile').toJS(),
+}))(withStyles(s)(UserPage));

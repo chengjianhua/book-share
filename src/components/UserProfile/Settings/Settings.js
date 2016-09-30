@@ -137,7 +137,7 @@ class Settings extends Component {
             name="gender"
             style={styles.radioButtonGroup}
             onChange={this.handleGenderChange}
-            defaultSelected={gender}
+            valueSelected={gender}
           >
             <RadioButton
               value="male"

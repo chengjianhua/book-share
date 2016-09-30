@@ -36,6 +36,15 @@ function fetchUserProfile(state, action) {
   }
 }
 
+function updateUserProfile(state, action) {
+  switch (action.type) {
+    case ActionTypes.UPDATE_USER_PROFILE_SUCCESS:
+      return state.set('profile', action.data);
+    default:
+      return state;
+  }
+}
+
 export default function accounts(state = defaultState, action) {
   switch (action.type) {
     case ActionTypes.FETCH_USER_BOOKS_DOING:
@@ -46,6 +55,8 @@ export default function accounts(state = defaultState, action) {
     case ActionTypes.FETCH_USER_PROFILE_SUCCESS:
     case ActionTypes.FETCH_USER_PROFILE_FAILURE:
       return fetchUserProfile(state, action);
+    case ActionTypes.UPDATE_USER_PROFILE_SUCCESS:
+      return updateUserProfile(state, action);
     default:
       return state;
   }
