@@ -6,6 +6,8 @@ import log4js from 'log4js';
 
 const logger = log4js.getLogger('Model[User]');
 
+const userCollection = connect.then((db) => db.collection('user'));
+
 class User {
 
   /**
@@ -14,8 +16,8 @@ class User {
    * @param callback 所需的回调函数
    */
   static findUniqueUserByUsername(username, callback) {
-    connect.then((db) => {
-      db.collection('user').find({username}).limit(1).next((err, user) => {
+    userCollection.then(db => {
+      db.find({username}).limit(1).next((err, user) => {
         if (!!user) {
           logger.info(`Found ${username}'s information.'`);
           return callback(null, user);
@@ -25,6 +27,23 @@ class User {
       });
     });
   }
+  // /**
+  //  * @description 根据用户名获得信息
+  //  * @param username 用户名
+  //  * @param callback 所需的回调函数
+  //  */
+  // static findUniqueUserByUsername(username, callback) {
+  //   connect.then((db) => {
+  //     db.collection('user').find({username}).limit(1).next((err, user) => {
+  //       if (!!user) {
+  //         logger.info(`Found ${username}'s information.'`);
+  //         return callback(null, user);
+  //       }
+  //       logger.warn(`Not found ${username}'s information.'`);
+  //       return callback(null);
+  //     });
+  //   });
+  // }
 
 
   /**
@@ -33,8 +52,8 @@ class User {
    * @param callback(result) 插入成功后要执行的操作
    */
   static addUser(user, callback) {
-    connect.then((db) => {
-      db.collection('user').insertOne(user, (err, result) => {
+    userCollection.then(db => {
+      db.insertOne(user, (err, result) => {
         if (err) {
           logger.error(`Add user ${user.username} failed.`, err);
         }
@@ -49,8 +68,8 @@ class User {
 
   static updateUser(user) {
     const {username} = user;
-    return connect.then(db => new Promise((resolve, reject) => {
-      db.collection('user').updateOne(
+    return userCollection.then(db => new Promise((resolve, reject) => {
+      db.updateOne(
         {
           username,
         },

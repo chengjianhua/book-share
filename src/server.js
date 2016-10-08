@@ -1,18 +1,20 @@
 import 'babel-polyfill';
 import path from 'path';
 import express from 'express';
+import expressGraphQL from 'express-graphql';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 import cors from 'cors';
-import expressGraphQL from 'express-graphql';
-import {renderToString} from 'react-dom/server';
+import session from 'express-session';
 import PrettyError from 'pretty-error';
 
 import schema from './data/schema';
 import assets from './assets';
 import {port, auth} from './config';
+import mongodbConnect from './database/db';
 
 import React from 'react';
+import {renderToString} from 'react-dom/server';
 import {match, RouterContext} from 'react-router';
 import routes from './router/routes';
 
@@ -27,6 +29,7 @@ import {loggerAccess} from './controller/middlewares';
 import WithStylesContext from './components/WithStylesContext';
 
 const server = global.server = express();
+const MongoStore = require('connect-mongo')(session);
 
 //
 // Tell any CSS tooling (such as Material UI) to use all vendor prefixes if the
@@ -48,10 +51,18 @@ server.use(bodyParser.json());
 //
 // Authentication
 // -----------------------------------------------------------------------------
-server.set('secret', auth.jwt.secret);
-
 server.use(cors());
+server.use(session({
+  secret: auth.session.secret,
+  resave: false,
+  saveUninitialized: false,
+  store: new MongoStore({dbPromise: mongodbConnect}),
+}));
 
+/**
+ *
+ * Tool middlewares
+ */
 server.use(loggerAccess);
 
 //
@@ -77,10 +88,8 @@ server.get('*', (req, res) => {
       res.status(500).send(err.message);
     } else if (redirectLocation) {
       res.redirect(302, redirectLocation.pathname + redirectLocation.search);
-    } else if (renderProps || true) { // eslint-disable-line
+    } else if (renderProps) {
       const css = [];
-
-      console.log(store.getState());
 
       data.body = renderToString(
         <Provider store={store}>

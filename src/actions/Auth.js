@@ -2,18 +2,21 @@ import ActionTypes from '../constants/ActionTypes';
 import {fetchJson} from '../core/fetch';
 import {canUseDOM} from 'exenv';
 import jwtDecode from 'jwt-decode';
+import {fromJS} from 'immutable';
 
 /* eslint-disable consistent-return */
 export function readToken() {
   return function (dispatch) {
     if (canUseDOM) {
       const token = localStorage.getItem('token');
+      const profile = localStorage.getItem('profile');
       if (token) {
         const decoded = jwtDecode(token);
         dispatch({
           type: ActionTypes.READ_TOKEN_SUCCESS,
           token,
           username: decoded ? decoded.username : '',
+          profile: fromJS(profile),
         });
         dispatch({
           type: ActionTypes.AUTHENTICATE_USER_SUCCESS,

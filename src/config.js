@@ -19,11 +19,11 @@ export const auth = {
 
   jwt: {
     secret: process.env.JWT_SECRET || 'bookshare',
-    database: 'mongodb://chengjianhua:950414@ds035806.mlab.com:35806/book-share',
   },
 
   session: {
     secret: 'bookshare',
+    database: 'mongodb://chengjianhua:950414@ds035806.mlab.com:35806/book-share',
   },
 
   // https://developers.facebook.com/
