@@ -25,6 +25,7 @@ import indexRouter from './controller/index';
 import apiRouter from './controller/api';
 import testRouter from './controller/test';
 import {loggerAccess} from './controller/middlewares';
+import passport from './core/passport';
 
 import WithStylesContext from './components/WithStylesContext';
 
@@ -47,17 +48,19 @@ server.use(cookieParser(auth.session.secret));
 server.use(bodyParser.urlencoded({extended: true}));
 server.use(bodyParser.json());
 
-
 //
 // Authentication
 // -----------------------------------------------------------------------------
 server.use(cors());
 server.use(session({
   secret: auth.session.secret,
-  resave: false,
-  saveUninitialized: false,
+  resave: true,
+  saveUninitialized: true,
   store: new MongoStore({dbPromise: mongodbConnect}),
 }));
+server.use(passport.initialize());
+server.use(passport.session());
+server.use(passport.loggerMiddleware());
 
 /**
  *
@@ -75,14 +78,20 @@ server.use('/graphql', expressGraphQL(req => ({
   pretty: process.env.NODE_ENV !== 'production',
 })));
 
-server.use('/manage', indexRouter);
 server.use('/api', apiRouter);
+server.use('/manage', indexRouter);
 server.use('/test', testRouter);
 
 server.get('*', (req, res) => {
   match({routes, location: req.url}, (err, redirectLocation, renderProps) => {
     const template = require('./views/index.jade');
-    const data = {title: '图书分享', description: '', css: '', body: '', entry: assets.main.js};
+    const data = {
+      title: '图书分享',
+      description: '',
+      css: '',
+      body: '',
+      entry: assets.main.js,
+    };
 
     if (err) {
       res.status(500).send(err.message);

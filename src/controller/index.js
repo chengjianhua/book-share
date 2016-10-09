@@ -11,6 +11,7 @@ import User from '../model/User';
 
 import {formatJson} from './utils';
 import {authenticateToken} from './middlewares';
+import passport from '../core/passport';
 
 const logger = log4js.getLogger('controller/index.js');
 
@@ -79,7 +80,7 @@ router.post('/register', (req, res) => {
   });
 });
 
-router.post('/authenticate', (req, res) => {
+router.post('/authenticate', passport.authenticate('local'), (req, res) => {
   const {secret} = auth.jwt;
   const {username, password} = req.body;
   User.findUniqueUserByUsername(username, (err, user) => {
@@ -109,7 +110,6 @@ router.post('/authenticate', (req, res) => {
         const token = jwt.sign(payload, secret, {
           expiresIn: '1 days',
         });
-
         res.json({
           success: true,
           message: 'Enjoy yourself in this awesome app.',

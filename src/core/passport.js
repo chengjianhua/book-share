@@ -1,58 +1,64 @@
 /**
  * Created by cjh95414 on 2016/6/6.
  */
-
 import passport from 'passport';
 import LocalStrategy from 'passport-local';
 
 import User from '../model/User';
 
-passport.use(new LocalStrategy(
-  function (username, password, done) {
-    User.findUniqueUserByUsername(username, function (err, user) {
+import log4js from 'log4js';
 
-      if (err) {
-        console.log('出现错误.');
-        return done(err);
-      }
-      if (!user) {
-        console.log('没有找到对应的用户名.');
+const logger = log4js.getLogger('passport');
 
-        return done(null, false, {message: '没有找到对应的用户名.'});
-      }
-      if (user.password != password) {
-        console.log('密码匹配有误.');
+/* eslint-disable no-console */
+passport.use(new LocalStrategy((username, password, done) => {
+  User.findUniqueUserByUsername(username, (err, user) => {
+    if (err) {
+      console.log('出现错误.');
+      return done(err);
+    }
+    if (!user) {
+      console.log('没有找到对应的用户名.');
 
-        return done(null, false, {message: '密码匹配有误.'});
-      }
+      return done(null, false, {message: '没有找到对应的用户名.'});
+    }
+    if (user.password !== password) {
+      console.log('密码匹配有误.');
 
-      return done(null, user);
-    });
-  }
-));
+      return done(null, false, {message: '密码匹配有误.'});
+    }
+
+    return done(null, user);
+  });
+}));
 
 
-passport.serializeUser(function (user, done) {
+passport.serializeUser((user, done) => {
+  console.log('passport.serializeUser');
   done(null, user.username);
 });
 
-passport.deserializeUser(function (username, done) {
-  User.findUniqueUserByUsername(username, function (err, user) {
+passport.deserializeUser((username, done) => {
+  console.log('passport.deserializeUser');
+  User.findUniqueUserByUsername(username, (err, user) => {
     if (err) {
       return done(err);
     }
-    done(null, user);
+    return done(null, user);
   });
 });
 
-passport.authenticateMiddleware = function authenticationMiddleware() {
-  return function (req, res, next) {
-    if (req.isAuthenticated()) {
-      return next();
-    }
-    res.redirect('/login');
+passport.authenticateMiddleware = () => function (req, res, next) {
+  if (req.isAuthenticated()) {
+    return next();
   }
+  return res.redirect('/sign');
 };
 
+passport.loggerMiddleware = () => (req, res, next) => {
+  logger.debug(`username ${req.user ? req.user.username : null} has saved into session.`);
+  console.log(req.session);
+  next();
+};
 
 export default passport;

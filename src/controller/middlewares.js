@@ -49,7 +49,7 @@ function authenticateToken(req, res, next) {
 authenticateToken.unless = unless;
 
 function loggerAccess(req, res, next) {
-  logger.debug(`${req.url}`);
+  logger.info(`${req.url}`);
   return next();
 }
 
