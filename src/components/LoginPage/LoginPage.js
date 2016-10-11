@@ -32,19 +32,21 @@ class LoginPage extends Component {
 
   handleFormSubmit = (event) => {
     event.preventDefault();
-    const {actions} = this.props;
-    const {username, password} = this.state;
+    // const {actions} = this.props;
+    // const {username, password} = this.state;
 
-    actions.authenticate(username, password)
-    .then(() => {
-      this.setState({
-        openAlertDialog: true,
-      }, () => {
-        setTimeout(() => {
-          this.context.router.push('/');
-        }, 2000);
-      });
-    });
+    this.form.submit();
+
+    // actions.authenticate(username, password)
+    // .then(() => {
+    //   this.setState({
+    //     openAlertDialog: true,
+    //   }, () => {
+    //     setTimeout(() => {
+    //       // this.context.router.push('/');
+    //     }, 2000);
+    //   });
+    // });
   };
 
   handleUsernameChange = (event, value) => {
@@ -67,18 +69,25 @@ class LoginPage extends Component {
     const {username, password, openAlertDialog} = this.state;
     return (
       <div className={s.root}>
-        <form method="post" action="" onSubmit={this.handleFormSubmit}>
+        <form
+          ref={(ref) => {this.form = ref;}}
+          method="post"
+          action="/manage/authenticate"
+          onSubmit={this.handleFormSubmit}
+        >
           <TextField
-            key="login-username"
-            hintText="请输入您的用户名"
             fullWidth
+            key="login-username"
+            name="username"
+            hintText="请输入您的用户名"
             value={username}
             onChange={this.handleUsernameChange}
           />
 
           <TextField
-            key="login-password"
             fullWidth
+            key="login-password"
+            name="password"
             hintText="请输入您的密码"
             type="password"
             value={password}

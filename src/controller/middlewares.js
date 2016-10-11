@@ -3,7 +3,7 @@ import unless from 'express-unless';
 import log4js from 'log4js';
 import {auth} from '../config';
 
-const logger = log4js.getLogger('Access');
+const logger = log4js.getLogger('Authorize');
 
 /* eslint-disable consistent-return */
 /* eslint-disable no-else-return */
@@ -17,6 +17,7 @@ function authenticateToken(req, res, next) {
     token = infos[1];
 
     if (schema !== 'Bearer') {
+      logger.warn(`Wrong schema "${schema}" request header "Authorization".`);
       return res.status(403).json({
         success: false,
         message: `Wrong schema "${schema}" request header "Authorization".`,
@@ -29,6 +30,7 @@ function authenticateToken(req, res, next) {
   if (token) {
     jwt.verify(token, secret, (err, decoded) => {
       if (err) {
+        logger.warn('Token is invalid.');
         return res.status(403).json({
           success: false,
           message: 'Failed to authenticate token.',
@@ -40,6 +42,7 @@ function authenticateToken(req, res, next) {
       }
     });
   } else {
+    logger.warn('No token provided.');
     return res.status(403).json({
       success: false,
       message: 'No token provided',
@@ -48,12 +51,7 @@ function authenticateToken(req, res, next) {
 }
 authenticateToken.unless = unless;
 
-function loggerAccess(req, res, next) {
-  logger.info(`${req.url}`);
-  return next();
-}
 
 export {
   authenticateToken,
-  loggerAccess,
 };

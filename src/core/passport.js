@@ -1,12 +1,12 @@
 /**
  * Created by cjh95414 on 2016/6/6.
  */
+import unless from 'express-unless';
+import log4js from 'log4js';
 import passport from 'passport';
 import LocalStrategy from 'passport-local';
 
 import User from '../model/User';
-
-import log4js from 'log4js';
 
 const logger = log4js.getLogger('passport');
 
@@ -19,12 +19,10 @@ passport.use(new LocalStrategy((username, password, done) => {
     }
     if (!user) {
       console.log('没有找到对应的用户名.');
-
       return done(null, false, {message: '没有找到对应的用户名.'});
     }
     if (user.password !== password) {
       console.log('密码匹配有误.');
-
       return done(null, false, {message: '密码匹配有误.'});
     }
 
@@ -32,14 +30,11 @@ passport.use(new LocalStrategy((username, password, done) => {
   });
 }));
 
-
 passport.serializeUser((user, done) => {
-  console.log('passport.serializeUser');
   done(null, user.username);
 });
 
 passport.deserializeUser((username, done) => {
-  console.log('passport.deserializeUser');
   User.findUniqueUserByUsername(username, (err, user) => {
     if (err) {
       return done(err);
@@ -48,16 +43,20 @@ passport.deserializeUser((username, done) => {
   });
 });
 
-passport.authenticateMiddleware = () => function (req, res, next) {
-  if (req.isAuthenticated()) {
-    return next();
-  }
-  return res.redirect('/sign');
+passport.authenticateMiddleware = () => {
+  const middleware = (req, res, next) => {
+    if (req.isAuthenticated()) {
+      return next();
+    }
+    return res.redirect('/sign');
+  };
+
+  middleware.unless = unless;
+  return middleware;
 };
 
 passport.loggerMiddleware = () => (req, res, next) => {
-  logger.debug(`username ${req.user ? req.user.username : null} has saved into session.`);
-  console.log(req.session);
+  logger.debug(`username ${req.user ? req.user.username : null} has found in session.`);
   next();
 };
 

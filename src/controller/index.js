@@ -22,32 +22,6 @@ router.use(authenticateToken.unless({
   path: ['/register', '/authenticate'],
 }));
 
-/**
- * [ share/add ]： 处理添加分享的请求
- */
-router.post('/share/add', (req, res) => {
-  const {username} = req.user;
-
-  // 请求中传入的数据
-  const {detail, bookTitle, shareTitle, shareContent} = req.body;
-
-  // 将要插入的数据
-  const share = {
-    bookId: detail ? detail.id : null,
-    bookTitle,
-    shareTitle,
-    shareContent,
-    username,
-  };
-
-  Book.addShareBook(share, (result) => {
-    logger.info(`[ObjectId = ${result.insertedId}]: Inserted a book into mongodb.`);
-    res.json(formatJson(true, 'Add a book share successfully.', {
-      id: result.insertedId,
-    }));
-  });
-});
-
 router.post('/comment/add/:id', (req, res) => {
   const shareId = req.params.id;
   const comment = Object.assign({}, req.body, {user: req.user.username});
@@ -110,12 +84,15 @@ router.post('/authenticate', passport.authenticate('local'), (req, res) => {
         const token = jwt.sign(payload, secret, {
           expiresIn: '1 days',
         });
-        res.json({
-          success: true,
-          message: 'Enjoy yourself in this awesome app.',
-          token,
-          profile: payload,
-        });
+
+        // res.json({
+        //   success: true,
+        //   message: 'Enjoy yourself in this awesome app.',
+        //   token,
+        //   profile: payload,
+        // });
+
+        res.redirect('/');
       }
     }
   });

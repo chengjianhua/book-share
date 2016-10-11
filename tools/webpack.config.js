@@ -101,9 +101,9 @@ const config = {
 
   postcss: function plugins(bundler) {
     return [
-      require('postcss-import')({ addDependencyTo: bundler }),
+      require('postcss-import')({addDependencyTo: bundler}),
       require('precss')(),
-      require('autoprefixer')({ browsers: AUTOPREFIXER_BROWSERS }),
+      require('autoprefixer')({browsers: AUTOPREFIXER_BROWSERS}),
     ];
   },
 };
@@ -124,7 +124,7 @@ const clientConfig = extend(true, {}, config, {
   devtool: DEBUG ? 'eval-source-map' : false,
   plugins: [
     ...config.plugins,
-    new webpack.DefinePlugin({ ...GLOBALS, 'process.env.BROWSER': true }),
+    new webpack.DefinePlugin({...GLOBALS, 'process.env.BROWSER': true}),
     new AssetsPlugin({
       path: path.join(__dirname, '../build'),
       filename: 'assets.js',
@@ -179,9 +179,9 @@ const serverConfig = extend(true, {}, config, {
   devtool: 'source-map',
   plugins: [
     ...config.plugins,
-    new webpack.DefinePlugin({ ...GLOBALS, 'process.env.BROWSER': false }),
+    new webpack.DefinePlugin({...GLOBALS, 'process.env.BROWSER': false}),
     new webpack.BannerPlugin('require("source-map-support").install();',
-      { raw: true, entryOnly: false }),
+      {raw: true, entryOnly: false}),
   ],
 });
 

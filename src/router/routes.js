@@ -15,7 +15,9 @@ import Share from '../components/Share';
 import AppHeader from '../components/AppHeader';
 import PageHeader from '../components/PageHeader';
 
-import store from '../stores/Store';
+import buildStore from '../store/buildStore';
+
+const store = buildStore();
 
 /**
  * @description 如果用户没有登录则重定向到登录页面
@@ -53,7 +55,7 @@ export default ([
 
   <Route path="/" component={AppIndex}>
     <IndexRoute component={BookCardPage} />
-    <Route path="user" component={UserPage} onEnter={redirectToLogin} />
+    <Route path="user" component={UserPage} />
   </Route>,
 
   <Route component={AppPage}>

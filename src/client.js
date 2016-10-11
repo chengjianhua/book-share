@@ -10,13 +10,15 @@ import {Router, browserHistory} from 'react-router';
 import routes from './router/routes';
 
 import {Provider} from 'react-redux';
-import Store from './stores/Store';
+import buildStore from './store/buildStore';
 
 import WithStylesContext from './components/WithStylesContext';
 
+injectTapEventPlugin();
+
 // import {fetchJson} from './core/fetch';
 
-injectTapEventPlugin();
+const store = buildStore();
 
 const appContainer = document.getElementById('app');
 
@@ -38,7 +40,7 @@ function render(state) {
   //  });
 
   ReactDOM.render(
-    <Provider store={Store}>
+    <Provider store={store}>
       <WithStylesContext onInsertCss={styles => styles._insertCss()}>
         <Router history={browserHistory} routes={routes} />
       </WithStylesContext>

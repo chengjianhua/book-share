@@ -1,11 +1,12 @@
 import 'babel-polyfill';
 import path from 'path';
+import cors from 'cors';
 import express from 'express';
-import expressGraphQL from 'express-graphql';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
-import cors from 'cors';
+import expressGraphQL from 'express-graphql';
 import session from 'express-session';
+import morgan from 'morgan';
 import PrettyError from 'pretty-error';
 
 import schema from './data/schema';
@@ -19,12 +20,11 @@ import {match, RouterContext} from 'react-router';
 import routes from './router/routes';
 
 import {Provider} from 'react-redux';
-import store from './stores/Store';
+import buildStore from './store/buildStore';
 
 import indexRouter from './controller/index';
 import apiRouter from './controller/api';
 import testRouter from './controller/test';
-import {loggerAccess} from './controller/middlewares';
 import passport from './core/passport';
 
 import WithStylesContext from './components/WithStylesContext';
@@ -47,30 +47,19 @@ server.use(express.static(path.join(__dirname, 'public')));
 server.use(cookieParser(auth.session.secret));
 server.use(bodyParser.urlencoded({extended: true}));
 server.use(bodyParser.json());
-
-//
-// Authentication
-// -----------------------------------------------------------------------------
 server.use(cors());
-server.use(session({
-  secret: auth.session.secret,
-  resave: true,
-  saveUninitialized: true,
-  store: new MongoStore({dbPromise: mongodbConnect}),
-}));
-server.use(passport.initialize());
-server.use(passport.session());
-server.use(passport.loggerMiddleware());
 
 /**
  *
  * Tool middlewares
  */
-server.use(loggerAccess);
+server.use(morgan('dev'));
 
 //
 // Register API middleware
 // -----------------------------------------------------------------------------
+// api don't need to be check cookie.
+server.use('/api', apiRouter);
 server.use('/graphql', expressGraphQL(req => ({
   schema,
   graphiql: true,
@@ -78,13 +67,29 @@ server.use('/graphql', expressGraphQL(req => ({
   pretty: process.env.NODE_ENV !== 'production',
 })));
 
-server.use('/api', apiRouter);
-server.use('/manage', indexRouter);
-server.use('/test', testRouter);
+//
+// Authentication
+// -----------------------------------------------------------------------------
+server.use(session({
+  secret: auth.session.secret,
+  resave: true,
+  saveUninitialized: false,
+  store: new MongoStore({dbPromise: mongodbConnect}),
+}));
+server.use(passport.initialize());
+server.use(passport.session());
+server.use(passport.loggerMiddleware());
+server.use(passport.authenticateMiddleware().unless({
+  useOriginalUrl: false,
+  path: ['/', '/sign'],
+}));
 
 server.get('*', (req, res) => {
   match({routes, location: req.url}, (err, redirectLocation, renderProps) => {
     const template = require('./views/index.jade');
+    const css = [];
+    const store = buildStore();
+
     const data = {
       title: '图书分享',
       description: '',
@@ -98,8 +103,6 @@ server.get('*', (req, res) => {
     } else if (redirectLocation) {
       res.redirect(302, redirectLocation.pathname + redirectLocation.search);
     } else if (renderProps) {
-      const css = [];
-
       data.body = renderToString(
         <Provider store={store}>
           <WithStylesContext onInsertCss={styles => css.push(styles._getCss())}>
@@ -108,12 +111,16 @@ server.get('*', (req, res) => {
         </Provider>
       );
 
+      data.css = css.join('');
+
       res.status(200).send(template(data));
     } else {
       res.status(404).send('Not found');
     }
-  }); // ~match
+  });
 });
+server.use('/manage', indexRouter);
+server.use('/test', testRouter);
 
 //
 // Error handling

@@ -3,10 +3,13 @@ import thunk from 'redux-thunk';
 
 import reducers from '../reducers';
 
-export default createStore(
+const buildStore = (initialState = {}) => createStore(
   reducers,
+  initialState,
   compose(
     applyMiddleware(thunk),
     typeof window !== 'undefined' && window.devToolsExtension ? window.devToolsExtension() : f => f
   )
 );
+
+export default buildStore;
