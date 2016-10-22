@@ -3,9 +3,7 @@
  */
 import express from 'express';
 import log4js from 'log4js';
-import jwt from 'jsonwebtoken';
 
-import {auth} from '../config';
 import Book from '../model/Book';
 import User from '../model/User';
 
@@ -55,7 +53,6 @@ router.post('/register', (req, res) => {
 });
 
 router.post('/authenticate', passport.authenticate('local'), (req, res) => {
-  const {secret} = auth.jwt;
   const {username, password} = req.body;
   User.findUniqueUserByUsername(username, (err, user) => {
     if (err) {
@@ -74,24 +71,6 @@ router.post('/authenticate', passport.authenticate('local'), (req, res) => {
           message: 'Authentication failed. Wrong password.',
         });
       } else {
-        const payload = {
-          username: user.username,
-          signature: user.signature,
-          gender: user.gender,
-          id: user._id,
-        };
-
-        const token = jwt.sign(payload, secret, {
-          expiresIn: '1 days',
-        });
-
-        // res.json({
-        //   success: true,
-        //   message: 'Enjoy yourself in this awesome app.',
-        //   token,
-        //   profile: payload,
-        // });
-
         res.redirect('/');
       }
     }

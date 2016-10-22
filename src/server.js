@@ -81,7 +81,7 @@ server.use(passport.session());
 server.use(passport.loggerMiddleware());
 server.use(passport.authenticateMiddleware().unless({
   useOriginalUrl: false,
-  path: ['/', '/sign'],
+  path: ['/', '/sign', '/manage/authenticate'],
 }));
 
 server.get('*', (req, res) => {

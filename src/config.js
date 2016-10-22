@@ -1,9 +1,10 @@
 export const port = process.env.PORT || 3000;
 export const host = process.env.WEBSITE_HOSTNAME || `localhost:${port}`;
 
-export const mongodbUrl = 'mongodb://123.206.6.150:27017/book_share';
+export const mongodbUrl = 'mongodb://chengjianhua:950414@ds035806.mlab.com:35806/book-share';
 
-export const doubanAPI = 'http://123.206.6.150:9000/v2/book';
+// export const doubanAPI = 'http://123.206.6.150:9000/v2/book';
+export const doubanAPI = 'http://localhost:9000/v2/book';
 // export const doubanAPI = 'https://api.douban.com';
 
 export const analytics = {
