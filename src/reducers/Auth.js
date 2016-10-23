@@ -14,8 +14,6 @@ function auth(state = defaultState, action) {
     case ActionTypes.READ_TOKEN_SUCCESS:
       return state.set('token', action.token)
         .set('username', action.username);
-    case ActionTypes.WRITE_TOKEN_SUCCESS:
-      return state.set('token', action.token);
     case ActionTypes.REMOVE_TOKEN_SUCCESS:
       return state.set('token', null);
     default:

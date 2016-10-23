@@ -1,6 +1,7 @@
 import 'babel-polyfill';
 import path from 'path';
 import cors from 'cors';
+import compress from 'compression';
 import express from 'express';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
@@ -8,6 +9,9 @@ import expressGraphQL from 'express-graphql';
 import session from 'express-session';
 import morgan from 'morgan';
 import PrettyError from 'pretty-error';
+
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 import schema from './data/schema';
 import assets from './assets';
@@ -33,17 +37,11 @@ const server = global.server = express();
 const MongoStore = require('connect-mongo')(session);
 
 //
-// Tell any CSS tooling (such as Material UI) to use all vendor prefixes if the
-// user agent is not known.
-// -----------------------------------------------------------------------------
-global.navigator = global.navigator || {};
-global.navigator.userAgent = global.navigator.userAgent || 'all';
-
-//
 // Register Node.js middleware
 // -----------------------------------------------------------------------------
-server.enable('trust proxy');
+server.use(compress());
 server.use(express.static(path.join(__dirname, 'public')));
+server.enable('trust proxy');
 server.use(cookieParser(auth.session.secret));
 server.use(bodyParser.urlencoded({extended: true}));
 server.use(bodyParser.json());
@@ -103,10 +101,17 @@ server.get('*', (req, res) => {
     } else if (redirectLocation) {
       res.redirect(302, redirectLocation.pathname + redirectLocation.search);
     } else if (renderProps) {
+      const muiTheme = getMuiTheme({userAgent: req.headers['user-agent']});
+      global.navigator = {
+        userAgent: req.headers['user-agent'],
+      };
+
       data.body = renderToString(
         <Provider store={store}>
           <WithStylesContext onInsertCss={styles => css.push(styles._getCss())}>
-            <RouterContext {...renderProps} />
+            <MuiThemeProvider muiTheme={muiTheme}>
+              <RouterContext {...renderProps} />
+            </MuiThemeProvider>
           </WithStylesContext>
         </Provider>
       );

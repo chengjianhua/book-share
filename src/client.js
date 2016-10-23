@@ -1,30 +1,38 @@
 import 'babel-polyfill';
 import React from 'react';
 import ReactDOM from 'react-dom';
+import {Router, browserHistory} from 'react-router';
+import {Provider} from 'react-redux';
+import injectTapEventPlugin from 'react-tap-event-plugin';
 import FastClick from 'fastclick';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+
 import Location from './core/Location';
 import {addEventListener, removeEventListener} from './core/DOMUtils';
-import injectTapEventPlugin from 'react-tap-event-plugin';
+import WithStylesContext from './components/WithStylesContext';
 
-import {Router, browserHistory} from 'react-router';
 import routes from './router/routes';
 
-import {Provider} from 'react-redux';
 import buildStore from './store/buildStore';
 
-import WithStylesContext from './components/WithStylesContext';
+import {readToken} from './actions/Auth';
 
 injectTapEventPlugin();
 
 // import {fetchJson} from './core/fetch';
 
-const store = buildStore();
+let store = buildStore();
+store.dispatch(readToken());
+store = buildStore(store.getState());
 
 const appContainer = document.getElementById('app');
 
 // Google Analytics tracking. Don't send 'pageview' event after the first
 // rendering, as it was already sent by the Html component.
 let trackPageview = () => (trackPageview = () => window.ga('send', 'pageview'));
+
+const muiTheme = getMuiTheme({userAgent: navigator.userAgent});
 
 function render(state) {
   if (state.scrollY !== undefined) {
@@ -42,7 +50,9 @@ function render(state) {
   ReactDOM.render(
     <Provider store={store}>
       <WithStylesContext onInsertCss={styles => styles._insertCss()}>
-        <Router history={browserHistory} routes={routes} />
+        <MuiThemeProvider muiTheme={muiTheme}>
+          <Router history={browserHistory} routes={routes} />
+        </MuiThemeProvider>
       </WithStylesContext>
     </Provider>, appContainer
   );

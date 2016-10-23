@@ -10,7 +10,7 @@ const shareRouter = new express.Router();
 
 shareRouter.use(authenticateToken.unless({
   useOriginalUrl: false,
-  path: ['/books', '/book/:id'],
+  path: ['/books', /\/book\/\w+/g],
 }));
 
 /**

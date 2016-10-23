@@ -1,4 +1,4 @@
-import ActionTypes from '../constants/ActionTypes';
+import ActionTypes from 'ActionTypes';
 import {fetchJson} from '../core/fetch';
 import {canUseDOM} from 'exenv';
 import jwtDecode from 'jwt-decode';
@@ -52,7 +52,7 @@ export function writeAuthorization({token, profile}) {
 
 export function authenticate(username, password) {
   return function (dispatch) {
-    return fetchJson('/manage/authenticate', {
+    return fetchJson('/api/token', {
       method: 'POST',
       body: JSON.stringify({
         username, password,

@@ -3,17 +3,15 @@ export const host = process.env.WEBSITE_HOSTNAME || `localhost:${port}`;
 
 export const mongodbUrl = 'mongodb://chengjianhua:950414@ds035806.mlab.com:35806/book-share';
 
-// export const doubanAPI = 'http://123.206.6.150:9000/v2/book';
-export const doubanAPI = 'http://localhost:9000/v2/book';
+export const doubanAPI = 'http://123.207.154.252:9000/v2/book';
+// export const doubanAPI = 'http://localhost:9000/v2/book';
 // export const doubanAPI = 'https://api.douban.com';
 
 export const analytics = {
-
   // https://analytics.google.com/
   google: {
     trackingId: process.env.GOOGLE_TRACKING_ID || 'UA-XXXXX-X',
   },
-
 };
 
 export const auth = {

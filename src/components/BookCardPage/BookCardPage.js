@@ -16,13 +16,9 @@ import s from './BookCardPage.scss';
 
 class BookCardPage extends Component {
 
-  // constructor(props) {
-  //   super(props);
-  // }
-
   componentWillMount() {
-    const {page} = this.props;
-    if (page === 1) {
+    const {bookList} = this.props;
+    if (bookList.size === 0) {
       this.loadBooksByPage(1);
     }
   }
@@ -72,7 +68,7 @@ class BookCardPage extends Component {
         {bookCards}
         <div className={s.loadButton}>
           <RaisedButton
-            label="LOAD MORE"
+            label="点击加载更多"
             onTouchTap={this.handleLoadMore}
             primary
             fullWidth

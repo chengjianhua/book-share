@@ -8,10 +8,10 @@ import User from '../../model/User';
 
 import {auth} from '../../config';
 
-const logger = log4js.getLogger('api');
+const logger = log4js.getLogger('Api');
 const apiRouter = new express.Router();
 
-apiRouter.get('/token', (req, res) => {
+apiRouter.post('/token', (req, res) => {
   const {secret} = auth.jwt;
   const {username, password} = req.body;
   User.findUniqueUserByUsername(username, (err, user) => {

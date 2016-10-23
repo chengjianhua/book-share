@@ -32,21 +32,19 @@ class LoginPage extends Component {
 
   handleFormSubmit = (event) => {
     event.preventDefault();
-    // const {actions} = this.props;
-    // const {username, password} = this.state;
+    const {actions} = this.props;
+    const {username, password} = this.state;
 
-    this.form.submit();
-
-    // actions.authenticate(username, password)
-    // .then(() => {
-    //   this.setState({
-    //     openAlertDialog: true,
-    //   }, () => {
-    //     setTimeout(() => {
-    //       // this.context.router.push('/');
-    //     }, 2000);
-    //   });
-    // });
+    actions.authenticate(username, password)
+    .then(() => {
+      this.setState({
+        openAlertDialog: true,
+      }, () => {
+        setTimeout(() => {
+          this.form.submit();
+        }, 2000);
+      });
+    });
   };
 
   handleUsernameChange = (event, value) => {

@@ -5,11 +5,11 @@ import {bindActionCreators} from 'redux';
 import baseTheme from 'material-ui/styles/baseThemes/lightBaseTheme';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
-import '../../../node_modules/normalize.css/normalize.css';
 import s from './App.scss';
 
-import {readToken} from '../../actions/Auth';
+import {readToken} from 'actions/Auth';
 
+// const readToken = require('actions/Auth.js').readToken;
 class App extends Component {
 
   static propTypes = {
@@ -29,9 +29,11 @@ class App extends Component {
   }
 
   componentDidMount() {
-    const {actions} = this.props;
-    actions.readToken();
-    console.log(`App.js initialize the app's token.`);
+    const {actions, token} = this.props;
+    if (!token) {
+      actions.readToken();
+      console.log(`App.js initialize the app's token at client-side.`); // eslint-disable-line
+    }
   }
 
   render() {

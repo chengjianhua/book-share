@@ -5,7 +5,7 @@ import React, {Component} from 'react';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-import {addComment, fetchBook} from '../../actions/Book';
+import {addComment, fetchBook} from 'actions/Book';
 
 import s from './BookDetailPage.scss';
 import BookDetailCard from './BookDetailCard';

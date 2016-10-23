@@ -1,12 +1,4 @@
-/**
- * React Starter Kit (https://www.reactstarterkit.com/)
- *
- * Copyright © 2014-2016 Kriasoft, LLC. All rights reserved.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE.txt file in the root directory of this source tree.
- */
-
+/* eslint-disable func-names */
 import path from 'path';
 import webpack from 'webpack';
 import extend from 'extend';
@@ -34,6 +26,7 @@ const GLOBALS = {
 // client-side (client.js) and server-side (server.js) bundles
 // -----------------------------------------------------------------------------
 
+console.log(path.resolve(__dirname, '../src'));
 const config = {
   output: {
     publicPath: '/',
@@ -60,6 +53,12 @@ const config = {
   ],
 
   resolve: {
+    alias: {
+      actions: path.resolve(__dirname, '../src/actions'),
+      models: path.resolve(__dirname, '../src/model'),
+      ActionTypes: path.resolve(__dirname, '../src/constants/ActionTypes.js'),
+    },
+    // root: [path.resolve(__dirname, '../src'), path.resolve(__dirname, '../node_modules')],
     extensions: ['', '.webpack.js', '.web.js', '.js', '.jsx', '.json'],
   },
 
@@ -163,8 +162,9 @@ const serverConfig = extend(true, {}, config, {
     function filter(context, request, cb) {
       const isExternal =
         request.match(/^[@a-z][a-z\/\.\-0-9]*$/i) &&
-        !request.match(/^react-routing/) &&
-        !context.match(/[\\/]react-routing/);
+        !request.match(/^actions/) &&
+        !request.match(/^models/) &&
+        !request.match(/^ActionTypes/);
       cb(null, Boolean(isExternal));
     },
   ],

@@ -1,7 +1,7 @@
 /**
  * Created by cjh95414 on 2016/5/3.
  */
-import React, {Component} from 'react';
+import React, {Component, PropTypes} from 'react';
 import {Link} from 'react-router';
 import {connect} from 'react-redux';
 
@@ -31,10 +31,14 @@ const style = {
 };
 
 class AppHeader extends Component {
+  static contextTypes = {
+    router: PropTypes.object.isRequired,
+  };
+
   constructor(props) {
     super(props);
     this.state = {
-      value: 0,
+      value: typeof window !== 'undefined' ? window.location.pathname : 0,
     };
   }
 
@@ -73,21 +77,18 @@ class AppHeader extends Component {
               onChange={this.handleChange}
             >
               <Tab
-                value={0}
+                value="/"
                 icon={ <ActionHome /> }
-                linkButton
                 containerElement={<Link to="/" />}
               />
               <Tab
-                value={1}
+                value="/sign"
                 icon={ <ActionFavorite /> }
-                linkButton
                 containerElement={<Link to="/sign" />}
               />
               <Tab
-                value={2}
+                value="/user"
                 icon={ <AccountBox /> }
-                linkButton
                 containerElement={<Link to="/user" />}
               />
             </Tabs>
