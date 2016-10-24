@@ -1,5 +1,5 @@
 import {List, Map} from 'immutable';
-import ActionTypes from '../constants/ActionTypes';
+import ActionTypes from 'ActionTypes';
 
 const defaultState = new Map({
   books: new Map({

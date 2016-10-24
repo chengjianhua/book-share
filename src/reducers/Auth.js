@@ -1,10 +1,11 @@
 import {Map} from 'immutable';
-import ActionTypes from '../constants/ActionTypes';
+import ActionTypes from 'ActionTypes';
 
 const defaultState = new Map({
   isAuthenticated: false,
   token: null,
   username: null,
+  ptofile: new Map(),
 });
 
 function auth(state = defaultState, action) {
@@ -13,7 +14,8 @@ function auth(state = defaultState, action) {
       return state.set('isAuthenticated', true);
     case ActionTypes.READ_TOKEN_SUCCESS:
       return state.set('token', action.token)
-        .set('username', action.username);
+        .set('username', action.username)
+        .set('profile', action.profile);
     case ActionTypes.REMOVE_TOKEN_SUCCESS:
       return state.set('token', null);
     default:

@@ -26,7 +26,6 @@ const style = {
   },
   tabs: {
     width: '100%',
-    marginTop: '-20px',
   },
 };
 
@@ -38,8 +37,15 @@ class AppHeader extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      value: typeof window !== 'undefined' ? window.location.pathname : 0,
+      value: '/',
     };
+  }
+
+  componentDidMount() {
+    // FIXME: 在服务端读取路由参数来设置激活的 Tab 更合理
+    this.setState({ // eslint-disable-line
+      value: window.location.pathname,
+    });
   }
 
   handleChange = (value) => {
@@ -51,11 +57,11 @@ class AppHeader extends Component {
   render() {
     const iconElementRight = (
       <IconMenu
+        targetOrigin={{horizontal: 'right', vertical: 'top'}}
+        anchorOrigin={{horizontal: 'right', vertical: 'top'}}
         iconButtonElement={
           <IconButton><MoreVertIcon /></IconButton>
         }
-        targetOrigin={{horizontal: 'right', vertical: 'top'}}
-        anchorOrigin={{horizontal: 'right', vertical: 'top'}}
       >
         <Link to="/share/add">
           <MenuItem primaryText="添加" />

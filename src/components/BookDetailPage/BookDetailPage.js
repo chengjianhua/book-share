@@ -13,10 +13,6 @@ import CommentBox from './CommentBox';
 
 class BookDetailPage extends Component {
 
-  // constructor(props) {
-  //   super(props);
-  // }
-
   componentDidMount() {
     const {actions, params} = this.props;
 

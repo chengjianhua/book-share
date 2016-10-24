@@ -2,14 +2,13 @@ import React, {Component, PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
-import baseTheme from 'material-ui/styles/baseThemes/lightBaseTheme';
-import getMuiTheme from 'material-ui/styles/getMuiTheme';
+// import baseTheme from 'material-ui/styles/baseThemes/lightBaseTheme';
+// import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import s from './App.scss';
 
 import {readToken} from 'actions/Auth';
 
-// const readToken = require('actions/Auth.js').readToken;
 class App extends Component {
 
   static propTypes = {
@@ -18,15 +17,15 @@ class App extends Component {
     header: PropTypes.element,
   };
 
-  static childContextTypes = {
-    muiTheme: PropTypes.object.isRequired,
-  };
-
-  getChildContext() {
-    return {
-      muiTheme: getMuiTheme(baseTheme),
-    };
-  }
+  // static childContextTypes = {
+  //   muiTheme: PropTypes.object.isRequired,
+  // };
+  //
+  // getChildContext() {
+  //   return {
+  //     muiTheme: getMuiTheme(baseTheme),
+  //   };
+  // }
 
   componentDidMount() {
     const {actions, token} = this.props;

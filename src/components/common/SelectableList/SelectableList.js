@@ -1,13 +1,13 @@
 /**
  * Created by cjh95414 on 2016/5/25.
  */
-import React, {PropTypes, Component} from "react";
-import {List, ListItem, MakeSelectable} from "material-ui/List";
+import React, {PropTypes, Component} from 'react';
+import {List, makeSelectable} from 'material-ui/List';
 
-let SelectableList = MakeSelectable(List);
+let SelectableList = makeSelectable(List);
 
 function wrapState(ComposedComponent) {
-  return class SelectableList extends Component {
+  return class SelectableListComponent extends Component {
     static propTypes = {
       children: PropTypes.node,
       defaultValue: PropTypes.number.isRequired,
@@ -29,8 +29,10 @@ function wrapState(ComposedComponent) {
         selectedIndex: index,
       });
 
+      const {onSelected} = this.props;
+
       // if defined the [Method: onSelected] in this.props, invoke it and deliver the selected index to [Method: onSelected]
-      this.props.onSelected && this.props.onSelected(index);
+      onSelected && onSelected(index);  // eslint-disable-line
     };
 
     render() {

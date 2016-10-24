@@ -30,6 +30,7 @@ export function removeToken() {
   return function (dispatch) {
     if (canUseDOM) {
       localStorage.removeItem('token');
+      localStorage.removeItem('profile');
       dispatch({
         type: ActionTypes.REMOVE_TOKEN_SUCCESS,
       });
@@ -41,7 +42,8 @@ export function writeAuthorization({token, profile}) {
   return function (dispatch) {
     if (canUseDOM) {
       localStorage.setItem('token', token);
-      localStorage.setItem('profile', JSON.stringify(profile));
+      // localStorage.setItem('profile', JSON.stringify(profile));
+      localStorage.setItem('profile', JSON.stringify(jwtDecode(token).profile));
       dispatch({
         token,
         type: ActionTypes.WRITE_TOKEN_SUCCESS,

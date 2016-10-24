@@ -31,11 +31,11 @@ apiRouter.post('/token', (req, res) => {
           message: 'Authentication failed. Wrong password.',
         });
       } else {
+        /* eslint-disable no-shadow */
+        const {username, ...profile} = user;
         const payload = {
-          username: user.username,
-          signature: user.signature,
-          gender: user.gender,
-          id: user._id,
+          username,
+          profile,
         };
 
         const token = jwt.sign(payload, secret, {

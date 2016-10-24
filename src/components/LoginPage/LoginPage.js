@@ -77,6 +77,7 @@ class LoginPage extends Component {
             fullWidth
             key="login-username"
             name="username"
+            id="login-username"
             hintText="请输入您的用户名"
             value={username}
             onChange={this.handleUsernameChange}
@@ -86,6 +87,7 @@ class LoginPage extends Component {
             fullWidth
             key="login-password"
             name="password"
+            id="login-username"
             hintText="请输入您的密码"
             type="password"
             value={password}
