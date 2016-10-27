@@ -10,7 +10,7 @@ const shareRouter = new express.Router();
 
 shareRouter.use(authenticateToken.unless({
   useOriginalUrl: false,
-  path: ['/books', /\/book\/\w+/g],
+  path: ['/books', /\/book\/\w+$/g],
 }));
 
 /**
@@ -56,6 +56,19 @@ shareRouter.get('/book/:id', (req, res) => {
     res.json(formatJson(true, `Fetching book: ${id} successfully.`, {
       book,
     }));
+  });
+});
+
+shareRouter.post('/book/:id/comment', (req, res) => {
+  const {id} = req.params;
+  const comment = Object.assign({}, req.body, {user: req.user.username});
+
+  Book.addComment(id, comment, (result) => {
+    if (!!result) {
+      res.json(formatJson(true, `Comment on book:${id} successfully.`));
+    } else {
+      res.json(formatJson(false, `Comment on book:${id} failed.`));
+    }
   });
 });
 

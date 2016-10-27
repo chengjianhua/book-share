@@ -1,7 +1,7 @@
 /**
  * Created by Cheng jianhua at 11:10 on 2016/6/6
  */
-import React, {Component, PropTypes} from 'react';
+import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
@@ -15,10 +15,6 @@ import s from './LoginPage.scss';
 import {authenticate} from '../../actions/Auth';
 
 class LoginPage extends Component {
-
-  static contextTypes = {
-    router: PropTypes.object.isRequired,
-  };
 
   constructor(props) {
     super(props);

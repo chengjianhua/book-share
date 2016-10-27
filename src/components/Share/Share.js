@@ -1,7 +1,8 @@
 /**
  * Created by cjh95414 on 2016/5/3.
  */
-import React, {PropTypes, Component} from 'react';
+import React, {Component} from 'react';
+import {withRouter} from 'react-router';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 
 import TextField from 'material-ui/TextField';
@@ -48,10 +49,6 @@ class Share extends Component {
       selectedIndex: 0,
     };
   }
-
-  static contextTypes = {
-    router: PropTypes.object.isRequired,
-  };
 
   handleOpenSearchDialog = () => {
     // the text which user inputted
@@ -172,7 +169,7 @@ class Share extends Component {
 
     // 2000ms later, the view switched to homepage.
     setTimeout(function () {
-      this.context.router.push('/');
+      this.props.router.push('/');
     }.bind(this), 2000);
   };
 
@@ -293,4 +290,4 @@ class Share extends Component {
   }
 }
 
-export default withStyles(s)(Share);
+export default withStyles(s)(withRouter(Share));

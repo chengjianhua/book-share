@@ -1,7 +1,7 @@
 /**
  * Created by cjh95414 on 2016/5/21.
  */
-import React, {Component, PropTypes} from 'react';
+import React, {Component} from 'react';
 import {Link} from 'react-router';
 
 import {List, ListItem} from 'material-ui/List';
@@ -44,22 +44,6 @@ const rightIconMenu = (
 
 class UserProfile extends Component {
 
-  static propTypes = {
-    user: PropTypes.shape({
-      username: PropTypes.string,
-      avatar: PropTypes.string,
-      signature: PropTypes.string,
-    }),
-  };
-
-  static defaultProps = {
-    user: {
-      username: 'chengjianhua',
-      avatar: 'http://lorempixel.com/100/100/nature/',
-      signature: 'To be or not to be !',
-    },
-  };
-
   constructor(props) {
     super(props);
 
@@ -69,9 +53,11 @@ class UserProfile extends Component {
   }
 
   componentDidMount() {
-    const {actions, username} = this.props;
+    const {actions, username, books} = this.props;
 
-    actions.fetchUserBooks(Globals.profile.username);
+    if (!books.size) {
+      actions.fetchUserBooks(username);
+    }
   }
 
   handleTabChange = (value) => {
@@ -171,7 +157,7 @@ function mapStateToProps(state) {
   return {
     isLoading: state.accounts.getIn(['books', 'isLoading']),
     books: state.accounts.getIn(['books', 'data']),
-    profile: state.accounts.get('profile'),
+    profile: state.auth.get('profile'),
     username: state.auth.get('username'),
   };
 }

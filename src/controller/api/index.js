@@ -13,10 +13,11 @@ const apiRouter = new express.Router();
 
 apiRouter.post('/token', (req, res) => {
   const {secret} = auth.jwt;
-  const {username, password} = req.body;
-  User.findUniqueUserByUsername(username, (err, user) => {
+  const {username: reqUsername, password: reqPassword} = req.body;
+  User.findUniqueUserByUsername(reqUsername, (err, user) => {
+    const {username, password, ...profile} = user;
     if (err) {
-      logger.error(`Fetching user named ${username} from database failed.`);
+      logger.error(`Fetching user named ${reqUsername} from database failed.`);
       throw err;
     }
     if (!user) {
@@ -25,14 +26,12 @@ apiRouter.post('/token', (req, res) => {
         message: 'Authentication failed. User not found.',
       });
     } else {
-      if (user.password !== password) {
+      if (password !== reqPassword) {
         res.statue(400).json({
           success: false,
           message: 'Authentication failed. Wrong password.',
         });
       } else {
-        /* eslint-disable no-shadow */
-        const {username, ...profile} = user;
         const payload = {
           username,
           profile,
@@ -46,7 +45,6 @@ apiRouter.post('/token', (req, res) => {
           success: true,
           message: 'Enjoy yourself in this awesome app.',
           token,
-          profile: payload,
         });
       }
     }

@@ -33,6 +33,8 @@ import passport from './core/passport';
 
 import WithStylesContext from './components/WithStylesContext';
 
+import {fromJS} from 'immutable';
+
 const server = global.server = express();
 const MongoStore = require('connect-mongo')(session);
 
@@ -86,7 +88,18 @@ server.get('*', (req, res) => {
   match({routes, location: req.url}, (err, redirectLocation, renderProps) => {
     const template = require('./views/index.jade');
     const css = [];
-    const store = buildStore();
+
+    const initState = buildStore().getState();
+    if (!!req.user) {
+      const {username, ...profile} = req.user;
+      initState.auth = fromJS({
+        isAuthenticated: true,
+        token: null,
+        username,
+        profile,
+      });
+    }
+    const store = buildStore(initState);
 
     const data = {
       title: '图书分享',

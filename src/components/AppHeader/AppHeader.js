@@ -37,15 +37,8 @@ class AppHeader extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      value: '/',
+      value: props.location.pathname,
     };
-  }
-
-  componentDidMount() {
-    // FIXME: 在服务端读取路由参数来设置激活的 Tab 更合理
-    this.setState({ // eslint-disable-line
-      value: window.location.pathname,
-    });
   }
 
   handleChange = (value) => {
@@ -55,6 +48,7 @@ class AppHeader extends Component {
   };
 
   render() {
+    console.log(this.props.location);
     const iconElementRight = (
       <IconMenu
         targetOrigin={{horizontal: 'right', vertical: 'top'}}
@@ -73,7 +67,7 @@ class AppHeader extends Component {
       <div className={s.root}>
         <div className={s.fixed}>
           <AppBar
-            title="浏览"
+            // title="浏览"
             style={style.appBar}
             iconElementRight={iconElementRight}
           >

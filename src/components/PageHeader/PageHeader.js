@@ -2,7 +2,7 @@
  * Created by cjh95414 on 2016/5/3.
  */
 import React, {PropTypes, Component} from 'react';
-import {Link} from 'react-router';
+import {Link, withRouter} from 'react-router';
 import AppBar from 'material-ui/AppBar';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 
@@ -16,12 +16,8 @@ import s from './PageHeader.scss';
 
 class PageHeader extends Component {
 
-  static contextTypes = {
-    router: PropTypes.object.isRequired,
-  };
-
   handleBackButtonTouchTap = () => {
-    this.context.router.goBack();
+    this.props.router.goBack();
   };
 
   render() {
@@ -56,4 +52,4 @@ class PageHeader extends Component {
   }
 }
 
-export default withStyles(s)(PageHeader);
+export default withStyles(s)(withRouter(PageHeader));

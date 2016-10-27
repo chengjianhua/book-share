@@ -51,23 +51,15 @@ class Settings extends Component {
   constructor(props) {
     super(props);
 
+    const {profile, username} = props;
+
+    const {signature, gender} = profile.toJS();
+
     this.state = {
-      username: '',
-      signature: '',
-      gender: '',
+      username,
+      signature,
+      gender,
     };
-  }
-
-  componentDidMount() {
-    const {actions} = this.props;
-    actions.fetchUserProfile(Globals.profile.username);
-  }
-
-  componentWillReceiveProps(nextProps) {
-    const {profile} = nextProps;
-    this.setState({
-      ...profile.toJS(),
-    });
   }
 
   handleFormSubmit = (event) => {
@@ -115,9 +107,10 @@ class Settings extends Component {
         <form onSubmit={this.handleFormSubmit}>
           <TextField
             fullWidth
-            key="username"
-            hintText="用户名"
             floatingLabelFixed
+            key="username"
+            id="settings-username"
+            hintText="用户名"
             floatingLabelText="用户名"
             value={username}
             onChange={this.handleUsernameChange}
@@ -125,9 +118,10 @@ class Settings extends Component {
 
           <TextField
             fullWidth
-            key="signature"
-            hintText="请输入您的签名"
             floatingLabelFixed
+            key="signature"
+            id="settings-signature"
+            hintText="请输入您的签名"
             floatingLabelText="签名"
             value={signature}
             onChange={this.handleSignatureChange}
@@ -167,7 +161,7 @@ class Settings extends Component {
 function mapStateToProps(state) {
   return {
     username: state.auth.get('username'),
-    profile: state.accounts.get('profile'),
+    profile: state.auth.get('profile'),
   };
 }
 

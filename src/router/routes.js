@@ -35,42 +35,22 @@ function redirectToLogin(nextState, replace) {
   }
 }
 
-/**
- * 必须指定参数 props，且在 <App /> 中写上 {...props} 不然路由时，children属性传递不到 <App />组件中
- * @param props
- * @constructor
- */
-const AppIndex = (props) => (
-  <App header={<AppHeader />} {...props} />
-);
-
-const AppPage = (props) => (
-  <App header={<PageHeader />} {...props} />
-);
-
 export default ([
-  <Route component={App}>
-    <Route path="/sign" component={SignPage} />
-  </Route>,
+  <Route path="/" component={App}>
 
-  <Route path="/" component={AppIndex}>
-    <IndexRoute component={BookCardPage} />
-    <Route path="user" component={UserPage} />
-  </Route>,
+    <IndexRoute components={{main: BookCardPage, header: AppHeader}} />
 
-  <Route component={AppPage}>
+    <Route path="sign" components={{main: SignPage}} />
 
     <Route path="share">
-      <Route path="add" component={Share} />
-
-      <Route path="book/:id" component={BookDetailPage} />
+      <Route path="add" components={Share} />
+      <Route path="book/:id" components={{main: BookDetailPage, header: PageHeader}} />
     </Route>
 
-    <Route path="/user">
-      <Route path="profile" component={UserProfile} />
-      <Route path="settings" component={ProfileSettings} />
+    <Route path="user">
+      <IndexRoute components={{main: UserPage, header: AppHeader}} />
+      <Route path="profile" components={{main: UserProfile, header: PageHeader}} />
+      <Route path="settings" components={{main: ProfileSettings, header: PageHeader}} />
     </Route>
-
   </Route>,
-
 ]);

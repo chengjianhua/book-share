@@ -5,7 +5,7 @@ const defaultState = new Map({
   isAuthenticated: false,
   token: null,
   username: null,
-  ptofile: new Map(),
+  profile: new Map(),
 });
 
 function auth(state = defaultState, action) {

@@ -9,7 +9,7 @@ export function readToken() {
   return function (dispatch) {
     if (canUseDOM) {
       const token = localStorage.getItem('token');
-      const profile = localStorage.getItem('profile');
+      const profile = JSON.parse(localStorage.getItem('profile'));
       if (token) {
         const decoded = jwtDecode(token);
         dispatch({

@@ -20,19 +20,6 @@ router.use(authenticateToken.unless({
   path: ['/register', '/authenticate'],
 }));
 
-router.post('/comment/add/:id', (req, res) => {
-  const shareId = req.params.id;
-  const comment = Object.assign({}, req.body, {user: req.user.username});
-
-  Book.addComment(shareId, comment, (result) => {
-    if (!!result) {
-      res.json(formatJson(true, `Comment on book:${shareId} successfully.`));
-    } else {
-      res.json(formatJson(false, `Comment on book:${shareId} failed.`));
-    }
-  });
-});
-
 
 /**
  * [ /register ]: 注册用户

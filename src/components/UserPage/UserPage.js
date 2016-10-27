@@ -46,15 +46,14 @@ class UserPage extends Component {
       },
     };
 
-    const {avatar, profile} = this.props;
-    const {username, signature} = profile;
+    const {username, avatar, profile} = this.props;
 
     return (
       <div className={s.root}>
         <Card >
           <CardHeader
             title={username}
-            subtitle={signature}
+            subtitle={profile.get('signature')}
             avatar={avatar}
           >
             <Link to="/user/profile">
@@ -99,5 +98,6 @@ class UserPage extends Component {
 }
 
 export default connect(state => ({
-  profile: state.accounts.get('profile').toJS(),
+  profile: state.auth.get('profile'),
+  username: state.auth.get('username'),
 }))(withStyles(s)(UserPage));

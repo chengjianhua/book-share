@@ -36,7 +36,7 @@ class LoadingOverlay extends Component {
 
     return (
       <div style={show ? style.show : style.hidden}>
-        <CircularProgress size={1.5} />
+        <CircularProgress size={80} />
       </div>
     );
   }

@@ -74,7 +74,7 @@ export function fetchBook(bookId) {
 
 export function addComment(shareId, comment) {
   return function (dispatch) {
-    return fetchJson(`/manage/comment/add/${shareId}`, {
+    return fetchJson(`/api/share/book/${shareId}/comment`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
