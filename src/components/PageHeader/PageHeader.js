@@ -1,7 +1,7 @@
 /**
  * Created by cjh95414 on 2016/5/3.
  */
-import React, {PropTypes, Component} from 'react';
+import React, {Component} from 'react';
 import {Link, withRouter} from 'react-router';
 import AppBar from 'material-ui/AppBar';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';

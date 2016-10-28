@@ -48,7 +48,6 @@ class AppHeader extends Component {
   };
 
   render() {
-    console.log(this.props.location);
     const iconElementRight = (
       <IconMenu
         targetOrigin={{horizontal: 'right', vertical: 'top'}}
