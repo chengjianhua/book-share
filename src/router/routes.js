@@ -43,7 +43,7 @@ export default ([
     <Route path="sign" components={{main: SignPage}} />
 
     <Route path="share">
-      <Route path="add" components={Share} />
+      <Route path="add" components={{main: Share, header: PageHeader}} />
       <Route path="book/:id" components={{main: BookDetailPage, header: PageHeader}} />
     </Route>
 

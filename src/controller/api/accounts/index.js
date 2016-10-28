@@ -6,7 +6,7 @@ import {formatJson} from '../../utils';
 
 const accountsRouter = new express.Router();
 
-accountsRouter.use(authenticateToken.unless({
+accountsRouter.use(authenticateToken().unless({
   useOriginalUrl: false,
   path: [],
 }));

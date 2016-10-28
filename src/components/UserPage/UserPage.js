@@ -101,3 +101,16 @@ export default connect(state => ({
   profile: state.auth.get('profile'),
   username: state.auth.get('username'),
 }))(withStyles(s)(UserPage));
+
+export class User extends Component {
+  render() {
+    return (
+      <div>
+        {/* if at "/users/123" this will be <Profile> */}
+        {/* UsersSidebar will also get <Profile> as this.props.children.
+            You can pick where it renders */}
+        {this.props.children}
+      </div>
+    )
+  }
+}

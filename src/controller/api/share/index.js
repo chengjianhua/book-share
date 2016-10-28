@@ -8,7 +8,7 @@ import {formatJson} from '../../utils';
 const logger = log4js.getLogger('/api/share/');
 const shareRouter = new express.Router();
 
-shareRouter.use(authenticateToken.unless({
+shareRouter.use(authenticateToken().unless({
   useOriginalUrl: false,
   path: ['/books', /\/book\/\w+$/g],
 }));

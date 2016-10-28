@@ -48,7 +48,7 @@ passport.authenticateMiddleware = () => {
     if (req.isAuthenticated()) {
       return next();
     }
-    return res.redirect('/sign');
+    return res.redirect(`/sign?url=${req.originalUrl}`);
   };
 
   middleware.unless = unless;

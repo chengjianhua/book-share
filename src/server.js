@@ -28,7 +28,6 @@ import buildStore from './store/buildStore';
 
 import indexRouter from './controller/index';
 import apiRouter from './controller/api';
-import testRouter from './controller/test';
 import passport from './core/passport';
 
 import WithStylesContext from './components/WithStylesContext';
@@ -138,7 +137,6 @@ server.get('*', (req, res) => {
   });
 });
 server.use('/manage', indexRouter);
-server.use('/test', testRouter);
 
 //
 // Error handling

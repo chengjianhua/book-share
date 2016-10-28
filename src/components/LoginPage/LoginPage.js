@@ -4,6 +4,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
+import {withRouter} from 'react-router';
 
 import TextField from 'material-ui/TextField';
 import Dialog from 'material-ui/Dialog';
@@ -61,12 +62,14 @@ class LoginPage extends Component {
 
   render() {
     const {username, password, openAlertDialog} = this.state;
+    const {originalUrl} = this.props;
+
     return (
       <div className={s.root}>
         <form
           ref={(ref) => {this.form = ref;}}
           method="post"
-          action="/manage/authenticate"
+          action={`/manage/authenticate?url=${originalUrl}`}
           onSubmit={this.handleFormSubmit}
         >
           <TextField
@@ -118,4 +121,4 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(null, mapDispatchToProps)(withStyles(s)(LoginPage));
+export default connect(null, mapDispatchToProps)(withStyles(s)(withRouter(LoginPage)));

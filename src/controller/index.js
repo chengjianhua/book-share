@@ -4,7 +4,6 @@
 import express from 'express';
 import log4js from 'log4js';
 
-import Book from '../model/Book';
 import User from '../model/User';
 
 import {formatJson} from './utils';
@@ -15,7 +14,7 @@ const logger = log4js.getLogger('controller/index.js');
 
 const router = new express.Router();
 
-router.use(authenticateToken.unless({
+router.use(authenticateToken().unless({
   useOriginalUrl: false,
   path: ['/register', '/authenticate'],
 }));
@@ -40,6 +39,7 @@ router.post('/register', (req, res) => {
 });
 
 router.post('/authenticate', passport.authenticate('local'), (req, res) => {
+  const {query: {url: originalUrl}} = req;
   const {username, password} = req.body;
   User.findUniqueUserByUsername(username, (err, user) => {
     if (err) {
@@ -58,7 +58,7 @@ router.post('/authenticate', passport.authenticate('local'), (req, res) => {
           message: 'Authentication failed. Wrong password.',
         });
       } else {
-        res.redirect('/');
+        res.redirect(originalUrl || '/');
       }
     }
   });
