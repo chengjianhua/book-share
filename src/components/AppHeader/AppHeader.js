@@ -34,6 +34,10 @@ class AppHeader extends Component {
     router: PropTypes.object.isRequired,
   };
 
+  static propTypes = {
+    iconElementRight: PropTypes.element,
+  };
+
   constructor(props) {
     super(props);
     this.state = {
@@ -48,7 +52,7 @@ class AppHeader extends Component {
   };
 
   render() {
-    const iconElementRight = (
+    const iconElementRight = this.props.iconElementRight || (
       <IconMenu
         targetOrigin={{horizontal: 'right', vertical: 'top'}}
         anchorOrigin={{horizontal: 'right', vertical: 'top'}}

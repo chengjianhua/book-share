@@ -21,7 +21,7 @@ class PageHeader extends Component {
   };
 
   render() {
-    const iconElementRight = (
+    const iconElementRight = this.props.iconElementRight || (
       <IconMenu
         iconButtonElement={ <IconButton><MoreVertIcon /></IconButton> }
         targetOrigin={{horizontal: 'right', vertical: 'top'}}

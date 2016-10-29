@@ -1,32 +1,31 @@
 /**
  * Created by cjh95414 on 2016/6/13.
  */
-
-import React, {PropTypes, Component} from "react";
-import {List, ListItem} from "material-ui/List";
+import React, {PropTypes, Component} from 'react';
+import {List, ListItem} from 'material-ui/List';
 import Dialog from 'material-ui/Dialog';
-import Divider from "material-ui/Divider";
-import Subheader from "material-ui/Subheader";
+import Divider from 'material-ui/Divider';
+import Subheader from 'material-ui/Subheader';
 import TextField from 'material-ui/TextField';
-import Avatar from "material-ui/Avatar";
-import {grey400, darkBlack, grey300} from "material-ui/styles/colors";
-import IconButton from "material-ui/IconButton";
+import Avatar from 'material-ui/Avatar';
+import {grey400, darkBlack, grey300} from 'material-ui/styles/colors';
+import IconButton from 'material-ui/IconButton';
 import FlatButton from 'material-ui/FlatButton';
 import FontIcon from 'material-ui/FontIcon';
 import RaisedButton from 'material-ui/RaisedButton';
-import MoreVertIcon from "material-ui/svg-icons/navigation/more-vert";
-import IconMenu from "material-ui/IconMenu";
-import MenuItem from "material-ui/MenuItem";
-import withStyles from "isomorphic-style-loader/lib/withStyles";
-import s from "./index.scss";
+import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
+import IconMenu from 'material-ui/IconMenu';
+import MenuItem from 'material-ui/MenuItem';
+import withStyles from 'isomorphic-style-loader/lib/withStyles';
+import s from './index.scss';
 
 const iconButtonElement = (
   <IconButton
-    touch={true}
+    touch
     tooltip="more"
     tooltipPosition="bottom-left"
   >
-    <MoreVertIcon color={grey400}/>
+    <MoreVertIcon color={grey400} />
   </IconButton>
 );
 
@@ -63,7 +62,7 @@ class CommentBox extends Component {
       username: PropTypes.string,
     }),
     onComment: PropTypes.func,
-    comments: PropTypes.array
+    comments: PropTypes.array,
   };
 
   static defaultProps = {
@@ -75,20 +74,22 @@ class CommentBox extends Component {
 
   handleCommentDialogOpen = () => {
     this.setState({
-      openCommentDialog: true
+      openCommentDialog: true,
     });
   };
 
   handleCommentDialogClose = () => {
     this.setState({
-      openCommentDialog: false
+      openCommentDialog: false,
     });
   };
 
   handleCommentDialogConfirm = () => {
     this.handleCommentDialogClose();
 
-    this.props.onComment && this.props.onComment(this.state.comment);
+    const {onComment} = this.props;
+
+    onComment && onComment(this.state.comment); // eslint-disable-line
   };
 
   handleCommentChange = (event, value) => {
@@ -98,7 +99,6 @@ class CommentBox extends Component {
   };
 
   render() {
-
     // --------对话框的按钮-----------
     const dialogActions = [
       <FlatButton
@@ -107,38 +107,36 @@ class CommentBox extends Component {
       />,
       <FlatButton
         label="确认"
-        keyboardFocused={true}
-        secondary={true}
+        keyboardFocused
+        secondary
         onTouchTap={this.handleCommentDialogConfirm}
-      />
+      />,
     ];
     // --------对话框的按钮-----------
 
-    const props = this.props;
+    const {comments, user} = this.props;
 
     // 根据评论数据生成评论列表
-    const commentList = this.props.comments.map(function (comment, index) {
-      return ([
-        <ListItem
-          key={index}
-          leftAvatar={<Avatar src={props.user.avatar} />}
-          rightIconButton={rightIconMenu}
-          primaryText={
-            <p>
-              {props.user.username}
-              <span style={{color: grey300, fontSize: '0.5rem'}}> {new Date(comment.date).toDateString()}</span> <br />
-            </p>
-          }
-          secondaryText={
-            <p>
-              {comment.content}
-            </p>
-          }
-          secondaryTextLines={2}
-        />,
-        <Divider inset={true}/>
-      ]);
-    });
+    const commentList = comments.map((comment, index) => [
+      <ListItem
+        key={index}
+        leftAvatar={<Avatar src={user.avatar} />}
+        rightIconButton={rightIconMenu}
+        primaryText={
+          <p>
+            {user.username}
+            <span style={{color: grey300, fontSize: '0.5rem'}}> {new Date(comment.date).toDateString()}</span> <br />
+          </p>
+        }
+        secondaryText={
+          <p>
+            {comment.content}
+          </p>
+        }
+        secondaryTextLines={2}
+      />,
+      <Divider inset />,
+    ]);
 
     return (
       <div className={s.commentRoot}>
@@ -147,14 +145,14 @@ class CommentBox extends Component {
           <RaisedButton
             label="评论"
             labelPosition="after"
-            primary={true}
+            primary
             icon={<FontIcon className="material-icons">comment</FontIcon>}
             onTouchTap={this.handleCommentDialogOpen}
           />
         </div>
 
         <List>
-          <Subheader>{this.props.comments.length} 条评论 </Subheader>
+          <Subheader>{comments.length} 条评论 </Subheader>
           {commentList}
         </List>
 
@@ -163,14 +161,14 @@ class CommentBox extends Component {
           title="请输入您的评论"
           contentStyle={styles.commentDialogContent}
           actions={dialogActions}
-          modal={true}
+          modal
           open={this.state.openCommentDialog}
-          autoScrollBodyContent={true}
+          autoScrollBodyContent
         >
           <TextField
             hintText="不超过100个字"
-            fullWidth={true}
-            multiLine={true}
+            fullWidth
+            multiLine
             rows={5}
             rowsMax={8}
             value={this.state.comment}

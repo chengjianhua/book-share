@@ -26,7 +26,6 @@ const GLOBALS = {
 // client-side (client.js) and server-side (server.js) bundles
 // -----------------------------------------------------------------------------
 
-console.log(path.resolve(__dirname, '../src'));
 const config = {
   output: {
     publicPath: '/',
@@ -57,6 +56,8 @@ const config = {
       actions: path.resolve(__dirname, '../src/actions'),
       models: path.resolve(__dirname, '../src/model'),
       ActionTypes: path.resolve(__dirname, '../src/constants/ActionTypes.js'),
+      components: path.resolve(__dirname, '../src/components'),
+      common: path.resolve(__dirname, '../src/components/common'),
     },
     // root: [path.resolve(__dirname, '../src'), path.resolve(__dirname, '../node_modules')],
     extensions: ['', '.webpack.js', '.web.js', '.js', '.jsx', '.json'],
@@ -133,10 +134,8 @@ const clientConfig = extend(true, {}, config, {
       new webpack.optimize.DedupePlugin(),
       new webpack.optimize.UglifyJsPlugin({
         compress: {
-          // jscs:disable requireCamelCaseOrUpperCaseIdentifiers
           screw_ie8: true,
 
-          // jscs:enable requireCamelCaseOrUpperCaseIdentifiers
           warnings: VERBOSE,
         },
       }),
@@ -160,11 +159,11 @@ const serverConfig = extend(true, {}, config, {
   externals: [
     /^\.\/assets$/,
     function filter(context, request, cb) {
+      // 匹配上述自定义的 alias, 防止 alias 中的模块被作为外部模块忽略
+      const alias = new RegExp(`^(${Object.keys(config.resolve.alias).join('|')})`);
       const isExternal =
         request.match(/^[@a-z][a-z\/\.\-0-9]*$/i) &&
-        !request.match(/^actions/) &&
-        !request.match(/^models/) &&
-        !request.match(/^ActionTypes/);
+        !request.match(alias);
       cb(null, Boolean(isExternal));
     },
   ],

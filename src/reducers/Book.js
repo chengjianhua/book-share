@@ -8,7 +8,10 @@ const defaultState = new Map({
     data: new List(),
     page: 1,
   }),
-  book: new Map(),
+  book: new Map({
+    starred: false,
+    detail: new Map(),
+  }),
 });
 
 function fetchBookList(state, action) {
@@ -27,7 +30,7 @@ function fetchBook(state, action) {
   switch (action.type) {
     case ActionTypes.FETCH_BOOK_DOING:
     case ActionTypes.FETCH_BOOK_SUCCESS:
-      return state.set('book', action.data);
+      return state.setIn(['book', 'detail'], action.detail);
     case ActionTypes.FETCH_BOOK_FAILURE:
     default:
       return state;

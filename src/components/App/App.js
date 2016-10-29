@@ -14,6 +14,24 @@ class App extends Component {
     header: PropTypes.element,
   };
 
+  static childContextTypes = {
+    setAppBarIconRight: PropTypes.func,
+  };
+
+  state = {
+    appbarIconRight: null,
+  };
+
+  getChildContext() {
+    return {
+      setAppBarIconRight: (iconRight) => {
+        this.setState({
+          appBarIconRight: iconRight,
+        });
+      },
+    };
+  }
+
   componentDidMount() {
     const {actions, token} = this.props;
     if (!token) {
@@ -24,9 +42,14 @@ class App extends Component {
 
   render() {
     const {main, header, error, children} = this.props;
+    const {appBarIconRight} = this.state;
+    const headerWithIcon = header ? React.cloneElement(header, {
+      iconElementRight: appBarIconRight,
+    }) : null;
+
     return !error ? (
       <div>
-        {header}
+        {headerWithIcon}
         {main}
       </div>
     ) : children;

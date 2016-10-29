@@ -3,20 +3,22 @@
  */
 import React, {Component, PropTypes} from 'react';
 import {Link} from 'react-router';
+import {connect} from 'react-redux';
 
-import {Card, CardActions, CardHeader, CardTitle, CardText} from 'material-ui/Card';
+import {Card, CardHeader, CardText} from 'material-ui/Card';
 import FontIcon from 'material-ui/FontIcon';
 import Divider from 'material-ui/Divider';
 import ChevronRight from 'material-ui/svg-icons/navigation/chevron-right';
 import IconButton from 'material-ui/IconButton';
 import FlatButton from 'material-ui/FlatButton';
 import Paper from 'material-ui/Paper';
+import IconMenu from 'material-ui/IconMenu';
+import MenuItem from 'material-ui/MenuItem';
+import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 
 import s from './UserPage.scss';
-
-import {connect} from 'react-redux';
 
 class UserPage extends Component {
 
@@ -29,6 +31,26 @@ class UserPage extends Component {
   static defaultProps = {
     avatar: 'http://lorempixel.com/100/100/nature/',
   };
+
+  static contextTypes = {
+    setAppBarIconRight: PropTypes.func,
+  };
+
+  componentWillMount() {
+    this.context.setAppBarIconRight(
+      <IconMenu
+        targetOrigin={{horizontal: 'right', vertical: 'top'}}
+        anchorOrigin={{horizontal: 'right', vertical: 'top'}}
+        iconButtonElement={
+          <IconButton><MoreVertIcon /></IconButton>
+        }
+      >
+        <Link to="/share/add">
+          <MenuItem primaryText="asdasdasd" />
+        </Link>
+      </IconMenu>
+    );
+  }
 
   render() {
     const style = {
@@ -101,16 +123,3 @@ export default connect(state => ({
   profile: state.auth.get('profile'),
   username: state.auth.get('username'),
 }))(withStyles(s)(UserPage));
-
-export class User extends Component {
-  render() {
-    return (
-      <div>
-        {/* if at "/users/123" this will be <Profile> */}
-        {/* UsersSidebar will also get <Profile> as this.props.children.
-            You can pick where it renders */}
-        {this.props.children}
-      </div>
-    )
-  }
-}

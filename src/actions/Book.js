@@ -1,6 +1,6 @@
 import ActionTypes from '../constants/ActionTypes';
 import isomorphicFetch from 'isomorphic-fetch';
-import fetch, {fetchJson} from '../core/fetch';
+import {fetchJson} from '../core/fetch';
 
 import {fromJS} from 'immutable';
 
@@ -13,7 +13,6 @@ export function fetchBookList(page) {
     });
 
     return fetchJson(`/api/share/books?page=${page}`)
-    // .then((response) => response.json())
     .then((json) => {
       const {books} = json;
 
@@ -65,7 +64,7 @@ export function fetchBook(bookId) {
         const bookDetail = Object.assign({}, book, {detail});
         dispatch({
           type: ActionTypes.FETCH_BOOK_SUCCESS,
-          data: fromJS(bookDetail),
+          detail: fromJS(bookDetail),
         });
       });
     });
@@ -95,3 +94,19 @@ export function addComment(shareId, comment) {
     });
   };
 }
+
+export const star = (shareId) => (dispatch) =>
+  fetchJson(`'/api/share/book/${shareId}/star'`, {
+    method: 'POST',
+  })
+  .then(() => {
+    dispatch({
+      type: ActionTypes.STAR_SHARE_BOOK_SUCCESS,
+    });
+  })
+  .catch((err) => {
+    dispatch({
+      type: ActionTypes.STAR_SHARE_BOOK_FAILURE,
+      err,
+    });
+  });
