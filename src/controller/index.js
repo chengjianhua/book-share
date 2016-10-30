@@ -16,9 +16,26 @@ const router = new express.Router();
 
 router.use(authenticateToken().unless({
   useOriginalUrl: false,
-  path: ['/register', '/authenticate'],
+  path: ['/register', '/login', '/checkUsername'],
 }));
 
+
+router.post('/checkUsername', (req, res) => {
+  const {username} = req.body;
+
+  User.findUniqueUserByUsername(username, (err, result) => {
+    if (err) {
+      logger.error(`Fetching user named ${username} from database failed when check username whether is existed.`);
+      return;
+    }
+
+    if (!result) {
+      res.json(formatJson(true, `username ${username} is available.`));
+    } else {
+      res.json(formatJson(false, `username ${username} is existed.`));
+    }
+  });
+});
 
 /**
  * [ /register ]: 注册用户
@@ -31,15 +48,16 @@ router.post('/register', (req, res) => {
     registerDate: new Date(),
   };
 
-  User.addUser(user, (result) => {
-    logger.info(`[ObjectId = ${result.insertedId}]: Inserted [${JSON.stringify(user)}] into mongodb!`);
-
-    res.json(formatJson(true, `User ${username} registerd successfully.`));
+  User.addUser(user, (err, result) => {
+    if (!err) {
+      logger.info(`[ObjectId = ${result.insertedId}]: Inserted [${JSON.stringify(user)}] into mongodb!`);
+      res.json(formatJson(true, `User ${username} registerd successfully.`));
+    }
   });
 });
 
-router.post('/authenticate', passport.authenticate('local'), (req, res) => {
-  const {query: {url: originalUrl}} = req;
+router.post('/login', passport.authenticate('local'), (req, res) => {
+  const {query: {originalUrl}} = req;
   const {username, password} = req.body;
   User.findUniqueUserByUsername(username, (err, user) => {
     if (err) {

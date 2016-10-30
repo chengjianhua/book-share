@@ -38,11 +38,10 @@ export function removeToken() {
   };
 }
 
-export function writeAuthorization({token, profile}) {
+export function writeAuthorization({token}) {
   return function (dispatch) {
     if (canUseDOM) {
       localStorage.setItem('token', token);
-      // localStorage.setItem('profile', JSON.stringify(profile));
       localStorage.setItem('profile', JSON.stringify(jwtDecode(token).profile));
       dispatch({
         token,
@@ -69,3 +68,40 @@ export function authenticate(username, password) {
     });
   };
 }
+
+export const checkUsername = (username) => () =>
+  fetchJson('/manage/checkUsername', {
+    method: 'POST',
+    body: JSON.stringify({
+      username,
+    }),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+  .then(({isSuccess}) => isSuccess);
+
+export const register = ({username, password}) => (dispatch) =>
+  fetchJson('/manage/register', {
+    method: 'POST',
+    body: JSON.stringify({
+      username, password,
+    }),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  }).then(({isSuccess}) => {
+    if (isSuccess) {
+      dispatch({
+        type: ActionTypes.REGISTER_USER_SUCCESS,
+      });
+
+      dispatch(authenticate(username, password));
+    } else {
+      dispatch({
+        type: ActionTypes.REGISTER_USER_FAILURE,
+      });
+    }
+
+    return isSuccess;
+  });

@@ -48,7 +48,7 @@ passport.authenticateMiddleware = () => {
     if (req.isAuthenticated()) {
       return next();
     }
-    return res.redirect(`/sign?url=${req.originalUrl}`);
+    return res.redirect(`/sign?originalUrl=${req.originalUrl}`);
   };
 
   middleware.unless = unless;
@@ -56,7 +56,9 @@ passport.authenticateMiddleware = () => {
 };
 
 passport.loggerMiddleware = () => (req, res, next) => {
-  logger.debug(`username ${req.user ? req.user.username : null} has found in session.`);
+  if (!req.headers.authorization) {
+    logger.debug(`username ${req.user ? req.user.username : null} has found in session.`);
+  }
   next();
 };
 

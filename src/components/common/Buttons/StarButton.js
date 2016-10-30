@@ -30,9 +30,9 @@ export default class StarButton extends PureComponent {
     const {starred} = this.state;
 
     if (starred) {
-      onStar();
-    } else {
       onUnstar();
+    } else {
+      onStar();
     }
 
     this.setState({

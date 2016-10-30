@@ -69,7 +69,7 @@ class LoginPage extends Component {
         <form
           ref={(ref) => {this.form = ref;}}
           method="post"
-          action={`/manage/authenticate?url=${originalUrl}`}
+          action={`/manage/login?originalUrl=${originalUrl}`}
           onSubmit={this.handleFormSubmit}
         >
           <TextField

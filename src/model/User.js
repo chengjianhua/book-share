@@ -35,12 +35,10 @@ class User {
     (await db).insertOne(user, (err, result) => {
       if (err) {
         logger.error(`Add user ${user.username} failed.`, err);
+        callback(err, null);
+      } else {
+        callback(null, result);
       }
-
-      // 执行数据库操作完成以后所需的操作
-      callback(result);
-
-      db.close();
     });
   }
 

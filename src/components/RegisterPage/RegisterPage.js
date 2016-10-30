@@ -1,13 +1,16 @@
 import React, {Component} from 'react';
 import {withRouter} from 'react-router';
+
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import TextField from 'material-ui/TextField';
 import Dialog from 'material-ui/Dialog';
 import RaisedButton from 'material-ui/RaisedButton';
+
 import s from './RegisterPage.scss';
 
-import fetch from 'isomorphic-fetch';
-import 'es6-promise';
+import {bindActionCreators} from 'redux';
+import {connect} from 'react-redux';
+import {checkUsername, register} from 'actions/Auth';
 
 class RegisterPage extends Component {
 
@@ -18,44 +21,9 @@ class RegisterPage extends Component {
       username: '',
       password: '',
       openAlertDialog: false,
+      isValidUsername: false,
     };
   }
-
-  handleRegisterSubmit = (event) => {
-    event.preventDefault();
-
-    const postData = {
-      username: this.state.username,
-      password: this.state.password,
-    };
-
-    console.log('注册表单已被拦截！');
-
-    // noinspection JSUnresolvedFunction
-    fetch('/manage/register', {
-      method: 'POST',
-      body: JSON.stringify(postData),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    }).then(function (response) {
-      return response.json();
-    }).then(function (data) {
-      // If server return a message that indicates the submit is successful, then switching to homepage.
-      if (data.isSuccess) {
-        // 打开成功的提示弹窗并在定时时间后自动跳转到主页
-        this.setState({
-          openAlertDialog: true,
-        }, function () {
-          setTimeout(function () {
-            this.context.router.push('/');
-          }.bind(this), 2000);
-        });
-      }
-    }.bind(this)).catch(function (ex) {
-      console.log('提交分享表单失败', ex);
-    });
-  };
 
   handleUsernameChange = (event, value) => {
     event.stopPropagation();
@@ -63,6 +31,18 @@ class RegisterPage extends Component {
     this.setState({
       username: value,
     });
+  };
+
+  handleUsernameBlur = (event) => {
+    const username = event.target.value;
+    const {actions} = this.props;
+
+    actions.checkUsername(username)
+      .then(isSuccess => {
+        this.setState({
+          isValidUsername: isSuccess,
+        });
+      });
   };
 
   handlePasswordChange = (event, value) => {
@@ -73,10 +53,39 @@ class RegisterPage extends Component {
     });
   };
 
+  handleRegisterSubmit = (event) => {
+    event.preventDefault();
+
+    this.setState({
+      isValidUsername: false,
+    });
+
+    const {actions} = this.props;
+    const {username, password} = this.state;
+
+    const user = {
+      username, password,
+    };
+
+    actions.register(user)
+      .then(isSuccess => {
+        if (isSuccess) {
+          this.form.submit();
+        }
+      });
+  };
+
   render() {
+    const {isValidUsername} = this.state;
+    const {originalUrl} = this.props;
     return (
       <div className={s.root}>
-        <form method="post" action="" onSubmit={this.handleRegisterSubmit}>
+        <form
+          method="post"
+          ref={form => {this.form = form;}}
+          action={`/manage/login?originalUrl=${originalUrl}`}
+          onSubmit={this.handleRegisterSubmit}
+        >
           <TextField
             fullWidth
             floatingLabelFixed
@@ -87,6 +96,7 @@ class RegisterPage extends Component {
             hintText="不超过16位字符"
             value={this.state.username}
             onChange={this.handleUsernameChange}
+            onBlur={this.handleUsernameBlur}
           />
           <TextField
             fullWidth
@@ -102,11 +112,12 @@ class RegisterPage extends Component {
           />
 
           <RaisedButton
+            primary
             key="register-button"
             label="注册"
-            primary
             type="submit"
             style={{width: '100%', marginTop: '1rem'}}
+            disabled={!isValidUsername}
           />
         </form>
 
@@ -123,4 +134,6 @@ class RegisterPage extends Component {
 
 }
 
-export default withStyles(s)(withRouter(RegisterPage));
+export default connect(null, (dispatch) => ({
+  actions: bindActionCreators(Object.assign({}, {checkUsername, register}), dispatch),
+}))(withStyles(s)(withRouter(RegisterPage)));

@@ -30,7 +30,7 @@ class SignPage extends Component {
   };
 
   render() {
-    const {location: {query: {url}}} = this.props;
+    const {location: {query: {originalUrl}}} = this.props;
 
     return (
       <div>
@@ -43,7 +43,7 @@ class SignPage extends Component {
             label="登录"
           >
             <LoginPage
-              originalUrl={url || '/'}
+              originalUrl={originalUrl || '/'}
             />
           </Tab>
 
@@ -51,7 +51,9 @@ class SignPage extends Component {
             value={1}
             label="注册"
           >
-            <RegisterPage />
+            <RegisterPage
+              originalUrl={originalUrl || '/'}
+            />
           </Tab>
         </Tabs>
       </div>
