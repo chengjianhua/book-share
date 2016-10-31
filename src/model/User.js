@@ -31,15 +31,19 @@ class User {
    * @param user 要插入到数据库中的用户信息
    * @param callback(result) 插入成功后要执行的操作
    */
-  static async addUser(user, callback) {
-    (await db).insertOne(user, (err, result) => {
-      if (err) {
-        logger.error(`Add user ${user.username} failed.`, err);
-        callback(err, null);
-      } else {
-        callback(null, result);
-      }
-    });
+  static async addUser(user) {
+    const result = await (await db).insertOne(user)
+      .then(({insertedCount, insertedId}) => {
+        if (insertedCount) {
+          logger.info(`Add user ${JSON.stringify(user)} into database successfully.`);
+          Promise.resolve(insertedId);
+        } else {
+          logger.error(`Add user ${JSON.stringify(user)} failed.`);
+          Promise.reject(new Error(`Add user ${user.username} failed.`));
+        }
+      });
+
+    return result;
   }
 
   static async updateUser(user) {

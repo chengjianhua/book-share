@@ -40,7 +40,7 @@ router.post('/checkUsername', (req, res) => {
 /**
  * [ /register ]: 注册用户
  */
-router.post('/register', (req, res) => {
+router.post('/register', async (req, res) => {
   const {username, password} = req.body;
   const user = {
     username,
@@ -48,12 +48,9 @@ router.post('/register', (req, res) => {
     registerDate: new Date(),
   };
 
-  User.addUser(user, (err, result) => {
-    if (!err) {
-      logger.info(`[ObjectId = ${result.insertedId}]: Inserted [${JSON.stringify(user)}] into mongodb!`);
-      res.json(formatJson(true, `User ${username} registerd successfully.`));
-    }
-  });
+  await User.addUser(user);
+
+  res.json(formatJson(true, `User ${username} registerd successfully.`));
 });
 
 router.post('/login', passport.authenticate('local'), (req, res) => {
@@ -80,6 +77,11 @@ router.post('/login', passport.authenticate('local'), (req, res) => {
       }
     }
   });
+});
+
+router.get('/logout', (req, res) => {
+  req.logout();
+  res.redirect('/');
 });
 
 export default router;
