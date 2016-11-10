@@ -14,7 +14,7 @@ export function fetchBookList(page) {
       type: ActionTypes.FETCH_BOOK_LIST_DOING,
     });
 
-    return fetchJson(`/api/share/books?page=${page}`)
+    return fetchJson(`${prefix}?page=${page}`)
     .then((json) => {
       const {books} = json;
 
@@ -58,18 +58,23 @@ export function fetchBookList(page) {
 
 export function fetchBook(bookId) {
   return function (dispatch) {
+    dispatch({
+      type: ActionTypes.FETCH_BOOK_DOING,
+    });
+
     return fetchJson(`${prefix}/${bookId}`)
-    .then(json => {
-      const {book} = json;
-      fetchJson(`${doubanAPI}/${book.bookId}`)
-      .then(detail => {
-        const bookDetail = Object.assign({}, book, {detail});
-        dispatch({
-          type: ActionTypes.FETCH_BOOK_SUCCESS,
-          detail: fromJS(bookDetail),
+      .then(json => {
+        const {book} = json;
+
+        return fetchJson(`${doubanAPI}/${book.bookId}`)
+        .then(detail => {
+          const bookDetail = Object.assign({}, book, {detail});
+          dispatch({
+            type: ActionTypes.FETCH_BOOK_SUCCESS,
+            detail: fromJS(bookDetail),
+          });
         });
       });
-    });
   };
 }
 
@@ -98,7 +103,7 @@ export function addComment(shareId, comment) {
 }
 
 export const star = (shareId, username) => (dispatch) =>
-  fetchJson(`${prefix}/${shareId}/star/${username}'`, {
+  fetchJson(`${prefix}/${shareId}/star/${username}`, {
     method: 'POST',
   })
   .then(() => {
@@ -112,3 +117,24 @@ export const star = (shareId, username) => (dispatch) =>
       err,
     });
   });
+
+export const unstar = (shareId, username) => (dispatch) => {
+  dispatch({
+    type: ActionTypes.STAR_BOOK_DOING,
+  });
+
+  return fetchJson(`${prefix}/${shareId}/star/${username}`, {
+    method: 'DELETE',
+  })
+  .then(() => {
+    dispatch({
+      type: ActionTypes.STAR_BOOK_SUCCESS,
+    });
+  })
+  .catch((err) => {
+    dispatch({
+      type: ActionTypes.STAR_BOOK_FAILURE,
+      err,
+    });
+  });
+};

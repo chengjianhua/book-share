@@ -121,7 +121,7 @@ class Book {
   static async star(shareId, username) {
     User.star(username, shareId);
 
-    const result = await (await dbBook).updateOne(
+    const {matchedCount, modifiedCount} = await (await dbBook).updateOne(
       {
         _id: new ObjectId(shareId),
       },
@@ -130,6 +130,36 @@ class Book {
           stars: username,
         },
       }
+    );
+
+    if (matchedCount === 0) {
+      const errMessage = `There is not a matched user named "${username}".`;
+      logger.warn(errMessage);
+      throw new Error(errMessage);
+    } else {
+      if (modifiedCount === 0) {
+        const errMessage = 'No updates.';
+        logger.info(errMessage);
+        throw new Error(errMessage);
+      } else {
+        logger.info(`User "${username}" star share: "${shareId}" successfully.`);
+        return true;
+      }
+    }
+  }
+
+  static async unstar(shareId, username) {
+    User.unstar(username, shareId);
+
+    const result = await (await dbBook).updateOne(
+      {
+        _id: new ObjectId(shareId),
+      },
+      {
+        $pull: {
+          stars: username,
+        },
+      },
     ).then(({matchedCount, modifiedCount}) => {
       if (matchedCount === 0) {
         const errMessage = `There is not a matched user named "${username}".`;
@@ -138,9 +168,9 @@ class Book {
       } else {
         if (modifiedCount === 0) {
           const errMessage = 'No updates.';
-          logger.error(errMessage);
+          logger.info(errMessage);
         } else {
-          logger.info(`User "${username}" star share: "${shareId}" successfully.`);
+          logger.info(`User "${username}" unstar share: "${shareId}" successfully.`);
           Promise.resolve(true);
         }
       }

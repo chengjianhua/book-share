@@ -1,12 +1,11 @@
 /**
  * Created by cjh95414 on 2016/6/13.
  */
-import React, {PropTypes, Component} from 'react';
+import React, {PropTypes, PureComponent} from 'react';
 import {Card, CardText, CardTitle, CardMedia, CardHeader} from 'material-ui/Card';
 import loadingGif from '../../../public/img/loading.gif';
-// import s from "./index.scss";
 
-class BookDetailCard extends Component {
+class BookDetailCard extends PureComponent {
 
   static propTypes = {
     user: PropTypes.shape({
@@ -17,35 +16,33 @@ class BookDetailCard extends Component {
     book: PropTypes.object,
   };
 
-  static defaultProps = {
-    user: {
-      username: 'chengjianhua',
-      signature: 'To be or not to be!',
-      avatar: '/img/avatar.png',
-    },
-  };
-
   render() {
     const loading = '加载中……';
     const {user, book} = this.props;
+
+    const bookTitle = book.get('bookTitle');
     const bookShareTitle = book.get('shareTitle');
     const bookShareContent = book.get('shareContent');
     const bookSummary = book.getIn(['detail', 'summary']);
     const bookImg = book.getIn(['detail', 'images', 'large']);
 
+    const username = user.get('username');
+    const signature = user.getIn(['profile', 'signature']);
+    const avatar = '/img/avatar.png';
+
     return (
       <div>
         <Card>
           <CardHeader
-            title={user.username}
-            subtitle={user.signature}
-            avatar={user.avatar}
+            title={username}
+            subtitle={signature}
+            avatar={avatar}
           />
 
           <CardMedia
             overlay={
               <CardTitle
-                title={book.get('bookTitle') || loading}
+                title={bookTitle || loading}
                 subtitle={bookSummary ? bookSummary.substr(0, 100).concat('...') : loading}
               />
             }

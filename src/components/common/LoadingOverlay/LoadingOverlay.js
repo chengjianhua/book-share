@@ -28,6 +28,7 @@ class LoadingOverlay extends Component {
         bottom: 0,
         padding: '50% 0 0 0',
         backgroundColor: 'rgba(50,50,50, 0.8)',
+        textAlign: 'center',
       },
       hidden: {
         display: 'none',

@@ -5,8 +5,9 @@ import React, {Component} from 'react';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
+import {Map} from 'immutable';
 
-import {addComment, fetchBook} from 'actions/Book';
+import {addComment, fetchBook, star, unstar} from 'actions/Book';
 import withApp from 'components/App/withApp';
 
 import {StarButton} from 'common/Buttons';
@@ -19,12 +20,24 @@ class BookDetailPage extends Component {
   componentWillMount() {
     this.props.app.setAppBarIconRight(
       <StarButton
-        onStar
+        onStar={this.handleStar}
+        onUnstar={this.handleUnstar}
       />
     );
+
     const {actions, params: {id}} = this.props;
 
     actions.fetchBook(id);
+  }
+
+  handleStar = () => {
+    const {actions, params: {id}, username} = this.props;
+    actions.star(id, username);
+  }
+
+  handleUnstar = () => {
+    const {actions, params: {id}, username} = this.props;
+    actions.unstar(id, username);
   }
 
   handleComment = (commentContent) => {
@@ -38,12 +51,13 @@ class BookDetailPage extends Component {
   };
 
   render() {
-    const {book} = this.props;
+    const {book, user} = this.props;
     const comments = book.get('comments');
 
     return (
       <div>
         <BookDetailCard
+          user={user}
           book={book}
         />
 
@@ -60,13 +74,17 @@ function mapStateToProps(state) {
   return {
     book: state.book.getIn(['book', 'detail']),
     username: state.auth.get('username'),
+    user: new Map({
+      username: state.auth.get('username'),
+      profile: state.auth.get('profile'),
+    }),
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
     actions: bindActionCreators(Object.assign({}, {
-      addComment, fetchBook,
+      addComment, fetchBook, star, unstar,
     }), dispatch),
   };
 }

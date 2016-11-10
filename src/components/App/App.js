@@ -25,7 +25,6 @@ class App extends Component {
 
   state = {
     appbarIconRight: null,
-    isLoading: false,
   };
 
   getChildContext() {
@@ -35,12 +34,6 @@ class App extends Component {
         setAppBarIconRight: (iconRight) => {
           this.setState({
             appBarIconRight: iconRight,
-          });
-        },
-
-        setIsLoading: (isLoading) => {
-          this.setState({
-            isLoading,
           });
         },
 
@@ -73,7 +66,7 @@ class App extends Component {
       <div>
         {headerWithIcon}
         {main}
-        <LoadingOverlay />
+        <LoadingOverlay show={this.props.isLoading} />
       </div>
     ) : children;
   }
@@ -85,6 +78,7 @@ function mapStateToProps(state) {
     isAuthenticated: state.auth.get('isAuthenticated'),
     token: state.auth.get('token'),
     username: state.auth.get('username'),
+    isLoading: state.app.get('isLoading'),
   };
 }
 

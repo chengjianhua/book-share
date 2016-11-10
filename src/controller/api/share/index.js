@@ -41,7 +41,7 @@ shareRouter.post('/add', (req, res) => {
 });
 
 shareRouter.get('/books', (req, res) => {
-  const {page} = req.query;
+  const page = req.query.page || 1;
 
   Book.getSharedBooksWithAll({page: Number(page)}, (books) => {
     res.json(formatJson(true, `Fetching books page No.${page} successfully.`, {
@@ -76,14 +76,25 @@ shareRouter.post('/books/:id/comment', (req, res) => {
 shareRouter.post('/books/:id/star/:username', (req, res) => {
   const {username, id: shareId} = req.params;
 
-  Book.star(username, shareId)
+  Book.star(shareId, username)
     .then(() => {
-      console.log('success');
       res.json(formatJson(true, 'success'));
     })
-    .catch((err) => {
-      console.error(err);
+    .catch(() => {
       res.json(formatJson(false, 'failed'));
     });
 });
+
+shareRouter.delete('/books/:id/star/:username', (req, res) => {
+  const {username, id: shareId} = req.params;
+
+  Book.unstar(shareId, username)
+    .then(() => {
+      res.json(formatJson(true, `User ${username} unstar share ${shareId} successfully.`));
+    })
+    .catch(() => {
+      res.json(formatJson(false, `User ${username} unstar share ${shareId} failed.`));
+    });
+});
+
 export default shareRouter;

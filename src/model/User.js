@@ -94,8 +94,9 @@ class User {
         Promise.reject(new Error(errMessage));
       } else {
         if (modifiedCount === 0) {
-          const errMessage = 'No updates.';
-          logger.error(errMessage);
+          const errMessage = 'There is not a share being starred.';
+          logger.warn(errMessage);
+          Promise.reject(new Error(errMessage));
         } else {
           logger.info(`User "${username}" star share: "${shareId}" successfully.`);
           Promise.resolve(true);
@@ -106,6 +107,34 @@ class User {
     return result;
   }
 
+  static async unstar(username, shareId) {
+    const result = await (await db).updateOne(
+      {
+        username,
+      },
+      {
+        $pull: {
+          'stars.books': new ObjectId(shareId),
+        },
+      }
+    ).then(({matchedCount, modifiedCount}) => {
+      if (matchedCount === 0) {
+        const errMessage = `There is not a matched user named "${username}".`;
+        logger.warn(errMessage);
+        Promise.reject(new Error(errMessage));
+      } else {
+        if (modifiedCount === 0) {
+          const errMessage = 'No updates.';
+          logger.info(errMessage);
+        } else {
+          logger.info(`User "${username}" unstar share: "${shareId}" successfully.`);
+          Promise.resolve(true);
+        }
+      }
+    });
+
+    return result;
+  }
 }
 
 export default User;
