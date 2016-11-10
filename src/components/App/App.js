@@ -3,9 +3,14 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
+
 import s from './App.scss';
 
 import {readToken} from 'actions/Auth';
+
+import LoadingOverlay from 'common/LoadingOverlay';
+
+import {appShape} from './propTypes';
 
 class App extends Component {
 
@@ -15,19 +20,36 @@ class App extends Component {
   };
 
   static childContextTypes = {
-    setAppBarIconRight: PropTypes.func,
+    app: appShape,
   };
 
   state = {
     appbarIconRight: null,
+    isLoading: false,
   };
 
   getChildContext() {
     return {
-      setAppBarIconRight: (iconRight) => {
-        this.setState({
-          appBarIconRight: iconRight,
-        });
+      app: {
+
+        setAppBarIconRight: (iconRight) => {
+          this.setState({
+            appBarIconRight: iconRight,
+          });
+        },
+
+        setIsLoading: (isLoading) => {
+          this.setState({
+            isLoading,
+          });
+        },
+
+        restoreAppBar: () => {
+          this.setState({
+            appBarIconRight: null,
+          });
+        },
+
       },
     };
   }
@@ -51,6 +73,7 @@ class App extends Component {
       <div>
         {headerWithIcon}
         {main}
+        <LoadingOverlay />
       </div>
     ) : children;
   }

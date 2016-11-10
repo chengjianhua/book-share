@@ -2,6 +2,7 @@
  * Created by cjh95414 on 2016/6/7.
  */
 import connect from '../database/db';
+import {ObjectId} from 'mongodb';
 import log4js from 'log4js';
 
 const logger = log4js.getLogger('Model[User]');
@@ -47,7 +48,8 @@ class User {
   }
 
   static async updateUser(user) {
-    const {username} = user;
+    const {username, signature, gender} = user;
+
     const result = await (await db).updateOne(
       {
         username,
@@ -55,8 +57,8 @@ class User {
       {
         $set: {
           username,
-          signature: user.signature,
-          gender: user.gender,
+          signature,
+          gender,
         },
       }
     ).then(({userProfile, matchedCount}) => {
@@ -70,6 +72,35 @@ class User {
     }).catch((err) => {
       logger.error(`Update ${username}'s profile failed.'`, err);
       Promise.reject(new Error(`Update ${username}'s profile failed.'`));
+    });
+
+    return result;
+  }
+
+  static async star(username, shareId) {
+    const result = await (await db).updateOne(
+      {
+        username,
+      },
+      {
+        $addToSet: {
+          'stars.books': new ObjectId(shareId),
+        },
+      }
+    ).then(({matchedCount, modifiedCount}) => {
+      if (matchedCount === 0) {
+        const errMessage = `There is not a matched user named "${username}".`;
+        logger.warn(errMessage);
+        Promise.reject(new Error(errMessage));
+      } else {
+        if (modifiedCount === 0) {
+          const errMessage = 'No updates.';
+          logger.error(errMessage);
+        } else {
+          logger.info(`User "${username}" star share: "${shareId}" successfully.`);
+          Promise.resolve(true);
+        }
+      }
     });
 
     return result;

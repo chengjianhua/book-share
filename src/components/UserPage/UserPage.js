@@ -17,6 +17,7 @@ import MenuItem from 'material-ui/MenuItem';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
+import withApp from 'components/App/withApp';
 
 import s from './UserPage.scss';
 
@@ -37,7 +38,7 @@ class UserPage extends Component {
   };
 
   componentWillMount() {
-    this.context.setAppBarIconRight(
+    this.props.app.setAppBarIconRight(
       <IconMenu
         targetOrigin={{horizontal: 'right', vertical: 'top'}}
         anchorOrigin={{horizontal: 'right', vertical: 'top'}}
@@ -46,7 +47,7 @@ class UserPage extends Component {
         }
       >
         <Link to="/share/add">
-          <MenuItem primaryText="asdasdasd" />
+          <MenuItem primaryText="添加" />
         </Link>
       </IconMenu>
     );
@@ -103,7 +104,12 @@ class UserPage extends Component {
             className={s.iconButton}
             label="书单"
             labelPosition="after"
-            icon={ <FontIcon className="material-icons" color="rgba(50,100,250,0.87)">view_list</FontIcon> }
+            icon={
+              <FontIcon
+                className="material-icons"
+                color="rgba(50,100,250,0.87)"
+              >view_list</FontIcon>
+            }
           />
 
           <FlatButton
@@ -122,4 +128,4 @@ class UserPage extends Component {
 export default connect(state => ({
   profile: state.auth.get('profile'),
   username: state.auth.get('username'),
-}))(withStyles(s)(UserPage));
+}))(withStyles(s)(withApp(UserPage)));

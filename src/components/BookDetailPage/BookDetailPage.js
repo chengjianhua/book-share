@@ -1,11 +1,13 @@
 /**
  * Created by cjh95414 on 2016/5/25.
  */
-import React, {Component, PropTypes} from 'react';
+import React, {Component} from 'react';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
+
 import {addComment, fetchBook} from 'actions/Book';
+import withApp from 'components/App/withApp';
 
 import {StarButton} from 'common/Buttons';
 import s from './BookDetailPage.scss';
@@ -14,13 +16,11 @@ import CommentBox from './CommentBox';
 
 class BookDetailPage extends Component {
 
-  static contextTypes = {
-    setAppBarIconRight: PropTypes.func,
-  };
-
   componentWillMount() {
-    this.context.setAppBarIconRight(
-      <StarButton />
+    this.props.app.setAppBarIconRight(
+      <StarButton
+        onStar
+      />
     );
     const {actions, params: {id}} = this.props;
 
@@ -59,6 +59,7 @@ class BookDetailPage extends Component {
 function mapStateToProps(state) {
   return {
     book: state.book.getIn(['book', 'detail']),
+    username: state.auth.get('username'),
   };
 }
 
@@ -70,4 +71,6 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(s)(BookDetailPage));
+export default connect(mapStateToProps, mapDispatchToProps)(
+  withStyles(s)(withApp(BookDetailPage))
+);

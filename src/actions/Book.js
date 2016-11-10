@@ -6,6 +6,8 @@ import {fromJS} from 'immutable';
 
 import {doubanAPI} from '../config';
 
+const prefix = '/api/share/books';
+
 export function fetchBookList(page) {
   return function (dispatch) {
     dispatch({
@@ -56,7 +58,7 @@ export function fetchBookList(page) {
 
 export function fetchBook(bookId) {
   return function (dispatch) {
-    return fetchJson(`/api/share/book/${bookId}`)
+    return fetchJson(`${prefix}/${bookId}`)
     .then(json => {
       const {book} = json;
       fetchJson(`${doubanAPI}/${book.bookId}`)
@@ -73,7 +75,7 @@ export function fetchBook(bookId) {
 
 export function addComment(shareId, comment) {
   return function (dispatch) {
-    return fetchJson(`/api/share/book/${shareId}/comment`, {
+    return fetchJson(`${prefix}/${shareId}/comment`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -95,8 +97,8 @@ export function addComment(shareId, comment) {
   };
 }
 
-export const star = (shareId) => (dispatch) =>
-  fetchJson(`'/api/share/book/${shareId}/star'`, {
+export const star = (shareId, username) => (dispatch) =>
+  fetchJson(`${prefix}/${shareId}/star/${username}'`, {
     method: 'POST',
   })
   .then(() => {

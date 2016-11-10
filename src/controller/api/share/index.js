@@ -1,7 +1,8 @@
 import express from 'express';
 import log4js from 'log4js';
 
-import Book from '../../../model/Book';
+import Book from 'models/Book';
+
 import {authenticateToken} from '../../middlewares';
 import {formatJson} from '../../utils';
 
@@ -49,7 +50,7 @@ shareRouter.get('/books', (req, res) => {
   });
 });
 
-shareRouter.get('/book/:id', (req, res) => {
+shareRouter.get('/books/:id', (req, res) => {
   const {id} = req.params;
 
   Book.getSharedBookByShareId(id, (book) => {
@@ -59,7 +60,7 @@ shareRouter.get('/book/:id', (req, res) => {
   });
 });
 
-shareRouter.post('/book/:id/comment', (req, res) => {
+shareRouter.post('/books/:id/comment', (req, res) => {
   const {id} = req.params;
   const comment = Object.assign({}, req.body, {user: req.user.username});
 
@@ -72,4 +73,17 @@ shareRouter.post('/book/:id/comment', (req, res) => {
   });
 });
 
+shareRouter.post('/books/:id/star/:username', (req, res) => {
+  const {username, id: shareId} = req.params;
+
+  Book.star(username, shareId)
+    .then(() => {
+      console.log('success');
+      res.json(formatJson(true, 'success'));
+    })
+    .catch((err) => {
+      console.error(err);
+      res.json(formatJson(false, 'failed'));
+    });
+});
 export default shareRouter;

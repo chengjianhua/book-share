@@ -7,6 +7,10 @@ const logger = log4js.getLogger('Model [Book]');
 import {ObjectId} from 'mongodb';
 import connect from '../database/db';
 
+import User from 'models/User';
+
+const dbBook = connect.then(database => database.collection('share_book'));
+
 /* eslint-disable no-unused-expressions */
 class Book {
   /**
@@ -112,6 +116,37 @@ class Book {
         }
       );
     });
+  }
+
+  static async star(shareId, username) {
+    User.star(username, shareId);
+
+    const result = await (await dbBook).updateOne(
+      {
+        _id: new ObjectId(shareId),
+      },
+      {
+        $addToSet: {
+          stars: username,
+        },
+      }
+    ).then(({matchedCount, modifiedCount}) => {
+      if (matchedCount === 0) {
+        const errMessage = `There is not a matched user named "${username}".`;
+        logger.warn(errMessage);
+        Promise.reject(new Error(errMessage));
+      } else {
+        if (modifiedCount === 0) {
+          const errMessage = 'No updates.';
+          logger.error(errMessage);
+        } else {
+          logger.info(`User "${username}" star share: "${shareId}" successfully.`);
+          Promise.resolve(true);
+        }
+      }
+    });
+
+    return result;
   }
 
 }

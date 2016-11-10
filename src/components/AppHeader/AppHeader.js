@@ -41,8 +41,14 @@ class AppHeader extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      value: props.location.pathname,
+      activeTab: props.location.pathname,
     };
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.setState({
+      activeTab: nextProps.location.pathname,
+    });
   }
 
   handleChange = (value) => {
@@ -76,7 +82,7 @@ class AppHeader extends Component {
           >
             <Tabs
               style={style.tabs}
-              value={this.state.value}
+              value={this.state.activeTab}
               onChange={this.handleChange}
             >
               <Tab

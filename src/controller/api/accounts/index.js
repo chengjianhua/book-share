@@ -61,4 +61,18 @@ accountsRouter.post('/:username/profile', (req, res) => {
     });
 });
 
+accountsRouter.post('/:username/star/:shareId', (req, res) => {
+  const {username, shareId} = req.params;
+
+  User.star(username, shareId)
+    .then(() => {
+      console.log('success');
+      res.json(formatJson(true, 'success'));
+    })
+    .catch((err) => {
+      console.error(err);
+      res.json(formatJson(false, 'failed'));
+    });
+});
+
 export default accountsRouter;
