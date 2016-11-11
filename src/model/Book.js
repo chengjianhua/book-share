@@ -2,12 +2,13 @@
  * Created by cjh95414 on 2016/6/11.
  */
 import log4js from 'log4js';
-const logger = log4js.getLogger('Model [Book]');
-
 import {ObjectId} from 'mongodb';
-import connect from '../database/db';
 
+import connect from '../database/db';
+import {handleDbOpResult as handlers} from './utils';
 import User from 'models/User';
+
+const logger = log4js.getLogger('Model [Book]');
 
 const dbBook = connect.then(database => database.collection('share_book'));
 
@@ -119,33 +120,33 @@ class Book {
   }
 
   static async star(shareId, username) {
-    User.star(username, shareId);
+    const userStarSuccess = await User.star(username, shareId);
 
-    const {matchedCount, modifiedCount} = await (await dbBook).updateOne(
-      {
-        _id: new ObjectId(shareId),
-      },
-      {
-        $addToSet: {
-          stars: username,
+    if (userStarSuccess) {
+      const result = await (await dbBook).updateOne(
+        {
+          _id: new ObjectId(shareId),
         },
-      }
-    );
+        {
+          $addToSet: {
+            stars: username,
+          },
+        }
+      );
 
-    if (matchedCount === 0) {
-      const errMessage = `There is not a matched user named "${username}".`;
-      logger.warn(errMessage);
-      throw new Error(errMessage);
-    } else {
-      if (modifiedCount === 0) {
-        const errMessage = 'No updates.';
-        logger.info(errMessage);
-        throw new Error(errMessage);
-      } else {
-        logger.info(`User "${username}" star share: "${shareId}" successfully.`);
-        return true;
+      try {
+        const isSuccess = await handlers.updateWriteOpResult(result);
+        if (isSuccess) {
+          logger.info(`User "${username}" star share: "${shareId}" successfully.`);
+          return true;
+        }
+      } catch (e) {
+        logger.error(e.message);
       }
     }
+
+    logger.error(`User "${username}" star share: "${shareId}" failed.`);
+    return false;
   }
 
   static async unstar(shareId, username) {

@@ -1,9 +1,10 @@
 /**
  * Created by cjh95414 on 2016/6/7.
  */
-import connect from '../database/db';
 import {ObjectId} from 'mongodb';
 import log4js from 'log4js';
+import connect from '../database/db';
+import {handleDbOpResult as handlers} from './utils';
 
 const logger = log4js.getLogger('Model[User]');
 
@@ -87,24 +88,20 @@ class User {
           'stars.books': new ObjectId(shareId),
         },
       }
-    ).then(({matchedCount, modifiedCount}) => {
-      if (matchedCount === 0) {
-        const errMessage = `There is not a matched user named "${username}".`;
-        logger.warn(errMessage);
-        Promise.reject(new Error(errMessage));
-      } else {
-        if (modifiedCount === 0) {
-          const errMessage = 'There is not a share being starred.';
-          logger.warn(errMessage);
-          Promise.reject(new Error(errMessage));
-        } else {
-          logger.info(`User "${username}" star share: "${shareId}" successfully.`);
-          Promise.resolve(true);
-        }
-      }
-    });
+    );
 
-    return result;
+    try {
+      const isSuccess = await handlers.updateWriteOpResult(result);
+      if (isSuccess) {
+        logger.info(`User "${username}" star share: "${shareId}" successfully.`);
+        return true;
+      }
+    } catch (e) {
+      logger.error(e.message);
+    }
+
+    logger.info(`User "${username}" star share: "${shareId}" failed.`);
+    return false;
   }
 
   static async unstar(username, shareId) {
