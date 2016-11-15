@@ -91,11 +91,9 @@ class User {
     );
 
     try {
-      const isSuccess = await handlers.updateWriteOpResult(result);
-      if (isSuccess) {
-        logger.info(`User "${username}" star share: "${shareId}" successfully.`);
-        return true;
-      }
+      await handlers.updateWriteOpResult(result);
+      logger.info(`User "${username}" star share: "${shareId}" successfully.`);
+      return true;
     } catch (e) {
       logger.error(e.message);
     }
@@ -114,23 +112,18 @@ class User {
           'stars.books': new ObjectId(shareId),
         },
       }
-    ).then(({matchedCount, modifiedCount}) => {
-      if (matchedCount === 0) {
-        const errMessage = `There is not a matched user named "${username}".`;
-        logger.warn(errMessage);
-        Promise.reject(new Error(errMessage));
-      } else {
-        if (modifiedCount === 0) {
-          const errMessage = 'No updates.';
-          logger.info(errMessage);
-        } else {
-          logger.info(`User "${username}" unstar share: "${shareId}" successfully.`);
-          Promise.resolve(true);
-        }
-      }
-    });
+    );
 
-    return result;
+    try {
+      await handlers.updateWriteOpResult(result);
+      logger.info(`User "${username}" unstar share: "${shareId}" successfully.`);
+      return true;
+    } catch (e) {
+      logger.error(e.message);
+    }
+
+    logger.info(`User "${username}" unstar share: "${shareId}" failed.`);
+    return false;
   }
 }
 
