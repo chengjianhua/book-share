@@ -16,18 +16,28 @@ import BookDetailCard from './BookDetailCard';
 import CommentBox from './CommentBox';
 
 class BookDetailPage extends Component {
+  state = {
+    starred: false,
+  }
 
   componentWillMount() {
-    this.props.app.setAppBarIconRight(
+    const {app, actions, starred, params: {id}} = this.props;
+
+    app.setAppBarIconRight(
       <StarButton
+        starred={starred}
         onStar={this.handleStar}
         onUnstar={this.handleUnstar}
       />
     );
 
-    const {actions, params: {id}} = this.props;
-
     actions.fetchBook(id);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.setState({
+      starred: nextProps.starred,
+    });
   }
 
   handleStar = () => {
@@ -71,11 +81,14 @@ class BookDetailPage extends Component {
 }
 
 function mapStateToProps(state) {
+  const username = state.auth.get('username');
+  const book = state.book.get('book');
   return {
-    book: state.book.getIn(['book', 'detail']),
-    username: state.auth.get('username'),
+    book,
+    username,
+    starred: state.book.getIn(['book', 'stars']).includes(username),
     user: new Map({
-      username: state.auth.get('username'),
+      username,
       profile: state.auth.get('profile'),
     }),
   };

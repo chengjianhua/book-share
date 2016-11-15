@@ -123,6 +123,7 @@ class Book {
     const userStarSuccess = await User.star(username, shareId);
 
     if (userStarSuccess) {
+      // 用户 star 成功了才操作分享
       const result = await (await dbBook).updateOne(
         {
           _id: new ObjectId(shareId),
@@ -135,49 +136,45 @@ class Book {
       );
 
       try {
-        const isSuccess = await handlers.updateWriteOpResult(result);
-        if (isSuccess) {
-          logger.info(`User "${username}" star share: "${shareId}" successfully.`);
-          return true;
-        }
+        await handlers.updateWriteOpResult(result);
+        logger.info(`Book "${shareId}" stars list add user "${username}" successfully.`);
+        return true;
       } catch (e) {
         logger.error(e.message);
       }
     }
 
-    logger.error(`User "${username}" star share: "${shareId}" failed.`);
+    logger.info(`Book "${shareId}" stars list add user "${username}" failed.`);
     return false;
   }
 
   static async unstar(shareId, username) {
-    User.unstar(username, shareId);
+    const userStarSuccess = User.unstar(username, shareId);
 
-    const result = await (await dbBook).updateOne(
-      {
-        _id: new ObjectId(shareId),
-      },
-      {
-        $pull: {
-          stars: username,
+    if (userStarSuccess) {
+      // 用户 star 成功了才操作分享
+      const result = await (await dbBook).updateOne(
+        {
+          _id: new ObjectId(shareId),
         },
-      },
-    ).then(({matchedCount, modifiedCount}) => {
-      if (matchedCount === 0) {
-        const errMessage = `There is not a matched user named "${username}".`;
-        logger.warn(errMessage);
-        Promise.reject(new Error(errMessage));
-      } else {
-        if (modifiedCount === 0) {
-          const errMessage = 'No updates.';
-          logger.info(errMessage);
-        } else {
-          logger.info(`User "${username}" unstar share: "${shareId}" successfully.`);
-          Promise.resolve(true);
-        }
-      }
-    });
+        {
+          $pull: {
+            stars: username,
+          },
+        },
+      );
 
-    return result;
+      try {
+        await handlers.upupdateWriteOpResult(result);
+        logger.info(`Book "${shareId}" stars list add user "${username}" successfully.`);
+        return true;
+      } catch (e) {
+        logger.error(e.message);
+      }
+    }
+
+    logger.info(`Book "${shareId}" stars list add user "${username}" failed.`);
+    return false;
   }
 
 }
