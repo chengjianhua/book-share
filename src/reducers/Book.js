@@ -30,7 +30,7 @@ function fetchBook(state, action) {
   switch (action.type) {
     // case ActionTypes.FETCH_BOOK_DOING:
     case ActionTypes.FETCH_BOOK_SUCCESS:
-      return state.set('book', action.detail);
+      return state.set('book', defaultState.get('book').mergeDeep(action.detail));
     // case ActionTypes.FETCH_BOOK_FAILURE:
     default:
       return state;

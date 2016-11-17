@@ -8,9 +8,7 @@ import {connect} from 'react-redux';
 import {Map} from 'immutable';
 
 import {addComment, fetchBook, star, unstar} from 'actions/Book';
-import withApp from 'components/App/withApp';
 
-import {StarButton} from 'common/Buttons';
 import s from './BookDetailPage.scss';
 import BookDetailCard from './BookDetailCard';
 import CommentBox from './CommentBox';
@@ -21,43 +19,23 @@ class BookDetailPage extends Component {
   }
 
   componentWillMount() {
-    const {app, actions, starred, params: {id}} = this.props;
+    const {actions, params: {id}} = this.props;
 
-    app.setAppBarIconRight(
-      <StarButton
-        starred={starred}
-        onStar={this.handleStar}
-        onUnstar={this.handleUnstar}
-      />
-    );
-
-    actions.fetchBook(id);
-  }
-
-  componentWillReceiveProps(nextProps) {
-    this.setState({
-      starred: nextProps.starred,
-    });
-  }
-
-  handleStar = () => {
-    const {actions, params: {id}, username} = this.props;
-    actions.star(id, username);
-  }
-
-  handleUnstar = () => {
-    const {actions, params: {id}, username} = this.props;
-    actions.unstar(id, username);
+    try {
+      actions.fetchBook(id);
+    } catch (e) {
+      console.error(e);
+    }
   }
 
   handleComment = (commentContent) => {
-    const {actions, params} = this.props;
+    const {actions, params: {id}} = this.props;
     const comment = {
       content: commentContent,
       date: new Date(),
     };
 
-    actions.addComment(params.id, comment);
+    actions.addComment(id, comment);
   };
 
   render() {
@@ -86,7 +64,6 @@ function mapStateToProps(state) {
   return {
     book,
     username,
-    starred: state.book.getIn(['book', 'stars']).includes(username),
     user: new Map({
       username,
       profile: state.auth.get('profile'),
@@ -103,5 +80,5 @@ function mapDispatchToProps(dispatch) {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(
-  withStyles(s)(withApp(BookDetailPage))
+  withStyles(s)(BookDetailPage)
 );

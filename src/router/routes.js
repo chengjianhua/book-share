@@ -4,16 +4,16 @@
 import React from 'react';
 import {Route, IndexRoute} from 'react-router';
 
-import App from '../components/App/App';
-import SignPage from '../components/SignPage';
-import BookCardPage from '../components/BookCardPage';
-import UserPage from '../components/UserPage';
-import UserProfile from '../components/UserProfile';
-import ProfileSettings from '../components/UserProfile/Settings';
-import BookDetailPage from '../components/BookDetailPage';
-import Share from '../components/Share';
-import AppHeader from '../components/AppHeader';
-import PageHeader from '../components/PageHeader';
+import App from 'components/App';
+import SignPage from 'components/SignPage';
+import BookCardPage from 'components/BookCardPage';
+import UserPage from 'components/UserPage';
+import UserProfile from 'components/UserProfile';
+import ProfileSettings from 'components/UserProfile/Settings';
+import BookDetailPage from 'components/BookDetailPage';
+import Share from 'components/Share';
+import AppHeader from 'components/AppHeader';
+import PageHeader from 'components/PageHeader';
 
 import buildStore from '../store/buildStore';
 
@@ -44,7 +44,7 @@ export default ([
 
     <Route path="share">
       <Route path="add" components={{main: Share, header: PageHeader}} />
-      <Route path="book/:id" components={{main: BookDetailPage, header: PageHeader}} />
+      <Route path="book/:id" components={{main: BookDetailPage, header: BookDetailPage.Header}} />
     </Route>
 
     <Route path="user">

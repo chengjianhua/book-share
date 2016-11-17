@@ -8,8 +8,8 @@ import emptyFunction from 'fbjs/lib/emptyFunction';
 export default class StarButton extends PureComponent {
   static propTypes = {
     starred: PropTypes.bool.isRequired,
-    onStar: PropTypes.func,
-    onUnstar: PropTypes.func,
+    onStar: PropTypes.func.isRequired,
+    onUnstar: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
@@ -23,6 +23,12 @@ export default class StarButton extends PureComponent {
     this.state = {
       starred: props.starred,
     };
+  }
+
+  componentWillReceiveProps({starred}) {
+    this.setState({
+      starred,
+    });
   }
 
   handleTouchTap = () => {

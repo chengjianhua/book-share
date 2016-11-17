@@ -91,6 +91,8 @@ server.get('*', (req, res) => {
     const css = [];
 
     const initState = buildStore().getState();
+
+    // 如果用户已经登录就将其中的用户信息保存到 store 中
     if (!!req.user) {
       const {username, ...profile} = req.user;
       initState.auth = fromJS({
@@ -100,6 +102,7 @@ server.get('*', (req, res) => {
         profile,
       });
     }
+
     const store = buildStore(initState);
 
     const data = {
@@ -164,4 +167,9 @@ server.use((err, req, res, next) => { // eslint-disable-line no-unused-vars
 server.listen(port, () => {
   /* eslint-disable no-console */
   console.log(`The server is running at http://localhost:${port}/`);
+});
+
+process.on('unhandledRejection', (err) => {
+  console.error('unhandledRejection watched by server.js:');
+  console.error(err);
 });

@@ -62,6 +62,8 @@ export function fetchBook(bookId) {
       type: ActionTypes.FETCH_BOOK_DOING,
     });
 
+    // FIXME: 将字符串模板替换成直接的字符串,服务端渲染的时候会报错: only absolute url supported
+    // 看看尝试完以后会不会仍然报错,仍然报错就不用理会了.
     return fetchJson(`${prefix}/${bookId}`)
       .then(json => {
         const {book} = json;
@@ -73,6 +75,13 @@ export function fetchBook(bookId) {
             type: ActionTypes.FETCH_BOOK_SUCCESS,
             detail: fromJS(bookDetail),
           });
+        });
+      })
+      .catch(error => {
+        console.error(error);
+        dispatch({
+          type: ActionTypes.FETCH_BOOK_FAILURE,
+          error,
         });
       });
   };

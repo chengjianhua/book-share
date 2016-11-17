@@ -21,6 +21,7 @@ export function fetchUserBooks(username) {
         data: fromJS(books),
       });
     }).catch(error => {
+      console.error(error);
       dispatch({
         type: ActionTypes.FETCH_USER_BOOKS_FAILURE,
         error,
@@ -45,6 +46,7 @@ export function fetchUserProfile(username) {
       });
     })
     .catch(error => {
+      console.error(error);
       dispatch({
         type: ActionTypes.FETCH_USER_PROFILE_FAILURE,
         error,

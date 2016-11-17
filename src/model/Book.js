@@ -165,15 +165,15 @@ class Book {
       );
 
       try {
-        await handlers.upupdateWriteOpResult(result);
-        logger.info(`Book "${shareId}" stars list add user "${username}" successfully.`);
+        await handlers.updateWriteOpResult(result);
+        logger.info(`Book "${shareId}" stars list remove user "${username}" successfully.`);
         return true;
       } catch (e) {
         logger.error(e.message);
       }
     }
 
-    logger.info(`Book "${shareId}" stars list add user "${username}" failed.`);
+    logger.info(`Book "${shareId}" stars list remove user "${username}" failed.`);
     return false;
   }
 
