@@ -1,4 +1,5 @@
-FROM chengjianhua/cnpm
+#FROM chengjianhua/cnpm
+FROM node
 
 # Build app
 ENV WORK_DIR /usr/src/book-share
