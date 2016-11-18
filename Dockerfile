@@ -7,7 +7,7 @@ RUN mkdir -p $WORK_DIR
 WORKDIR $WORK_DIR
 COPY . $WORK_DIR
 
-RUN cnpm install
+RUN npm install
 
 RUN npm run build -- --release
 
