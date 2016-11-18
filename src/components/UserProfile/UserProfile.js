@@ -18,11 +18,11 @@ import {Tabs, Tab} from 'material-ui/Tabs';
 
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import * as accountsActions from '../../actions/Accounts';
+import * as accountsActions from 'actions/Accounts';
 
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
+import LoadingOverlay from 'components/common/LoadingOverlay';
 import s from './UserProfile.scss';
-import LoadingOverlay from '../common/LoadingOverlay';
 
 import avatar from '../../public/img/avatar.png';
 
@@ -53,10 +53,14 @@ class UserProfile extends Component {
   }
 
   componentDidMount() {
-    const {actions, username, books} = this.props;
+    const {actions, username, books, starredBooks} = this.props;
 
     if (!books.size) {
       actions.fetchUserBooks(username);
+    }
+
+    if (!starredBooks.size) {
+      actions.fetchStarredBooks(username);
     }
   }
 
@@ -67,9 +71,40 @@ class UserProfile extends Component {
   };
 
   render() {
-    const {books, isLoading, profile} = this.props;
+    const {books, isLoading, profile, starredBooks} = this.props;
 
     const bookList = books.map((book, index) => {
+      const shareTitle = book.get('shareTitle');
+      const bookTitle = book.get('bookTitle');
+      const shareContent = book.get('shareContent');
+
+      const primaryText = (
+        <p className={s.shareTitle}>
+          <Link to={{pathname: `/share/book/${book.get('_id')}`, state: {book}}}>{shareTitle}</Link>
+          <span style={{color: grey300, fontSize: '0.5rem'}}> - {bookTitle}</span>
+        </p>
+      );
+
+      const secondaryText = (
+        <p>
+          {shareContent ? shareContent.substr(0, 50) : '加载中...'}
+        </p>
+      );
+      return [(
+        <ListItem
+          key={index}
+          secondaryTextLines={1}
+          leftIcon={<FontIcon className="material-icons">book</FontIcon>}
+          rightIconButton={rightIconMenu}
+          primaryText={primaryText}
+          secondaryText={secondaryText}
+        />
+      ),
+        <Divider inset />,
+      ];
+    }).toJS();
+
+    const starredBooksList = starredBooks.map((book, index) => {
       const shareTitle = book.get('shareTitle');
       const bookTitle = book.get('bookTitle');
       const shareContent = book.get('shareContent');
@@ -143,7 +178,10 @@ class UserProfile extends Component {
             value={1}
             icon={<FontIcon className="material-icons">favorite</FontIcon>}
           >
-            {null}
+            <List>
+              <Subheader>{starredBooks.size} 个分享</Subheader>
+              {starredBooksList}
+            </List>
           </Tab>
         </Tabs>
 
@@ -157,6 +195,7 @@ function mapStateToProps(state) {
   return {
     isLoading: state.accounts.getIn(['books', 'isLoading']),
     books: state.accounts.getIn(['books', 'data']),
+    starredBooks: state.accounts.getIn(['stars', 'books']),
     profile: state.auth.get('profile'),
     username: state.auth.get('username'),
   };

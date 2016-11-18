@@ -24,6 +24,22 @@ accountsRouter.get('/:username/books', (req, res) => {
   });
 });
 
+accountsRouter.get('/:username/stars/books', async (req, res) => {
+  const {username} = req.params;
+  let starredBooks = null;
+
+  try {
+    starredBooks = await Book.findStarredShareBooksByUsername(username);
+    res.json(formatJson(
+      true,
+      `Get ${username}'s starred books list successfully.'`,
+      starredBooks
+    ));
+  } catch (e) {
+    res.json(formatJson(true, `Get ${username}'s starred books list failed.'`));
+  }
+});
+
 accountsRouter.get('/:username/profile', (req, res) => {
   const {username} = req.params;
 
@@ -66,12 +82,16 @@ accountsRouter.post('/:username/star/:shareId', (req, res) => {
 
   User.star(username, shareId)
     .then(() => {
-      console.log('success');
-      res.json(formatJson(true, 'success'));
+      res.json(formatJson(
+        true,
+        `User ${username} stars share book "${shareId} successfully."`
+      ));
     })
-    .catch((err) => {
-      console.error(err);
-      res.json(formatJson(false, 'failed'));
+    .catch(() => {
+      res.json(formatJson(
+        false,
+        `User ${username} stars share book "${shareId} failed."`
+      ));
     });
 });
 

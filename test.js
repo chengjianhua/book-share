@@ -1,14 +1,14 @@
 import {handleDbOpResult as handlers} from './src/model/utils';
 
-const result = (matchedCount, modifiedCount) => ({
-  matchedCount, modifiedCount,
-});
-
-try {
-  handlers.updateWriteOpResult(result(0, 0));
-} catch (e) {
-  console.error(e.message);
-}
+// const result = (matchedCount, modifiedCount) => ({
+//   matchedCount, modifiedCount,
+// });
+//
+// try {
+//   handlers.updateWriteOpResult(result(0, 0));
+// } catch (e) {
+//   console.error(e.message);
+// }
 
 // async function f() {
 //   // throw new Error('出错了');
@@ -26,3 +26,9 @@ try {
 // }
 //
 // g();
+
+import Book from './src/model/Book';
+Book.findStarredShareBooksByUsername('chengjianhua')
+  .then(documents => {
+    console.log(documents);
+  });

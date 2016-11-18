@@ -1,6 +1,6 @@
 import ActionTypes from '../constants/ActionTypes';
 import isomorphicFetch from 'isomorphic-fetch';
-import {fetchJson} from '../core/fetch';
+import {fetchJson, postJson} from '../core/fetch';
 
 import {fromJS} from 'immutable';
 
@@ -62,8 +62,6 @@ export function fetchBook(bookId) {
       type: ActionTypes.FETCH_BOOK_DOING,
     });
 
-    // FIXME: 将字符串模板替换成直接的字符串,服务端渲染的时候会报错: only absolute url supported
-    // 看看尝试完以后会不会仍然报错,仍然报错就不用理会了.
     return fetchJson(`${prefix}/${bookId}`)
       .then(json => {
         const {book} = json;
@@ -78,7 +76,6 @@ export function fetchBook(bookId) {
         });
       })
       .catch(error => {
-        console.error(error);
         dispatch({
           type: ActionTypes.FETCH_BOOK_FAILURE,
           error,
@@ -89,11 +86,7 @@ export function fetchBook(bookId) {
 
 export function addComment(shareId, comment) {
   return function (dispatch) {
-    return fetchJson(`${prefix}/${shareId}/comment`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+    return postJson(`${prefix}/${shareId}/comment`, {
       body: JSON.stringify(comment),
     })
     .then(() => {
@@ -111,29 +104,13 @@ export function addComment(shareId, comment) {
   };
 }
 
-export const star = (shareId, username) => (dispatch) =>
-  fetchJson(`${prefix}/${shareId}/star/${username}`, {
-    method: 'POST',
-  })
-  .then(() => {
-    dispatch({
-      type: ActionTypes.STAR_SHARE_BOOK_SUCCESS,
-    });
-  })
-  .catch((err) => {
-    dispatch({
-      type: ActionTypes.STAR_SHARE_BOOK_FAILURE,
-      err,
-    });
-  });
-
-export const unstar = (shareId, username) => (dispatch) => {
+export const star = (shareId, username) => (dispatch) => {
   dispatch({
     type: ActionTypes.STAR_BOOK_DOING,
   });
 
   return fetchJson(`${prefix}/${shareId}/star/${username}`, {
-    method: 'DELETE',
+    method: 'POST',
   })
   .then(() => {
     dispatch({
@@ -143,6 +120,27 @@ export const unstar = (shareId, username) => (dispatch) => {
   .catch((err) => {
     dispatch({
       type: ActionTypes.STAR_BOOK_FAILURE,
+      err,
+    });
+  });
+};
+
+export const unstar = (shareId, username) => (dispatch) => {
+  dispatch({
+    type: ActionTypes.UNSTAR_BOOK_DOING,
+  });
+
+  return fetchJson(`${prefix}/${shareId}/star/${username}`, {
+    method: 'DELETE',
+  })
+  .then(() => {
+    dispatch({
+      type: ActionTypes.UNSTAR_BOOK_SUCCESS,
+    });
+  })
+  .catch((err) => {
+    dispatch({
+      type: ActionTypes.UNSTAR_BOOK_FAILURE,
       err,
     });
   });

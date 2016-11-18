@@ -125,6 +125,7 @@ class User {
     logger.info(`User "${username}" unstar share: "${shareId}" failed.`);
     return false;
   }
+
 }
 
 export default User;

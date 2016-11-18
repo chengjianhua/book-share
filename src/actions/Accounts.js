@@ -1,6 +1,6 @@
 import ActionTypes from '../constants/ActionTypes';
 // import isomorphicFetch from 'isomorphic-fetch';
-import fetch, {fetchJson} from '../core/fetch'; // eslint-disable-line
+import {fetchJson, postJson} from '../core/fetch';
 
 import {fromJS} from 'immutable';
 
@@ -21,7 +21,6 @@ export function fetchUserBooks(username) {
         data: fromJS(books),
       });
     }).catch(error => {
-      console.error(error);
       dispatch({
         type: ActionTypes.FETCH_USER_BOOKS_FAILURE,
         error,
@@ -46,7 +45,6 @@ export function fetchUserProfile(username) {
       });
     })
     .catch(error => {
-      console.error(error);
       dispatch({
         type: ActionTypes.FETCH_USER_PROFILE_FAILURE,
         error,
@@ -55,31 +53,53 @@ export function fetchUserProfile(username) {
   };
 }
 
-export function updateUserProfile(profile) {
-  const {username} = profile;
+export function updateUserProfile(newProfile) {
+  const {username} = newProfile;
   return function (dispatch) {
     dispatch({
       type: ActionTypes.UPDATE_USER_PROFILE_DOING,
     });
-    return fetchJson(`/api/accounts/${username}/profile`, {
-      method: 'POST',
-      body: JSON.stringify(profile),
-      headers: {
-        'Content-Type': 'application/json',
-      },
+
+    return postJson(`/api/accounts/${username}/profile`, {
+      body: JSON.stringify(newProfile),
     })
-    .then((json) => {
+    .then(({profile}) => {
       if (canUseDOM) {
-        localStorage.setItem('profile', JSON.stringify(json.profile));
+        localStorage.setItem('profile', JSON.stringify(profile));
       }
+
       dispatch({
         type: ActionTypes.UPDATE_USET_PROFILE_SUCCESS,
-        data: fromJS(json.profile),
+        data: fromJS(profile),
       });
-    }).catch(() => {
+    })
+    .catch((error) => {
       dispatch({
         type: ActionTypes.UPDATE_USER_PROFILE_FAILURE,
+        error,
       });
     });
+  };
+}
+
+export function fetchStarredBooks(username) {
+  return function (dispatch) {
+    dispatch({
+      type: ActionTypes.FETCH_USER_STARRED_BOOKS_DOING,
+    });
+
+    return fetchJson(`/api/accounts/${username}/stars/books`)
+      .then(({data}) => {
+        dispatch({
+          type: ActionTypes.FETCH_USER_STARRED_BOOKS_SUCCESS,
+          data: fromJS(data),
+        });
+      })
+      .catch(error => {
+        dispatch({
+          type: ActionTypes.FETCH_USER_STARRED_BOOKS_FAILURE,
+          error,
+        });
+      });
   };
 }

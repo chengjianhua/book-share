@@ -1,3 +1,8 @@
+function classof(o) {
+  if (o === null) return 'Null';
+  if (o === undefined) return 'Undefined';
+  return Object.prototype.toString.call(o).slice(8, -1);
+}
 
 /**
  * [formatJson format return data]
@@ -10,5 +15,7 @@
  * @return {[Object]}
  */
 export function formatJson(isSuccess, message, payload) {
-  return Object.assign({}, {isSuccess, message}, payload);
+  return Object.assign({}, {isSuccess, message},
+    classof(payload) === 'Object' ? payload : {data: payload}
+  );
 }

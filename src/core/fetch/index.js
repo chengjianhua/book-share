@@ -5,7 +5,6 @@ import {canUseDOM} from 'exenv';
 /* eslint-disable no-else-return */
 
 function addAuthorizationHeader(options) {
-  const {headers} = options;
   let token = '';
   if (canUseDOM) {
     token = localStorage.getItem('token');
@@ -14,11 +13,9 @@ function addAuthorizationHeader(options) {
     ['Authorization']: `Bearer ${token}`,
   };
 
-  if (!headers) {
-    options.headers = authenticationHeader;
-  } else {
-    options.headers = Object.assign({}, headers, authenticationHeader);
-  }
+  const headers = Object.assign({}, options.headers, authenticationHeader);
+
+  return Object.assign({}, options, {headers});
 }
 
 function checkStatus(response) {
@@ -36,15 +33,35 @@ function parseJson(response) {
 }
 
 function fetch(url, options = {}) {
-  addAuthorizationHeader(options);
-  return isomorphicFetch(url, options)
+  const finalOptions = addAuthorizationHeader(options);
+  return isomorphicFetch(url, finalOptions)
     .then(checkStatus)
     .then(parseJson);
 }
 
+function addContentTypeJson(options) {
+  const addedHeaders = {
+    'Content-Type': 'application/json',
+  };
+
+  const headers = Object.assign({}, options.headers, addedHeaders);
+
+  return Object.assign({}, options, {
+    method: 'POST',
+    headers,
+  });
+}
+
 function fetchJson(url, options = {}) {
-  addAuthorizationHeader(options);
-  return isomorphicFetch(url, options)
+  const finalOptions = addAuthorizationHeader(options);
+  return isomorphicFetch(url, finalOptions)
+    .then(checkStatus)
+    .then(parseJson);
+}
+
+function postJson(url, options = {}) {
+  const finalOptions = addAuthorizationHeader(addContentTypeJson(options));
+  return isomorphicFetch(url, finalOptions)
     .then(checkStatus)
     .then(parseJson);
 }
@@ -53,4 +70,5 @@ export default fetch;
 
 export {
   fetchJson,
+  postJson,
 };

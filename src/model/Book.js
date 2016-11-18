@@ -177,6 +177,14 @@ class Book {
     return false;
   }
 
+  static async findStarredShareBooksByUsername(username) {
+    const result = await (await dbBook).find({
+      stars: {$in: [username]},
+    }).toArray();
+
+    return result;
+  }
+
 }
 
 export default Book;

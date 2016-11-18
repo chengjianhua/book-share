@@ -21,11 +21,7 @@ class BookDetailPage extends Component {
   componentWillMount() {
     const {actions, params: {id}} = this.props;
 
-    try {
-      actions.fetchBook(id);
-    } catch (e) {
-      console.error(e);
-    }
+    actions.fetchBook(id);
   }
 
   handleComment = (commentContent) => {

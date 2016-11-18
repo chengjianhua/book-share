@@ -11,6 +11,9 @@ const defaultState = new Map({
     signature: '',
     gender: '',
   }),
+  stars: new Map({
+    books: new List(),
+  }),
 });
 
 function fetchUserBooks(state, action) {
@@ -45,6 +48,15 @@ function updateUserProfile(state, action) {
   }
 }
 
+function fetchStarredBooks(state, action) {
+  switch (action.type) {
+    case ActionTypes.FETCH_USER_STARRED_BOOKS_SUCCESS:
+      return state.setIn(['stars', 'books'], action.data);
+    default:
+      return state;
+  }
+}
+
 export default function accounts(state = defaultState, action) {
   switch (action.type) {
     case ActionTypes.FETCH_USER_BOOKS_DOING:
@@ -57,6 +69,8 @@ export default function accounts(state = defaultState, action) {
       return fetchUserProfile(state, action);
     case ActionTypes.UPDATE_USER_PROFILE_SUCCESS:
       return updateUserProfile(state, action);
+    case ActionTypes.FETCH_USER_STARRED_BOOKS_SUCCESS:
+      return fetchStarredBooks(state, action);
     default:
       return state;
   }
