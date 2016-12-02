@@ -25,7 +25,7 @@ const DEBUG = !process.argv.includes('--release');
  */
 async function start() {
   await run(clean);
-  await run(copy.bind(undefined, { watch: true }));
+  await run(copy.bind(undefined, {watch: true}));
   await new Promise(resolve => {
     // Patch the client-side bundle configurations
     // to enable Hot Module Replacement (HMR) and React Transform
@@ -88,7 +88,7 @@ async function start() {
         if (!err) {
           const bs = Browsersync.create();
           bs.init({
-            ...(DEBUG ? {} : { notify: false, ui: false }),
+            ...(DEBUG ? {} : {notify: false, ui: false}),
 
             proxy: {
               target: host,
