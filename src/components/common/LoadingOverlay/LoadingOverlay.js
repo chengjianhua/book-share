@@ -1,10 +1,10 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import CircularProgress from 'material-ui/CircularProgress';
 
 class LoadingOverlay extends Component {
 
   componentWillReceiveProps(nextProps) {
-    const {show} = nextProps;
+    const { show } = nextProps;
     if (typeof document !== 'undefined') {
       const body = document.body;
       body.style.overflow = show ? 'hidden' : 'auto';
@@ -13,7 +13,7 @@ class LoadingOverlay extends Component {
   }
 
   render() {
-    const {show} = this.props;
+    const { show } = this.props;
 
     const style = {
       show: {

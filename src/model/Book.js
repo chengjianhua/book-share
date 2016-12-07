@@ -2,10 +2,10 @@
  * Created by cjh95414 on 2016/6/11.
  */
 import log4js from 'log4js';
-import {ObjectId} from 'mongodb';
+import { ObjectId } from 'mongodb';
 
 import connect from '../database/db';
-import {handleDbOpResult as handlers} from './utils';
+import { handleDbOpResult as handlers } from './utils';
 import User from 'models/User';
 
 const logger = log4js.getLogger('Model [Book]');
@@ -22,7 +22,7 @@ class Book {
   static addShareBook(share, callback) {
     connect.then(db => {
       // 为分享默认添加一个空的评论数组
-      const insertObject = Object.assign({}, share, {comments: []});
+      const insertObject = Object.assign({}, share, { comments: [] });
 
       db.collection('share_book').insertOne(insertObject, (err, result) => {
         if (err) {
@@ -39,7 +39,7 @@ class Book {
    * @param limit 一次返回的数据的个数 [默认为 10]
    * @param callback 回调函数
    */
-  static getSharedBooksWithAll({page = 1, limit = 10} = {}, callback) {
+  static getSharedBooksWithAll({ page = 1, limit = 10 } = {}, callback) {
     // 获得需要跳过的 documents 的个数
     const skip = page > 0 ? (page - 1) * limit : 0;
     connect.then((db) => {
@@ -51,7 +51,7 @@ class Book {
             bookTitle: true,
             shareTitle: true,
             shareContent: true,
-            commentsCount: {$size: '$comments'},
+            commentsCount: { $size: '$comments' },
           },
         },
       ])
@@ -67,7 +67,7 @@ class Book {
 
   static getSharedBookByShareId(id, callback) {
     connect.then((db) => {
-      db.collection('share_book').find({_id: new ObjectId(id)}).limit(1).next((err, book) => {
+      db.collection('share_book').find({ _id: new ObjectId(id) }).limit(1).next((err, book) => {
         if (err) {
           logger.error(`Query one share book with {id: ${id}} failed.`, err);
         }
@@ -78,7 +78,7 @@ class Book {
 
   static getShareBookSByUsername(username, callback) {
     connect.then((db) => {
-      db.collection('share_book').find({username}).toArray((err, documents) => {
+      db.collection('share_book').find({ username }).toArray((err, documents) => {
         if (err) {
           logger.error(`Query share books by "${username}" failed.`, err);
         }
@@ -96,7 +96,7 @@ class Book {
    * @param callback
    */
   static addComment(shareId, commentObject, callback) {
-    const comment = Object.assign({}, commentObject, {date: new Date()});
+    const comment = Object.assign({}, commentObject, { date: new Date() });
     connect.then((db) => {
       db.collection('share_book').updateOne(
         {
@@ -179,7 +179,7 @@ class Book {
 
   static async findStarredShareBooksByUsername(username) {
     const result = await (await dbBook).find({
-      stars: {$in: [username]},
+      stars: { $in: [username] },
     }).toArray();
 
     return result;

@@ -1,8 +1,8 @@
 import express from 'express';
 import Book from '../../../model/Book';
 import User from '../../../model/User';
-import {authenticateToken} from '../../middlewares';
-import {formatJson} from '../../utils';
+import { authenticateToken } from '../../middlewares';
+import { formatJson } from '../../utils';
 
 const accountsRouter = new express.Router();
 
@@ -12,7 +12,7 @@ accountsRouter.use(authenticateToken().unless({
 }));
 
 accountsRouter.get('/:username/books', (req, res) => {
-  const {username} = req.params;
+  const { username } = req.params;
 
   Book.getShareBookSByUsername(username, (books) => {
     res.json(formatJson(
@@ -25,7 +25,7 @@ accountsRouter.get('/:username/books', (req, res) => {
 });
 
 accountsRouter.get('/:username/stars/books', async (req, res) => {
-  const {username} = req.params;
+  const { username } = req.params;
   let starredBooks = null;
 
   try {
@@ -41,7 +41,7 @@ accountsRouter.get('/:username/stars/books', async (req, res) => {
 });
 
 accountsRouter.get('/:username/profile', (req, res) => {
-  const {username} = req.params;
+  const { username } = req.params;
 
   User.findUniqueUserByUsername(username, (err, profile) => {
     if (!profile) {
@@ -68,7 +68,7 @@ accountsRouter.post('/:username/profile', (req, res) => {
         formatJson(
           true,
           `Update ${profile.username}'s profile successfully.'`,
-          {profile}
+          { profile }
         )
       );
     })
@@ -78,7 +78,7 @@ accountsRouter.post('/:username/profile', (req, res) => {
 });
 
 accountsRouter.post('/:username/star/:shareId', (req, res) => {
-  const {username, shareId} = req.params;
+  const { username, shareId } = req.params;
 
   User.star(username, shareId)
     .then(() => {

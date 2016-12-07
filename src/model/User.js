@@ -1,10 +1,10 @@
 /**
  * Created by cjh95414 on 2016/6/7.
  */
-import {ObjectId} from 'mongodb';
+import { ObjectId } from 'mongodb';
 import log4js from 'log4js';
 import connect from '../database/db';
-import {handleDbOpResult as handlers} from './utils';
+import { handleDbOpResult as handlers } from './utils';
 
 const logger = log4js.getLogger('Model[User]');
 
@@ -18,7 +18,7 @@ class User {
    * @param callback 所需的回调函数
    */
   static async findUniqueUserByUsername(username, callback) {
-    (await db).find({username}).limit(1).next((err, user) => {
+    (await db).find({ username }).limit(1).next((err, user) => {
       if (!!user) {
         logger.info(`Found ${username}'s information.'`);
         return callback(null, user);
@@ -35,7 +35,7 @@ class User {
    */
   static async addUser(user) {
     const result = await (await db).insertOne(user)
-      .then(({insertedCount, insertedId}) => {
+      .then(({ insertedCount, insertedId }) => {
         if (insertedCount) {
           logger.info(`Add user ${JSON.stringify(user)} into database successfully.`);
           Promise.resolve(insertedId);
@@ -49,7 +49,7 @@ class User {
   }
 
   static async updateUser(user) {
-    const {username, signature, gender} = user;
+    const { username, signature, gender } = user;
 
     const result = await (await db).updateOne(
       {
@@ -62,7 +62,7 @@ class User {
           gender,
         },
       }
-    ).then(({userProfile, matchedCount}) => {
+    ).then(({ userProfile, matchedCount }) => {
       if (matchedCount === 0) {
         logger.warn(`There is not a matched user named "${username}".`);
         Promise.reject(new Error(`There is not a matched user named "${username}".`));

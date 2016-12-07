@@ -1,11 +1,11 @@
 /**
  * Created by cjh95414 on 2016/5/21.
  */
-import React, {Component, PropTypes} from 'react';
-import {Link} from 'react-router';
-import {connect} from 'react-redux';
+import React, { Component, PropTypes } from 'react';
+import { Link } from 'react-router';
+import { connect } from 'react-redux';
 
-import {Card, CardHeader, CardText} from 'material-ui/Card';
+import { Card, CardHeader, CardText } from 'material-ui/Card';
 import FontIcon from 'material-ui/FontIcon';
 import Divider from 'material-ui/Divider';
 import ChevronRight from 'material-ui/svg-icons/navigation/chevron-right';
@@ -40,8 +40,8 @@ class UserPage extends Component {
   componentWillMount() {
     this.props.app.setAppBarIconRight(
       <IconMenu
-        targetOrigin={{horizontal: 'right', vertical: 'top'}}
-        anchorOrigin={{horizontal: 'right', vertical: 'top'}}
+        targetOrigin={{ horizontal: 'right', vertical: 'top' }}
+        anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
         iconButtonElement={
           <IconButton><MoreVertIcon /></IconButton>
         }
@@ -69,7 +69,7 @@ class UserPage extends Component {
       },
     };
 
-    const {username, avatar, profile} = this.props;
+    const { username, avatar, profile } = this.props;
 
     return (
       <div className={s.root}>
@@ -93,6 +93,7 @@ class UserPage extends Component {
         </Card>
 
         <Paper className={s.iconContainer}>
+
           <FlatButton
             className={s.iconButton}
             label="书籍"
@@ -120,6 +121,7 @@ class UserPage extends Component {
           />
 
         </Paper>
+
       </div>
     );
   }

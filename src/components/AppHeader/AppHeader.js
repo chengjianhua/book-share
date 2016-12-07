@@ -1,9 +1,9 @@
 /**
  * Created by cjh95414 on 2016/5/3.
  */
-import React, {Component, PropTypes} from 'react';
-import {Link} from 'react-router';
-import {connect} from 'react-redux';
+import React, { Component, PropTypes } from 'react';
+import { Link } from 'react-router';
+import { connect } from 'react-redux';
 
 import AppBar from 'material-ui/AppBar';
 import IconButton from 'material-ui/IconButton';
@@ -60,8 +60,8 @@ class AppHeader extends Component {
   render() {
     const iconElementRight = this.props.iconElementRight || (
       <IconMenu
-        targetOrigin={{horizontal: 'right', vertical: 'top'}}
-        anchorOrigin={{horizontal: 'right', vertical: 'top'}}
+        targetOrigin={{ horizontal: 'right', vertical: 'top' }}
+        anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
         iconButtonElement={
           <IconButton><MoreVertIcon /></IconButton>
         }

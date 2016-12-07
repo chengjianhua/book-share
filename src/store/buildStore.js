@@ -1,6 +1,6 @@
-import {createStore, applyMiddleware, compose} from 'redux';
+import { createStore, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
-import {composeWithDevTools} from 'redux-devtools-extension';
+import { composeWithDevTools } from 'redux-devtools-extension';
 
 import reducers from '../reducers';
 
@@ -13,12 +13,12 @@ const buildStore = (initialState = {}) => {
     )
   );
 
-  // if (module.hot) {
-  //   module.hot.accept('../reducers', () => {
-  //     const nextReducers = require('../reducers/index').default;
-  //     store.replaceReducer(nextReducers);
-  //   });
-  // }
+  if (module.hot) {
+    module.hot.accept('../reducers', () => {
+      const nextReducers = require('../reducers/index').default;
+      store.replaceReducer(nextReducers);
+    });
+  }
 
   return store;
 };

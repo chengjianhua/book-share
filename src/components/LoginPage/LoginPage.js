@@ -1,10 +1,10 @@
 /**
  * Created by Cheng jianhua at 11:10 on 2016/6/6
  */
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
-import {withRouter} from 'react-router';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { withRouter } from 'react-router';
 
 import TextField from 'material-ui/TextField';
 import Dialog from 'material-ui/Dialog';
@@ -13,7 +13,7 @@ import withStyles from 'isomorphic-style-loader/lib/withStyles';
 
 import s from './LoginPage.scss';
 
-import {authenticate} from '../../actions/Auth';
+import { authenticate } from '../../actions/Auth';
 
 class LoginPage extends Component {
 
@@ -27,43 +27,41 @@ class LoginPage extends Component {
     };
   }
 
+  handleUsernameChange = (event, username) => {
+    event.stopPropagation();
+
+    this.setState({
+      username,
+    });
+  };
+
+  handlePasswordChange = (event, password) => {
+    event.stopPropagation();
+
+    this.setState({
+      password,
+    });
+  };
+
   handleFormSubmit = (event) => {
     event.preventDefault();
 
-    const {actions} = this.props;
-    const {username, password} = this.state;
+    const { actions } = this.props;
+    const { username, password } = this.state;
 
     actions.authenticate(username, password)
     .then(() => {
       this.setState({
         openAlertDialog: true,
       }, () => {
-        setTimeout(() => {
-          this.form.submit();
-        }, 2000);
+        this.form.submit();
       });
     });
   };
 
-  handleUsernameChange = (event, value) => {
-    event.stopPropagation();
-
-    this.setState({
-      username: value,
-    });
-  };
-
-  handlePasswordChange = (event, value) => {
-    event.stopPropagation();
-
-    this.setState({
-      password: value,
-    });
-  };
-
   render() {
-    const {username, password, openAlertDialog} = this.state;
-    const {originalUrl} = this.props;
+    const { username, password, openAlertDialog } = this.state;
+    const { originalUrl } = this.props;
 
     return (
       <div className={s.root}>
@@ -99,7 +97,7 @@ class LoginPage extends Component {
             primary
             label="登录"
             type="submit"
-            style={{width: '100%'}}
+            style={{ width: '100%' }}
           />
         </form>
 
@@ -118,7 +116,7 @@ class LoginPage extends Component {
 
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators(Object.assign({}, {authenticate}), dispatch),
+    actions: bindActionCreators(Object.assign({}, { authenticate }), dispatch),
   };
 }
 

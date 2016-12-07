@@ -2,7 +2,7 @@
  * Created by cjh95414 on 2016/5/6.
  */
 import React from 'react';
-import {Route, IndexRoute} from 'react-router';
+import { Route, IndexRoute } from 'react-router';
 
 import App from 'components/App';
 import SignPage from 'components/SignPage';
@@ -30,7 +30,7 @@ function redirectToLogin(nextState, replace) {
       // 重定向到登录页面
     replace({
       pathname: '/sign',
-      state: {nextPathname: nextState.location.pathname},
+      state: { nextPathname: nextState.location.pathname },
     });
   }
 }
@@ -38,19 +38,19 @@ function redirectToLogin(nextState, replace) {
 export default ([
   <Route path="/" component={App}>
 
-    <IndexRoute components={{main: BookCardPage, header: AppHeader}} />
+    <IndexRoute components={{ main: BookCardPage, header: AppHeader }} />
 
-    <Route path="sign" components={{main: SignPage}} />
+    <Route path="sign" components={{ main: SignPage }} />
 
     <Route path="share">
-      <Route path="add" components={{main: Share, header: PageHeader}} />
-      <Route path="book/:id" components={{main: BookDetailPage, header: BookDetailPage.Header}} />
+      <Route path="add" components={{ main: Share, header: PageHeader }} />
+      <Route path="book/:id" components={{ main: BookDetailPage, header: BookDetailPage.Header }} />
     </Route>
 
     <Route path="user">
-      <IndexRoute components={{main: UserPage, header: AppHeader}} />
-      <Route path="profile" components={{main: UserProfile, header: PageHeader}} />
-      <Route path="settings" components={{main: ProfileSettings, header: PageHeader}} />
+      <IndexRoute components={{ main: UserPage, header: AppHeader }} />
+      <Route path="profile" components={{ main: UserProfile, header: PageHeader }} />
+      <Route path="settings" components={{ main: ProfileSettings, header: PageHeader }} />
     </Route>
   </Route>,
 ]);

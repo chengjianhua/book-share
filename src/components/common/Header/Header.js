@@ -1,8 +1,8 @@
 /**
  * Created by cjh95414 on 2016/5/3.
  */
-import React, {Component, PropTypes} from 'react';
-import {Link, withRouter} from 'react-router';
+import React, { Component, PropTypes } from 'react';
+import { Link, withRouter } from 'react-router';
 
 import AppBar from 'material-ui/AppBar';
 import IconButton from 'material-ui/IconButton';
@@ -41,8 +41,8 @@ class Header extends Component {
 
     const iconElementRight = this.props.iconElementRight || (
       <IconMenu
-        targetOrigin={{horizontal: 'right', vertical: 'top'}}
-        anchorOrigin={{horizontal: 'right', vertical: 'top'}}
+        targetOrigin={{ horizontal: 'right', vertical: 'top' }}
+        anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
         iconButtonElement={
           <IconButton><MoreVertIcon /></IconButton>
         }

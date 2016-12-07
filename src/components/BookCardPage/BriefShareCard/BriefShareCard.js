@@ -1,8 +1,8 @@
 /**
  * Created by cjh95414 on 2016/5/5.
  */
-import React, {Component, PropTypes} from 'react';
-import {Link} from 'react-router';
+import React, { Component, PropTypes } from 'react';
+import { Link } from 'react-router';
 
 import Paper from 'material-ui/Paper';
 import FlatButton from 'material-ui/FlatButton';
@@ -12,7 +12,7 @@ import FontIcon from 'material-ui/FontIcon';
 import ActionThumbUp from 'material-ui/svg-icons/action/thumb-up';
 import ComunicateComment from 'material-ui/svg-icons/communication/comment';
 
-import {grey500, blue500} from 'material-ui/styles/colors';
+import { grey500, blue500 } from 'material-ui/styles/colors';
 
 import s from './BriefShareCard.scss';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
@@ -63,7 +63,7 @@ class BriefShareCard extends Component {
       },
     };
 
-    const {username, img, bookName, title, content, commentsCount} = this.props;
+    const { username, img, bookName, title, content, commentsCount } = this.props;
     return (
       <Paper style={style.root}>
         <div className={s.root}>
@@ -78,7 +78,7 @@ class BriefShareCard extends Component {
               </p>
             </div>
 
-            <div className={s.content} style={{color: grey500}}>
+            <div className={s.content} style={{ color: grey500 }}>
               {content}
             </div>
           </div>

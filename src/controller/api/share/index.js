@@ -3,8 +3,8 @@ import log4js from 'log4js';
 
 import Book from 'models/Book';
 
-import {authenticateToken} from '../../middlewares';
-import {formatJson} from '../../utils';
+import { authenticateToken } from '../../middlewares';
+import { formatJson } from '../../utils';
 
 const logger = log4js.getLogger('/api/share/');
 const shareRouter = new express.Router();
@@ -14,14 +14,25 @@ shareRouter.use(authenticateToken().unless({
   path: ['/books', /\/book\/\w+$/g],
 }));
 
+shareRouter.get('/books', (req, res) => {
+  const { page = 1 } = req.query;
+
+  Book.getSharedBooksWithAll({ page: Number(page) }, (books) => {
+    res.json(formatJson(true, `Fetching books page No.${page} successfully.`, {
+      books,
+    }));
+  });
+});
+
 /**
- * [ share/add ]： 处理添加分享的请求
+ * [ share/books ]： 处理添加分享的请求
+ * @method POST
  */
-shareRouter.post('/add', (req, res) => {
-  const {username} = req.user;
+shareRouter.post('/books', (req, res) => {
+  const { username } = req.user;
 
   // 请求中传入的数据
-  const {detail, bookTitle, shareTitle, shareContent} = req.body;
+  const { detail, bookTitle, shareTitle, shareContent } = req.body;
 
   // 将要插入的数据
   const share = {
@@ -32,26 +43,16 @@ shareRouter.post('/add', (req, res) => {
     username,
   };
 
-  Book.addShareBook(share, (result) => {
-    logger.info(`[ObjectId = ${result.insertedId}]: Inserted a book into mongodb.`);
+  Book.addShareBook(share, ({ insertedId: id }) => {
+    logger.info(`[ObjectId = ${id}]: Inserted a book into mongodb.`);
     res.json(formatJson(true, 'Add a book share successfully.', {
-      id: result.insertedId,
-    }));
-  });
-});
-
-shareRouter.get('/books', (req, res) => {
-  const page = req.query.page || 1;
-
-  Book.getSharedBooksWithAll({page: Number(page)}, (books) => {
-    res.json(formatJson(true, `Fetching books page No.${page} successfully.`, {
-      books,
+      id,
     }));
   });
 });
 
 shareRouter.get('/books/:id', (req, res) => {
-  const {id} = req.params;
+  const { id } = req.params;
 
   Book.getSharedBookByShareId(id, (book) => {
     res.json(formatJson(true, `Fetching book: ${id} successfully.`, {
@@ -61,8 +62,8 @@ shareRouter.get('/books/:id', (req, res) => {
 });
 
 shareRouter.post('/books/:id/comment', (req, res) => {
-  const {id} = req.params;
-  const comment = Object.assign({}, req.body, {user: req.user.username});
+  const { id } = req.params;
+  const comment = Object.assign({}, req.body, { user: req.user.username });
 
   Book.addComment(id, comment, (result) => {
     if (!!result) {
@@ -74,7 +75,7 @@ shareRouter.post('/books/:id/comment', (req, res) => {
 });
 
 shareRouter.post('/books/:id/star/:username', (req, res) => {
-  const {username, id: shareId} = req.params;
+  const { username, id: shareId } = req.params;
 
   Book.star(shareId, username)
     .then(() => {
@@ -86,7 +87,7 @@ shareRouter.post('/books/:id/star/:username', (req, res) => {
 });
 
 shareRouter.delete('/books/:id/star/:username', (req, res) => {
-  const {username, id: shareId} = req.params;
+  const { username, id: shareId } = req.params;
 
   Book.unstar(shareId, username)
     .then(() => {

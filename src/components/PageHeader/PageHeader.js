@@ -1,8 +1,8 @@
 /**
  * Created by cjh95414 on 2016/5/3.
  */
-import React, {Component} from 'react';
-import {Link, withRouter} from 'react-router';
+import React, { Component } from 'react';
+import { Link, withRouter } from 'react-router';
 import AppBar from 'material-ui/AppBar';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 
@@ -24,8 +24,8 @@ class PageHeader extends Component {
     const iconElementRight = this.props.iconElementRight || (
       <IconMenu
         iconButtonElement={ <IconButton><MoreVertIcon /></IconButton> }
-        targetOrigin={{horizontal: 'right', vertical: 'top'}}
-        anchorOrigin={{horizontal: 'right', vertical: 'top'}}
+        targetOrigin={{ horizontal: 'right', vertical: 'top' }}
+        anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
       >
         <Link to="/share/add">
         <MenuItem key={'refresh'} primaryText="添加" />

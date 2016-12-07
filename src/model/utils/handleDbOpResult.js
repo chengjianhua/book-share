@@ -7,7 +7,7 @@
  * @param  {[Number]}            modifiedCount [description]
  * @return {[Boolean]}                          [description]
  */
-export function updateWriteOpResult({matchedCount, modifiedCount}) {
+export function updateWriteOpResult({ matchedCount, modifiedCount }) {
   let errMessage = '';
 
   if (matchedCount === 0) {

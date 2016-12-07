@@ -25,7 +25,7 @@ class ContentPage extends Component {
 
   render() {
     this.context.onSetTitle(this.props.title);
-    //noinspection CheckEmptyScriptTag
+    // noinspection CheckEmptyScriptTag
     return (
       <div className={s.root}>
         <div className={s.container}>

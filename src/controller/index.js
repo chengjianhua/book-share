@@ -6,8 +6,8 @@ import log4js from 'log4js';
 
 import User from '../model/User';
 
-import {formatJson} from './utils';
-import {authenticateToken} from './middlewares';
+import { formatJson } from './utils';
+import { authenticateToken } from './middlewares';
 import passport from '../core/passport';
 
 const logger = log4js.getLogger('controller/index.js');
@@ -21,7 +21,7 @@ router.use(authenticateToken().unless({
 
 
 router.post('/checkUsername', (req, res) => {
-  const {username} = req.body;
+  const { username } = req.body;
 
   User.findUniqueUserByUsername(username, (err, result) => {
     if (err) {
@@ -41,7 +41,7 @@ router.post('/checkUsername', (req, res) => {
  * [ /register ]: 注册用户
  */
 router.post('/register', async (req, res) => {
-  const {username, password} = req.body;
+  const { username, password } = req.body;
   const user = {
     username,
     password,
@@ -54,8 +54,8 @@ router.post('/register', async (req, res) => {
 });
 
 router.post('/login', passport.authenticate('local'), (req, res) => {
-  const {query: {originalUrl}} = req;
-  const {username, password} = req.body;
+  const { query: { originalUrl } } = req;
+  const { username, password } = req.body;
   User.findUniqueUserByUsername(username, (err, user) => {
     if (err) {
       logger.error(`Fetching user named ${username} from database failed.`);
@@ -68,7 +68,7 @@ router.post('/login', passport.authenticate('local'), (req, res) => {
       });
     } else {
       if (user.password !== password) {
-        res.statue(400).json({
+        res.status(400).json({
           success: false,
           message: 'Authentication failed. Wrong password.',
         });

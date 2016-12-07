@@ -6,16 +6,16 @@ import shareRouter from './share';
 import accountsRouter from './accounts';
 import User from '../../model/User';
 
-import {auth} from '../../config';
+import { auth } from '../../config';
 
 const logger = log4js.getLogger('Api');
 const apiRouter = new express.Router();
 
 apiRouter.post('/token', (req, res) => {
-  const {secret} = auth.jwt;
-  const {username: reqUsername, password: reqPassword} = req.body;
+  const { secret } = auth.jwt;
+  const { username: reqUsername, password: reqPassword } = req.body;
   User.findUniqueUserByUsername(reqUsername, (err, user) => {
-    const {username, password, ...profile} = user;
+    const { username, password, ...profile } = user;
     if (err) {
       logger.error(`Fetching user named ${reqUsername} from database failed.`);
       throw err;
@@ -27,7 +27,7 @@ apiRouter.post('/token', (req, res) => {
       });
     } else {
       if (password !== reqPassword) {
-        res.statue(400).json({
+        res.status(400).json({
           success: false,
           message: 'Authentication failed. Wrong password.',
         });

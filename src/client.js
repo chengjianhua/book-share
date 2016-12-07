@@ -1,22 +1,22 @@
 import 'babel-polyfill';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {Router, browserHistory} from 'react-router';
-import {Provider} from 'react-redux';
+import { Router, browserHistory } from 'react-router';
+import { Provider } from 'react-redux';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import FastClick from 'fastclick';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 import Location from './core/Location';
-import {addEventListener, removeEventListener} from './core/DOMUtils';
+import { addEventListener, removeEventListener } from './core/DOMUtils';
 import WithStylesContext from './components/WithStylesContext';
 
 import routes from './router/routes';
 
 import buildStore from './store/buildStore';
 
-import {readToken} from './actions/Auth';
+import { readToken } from './actions/Auth';
 
 injectTapEventPlugin();
 
@@ -32,7 +32,7 @@ const appContainer = document.getElementById('app');
 // rendering, as it was already sent by the Html component.
 let trackPageview = () => (trackPageview = () => window.ga('send', 'pageview'));
 
-const muiTheme = getMuiTheme({userAgent: navigator.userAgent});
+const muiTheme = getMuiTheme({ userAgent: navigator.userAgent });
 
 function render(state) {
   if (state.scrollY !== undefined) {

@@ -1,16 +1,15 @@
 import jwt from 'jsonwebtoken';
 import unless from 'express-unless';
 import log4js from 'log4js';
-import {auth} from '../config';
+import { auth } from '../config';
 
 const logger = log4js.getLogger('Authorize');
 
 /* eslint-disable consistent-return */
 /* eslint-disable no-else-return */
-
 export function authenticateToken() {
   const middleware = (req, res, next) => {
-    const {secret} = auth.jwt;
+    const { secret } = auth.jwt;
     let token = '';
     const authorizationHeader = req.headers.authorization;
     if (authorizationHeader) {

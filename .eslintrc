@@ -9,7 +9,7 @@
     "no-confusing-arrow": 0,
     "react/jsx-quotes": 0,
     "jsx-quotes": [2, "prefer-double"],
-    "object-curly-spacing": ["error", "never"],
+    // "object-curly-spacing": ["error", "never"],
     "func-names": ["error", "never"],
     "max-len": ["error", {
         "ignoreTrailingComments": true,

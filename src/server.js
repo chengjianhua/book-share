@@ -15,15 +15,15 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 import schema from './data/schema';
 import assets from './assets';
-import {port, auth} from './config';
+import { port, auth } from './config';
 import mongodbConnect from './database/db';
 
 import React from 'react';
-import {renderToString} from 'react-dom/server';
-import {match, RouterContext} from 'react-router';
+import { renderToString } from 'react-dom/server';
+import { match, RouterContext } from 'react-router';
 import routes from './router/routes';
 
-import {Provider} from 'react-redux';
+import { Provider } from 'react-redux';
 import buildStore from './store/buildStore';
 
 import indexRouter from './controller/index';
@@ -32,7 +32,7 @@ import passport from './core/passport';
 
 import WithStylesContext from './components/WithStylesContext';
 
-import {fromJS} from 'immutable';
+import { fromJS } from 'immutable';
 
 const server = global.server = express();
 const MongoStore = require('connect-mongo')(session);
@@ -44,7 +44,7 @@ server.use(compress());
 server.use(express.static(path.join(__dirname, 'public')));
 server.enable('trust proxy');
 server.use(cookieParser(auth.session.secret));
-server.use(bodyParser.urlencoded({extended: true}));
+server.use(bodyParser.urlencoded({ extended: true }));
 server.use(bodyParser.json());
 server.use(cors());
 
@@ -62,7 +62,7 @@ server.use('/api', apiRouter);
 server.use('/graphql', expressGraphQL(req => ({
   schema,
   graphiql: true,
-  rootValue: {request: req},
+  rootValue: { request: req },
   pretty: process.env.NODE_ENV !== 'production',
 })));
 
@@ -73,7 +73,7 @@ server.use(session({
   secret: auth.session.secret,
   resave: true,
   saveUninitialized: false,
-  store: new MongoStore({dbPromise: mongodbConnect}),
+  store: new MongoStore({ dbPromise: mongodbConnect }),
 }));
 server.use(passport.initialize());
 server.use(passport.session());
@@ -86,7 +86,7 @@ server.use(passport.authenticateMiddleware().unless({
 }));
 
 server.get('*', (req, res) => {
-  match({routes, location: req.url}, (err, redirectLocation, renderProps) => {
+  match({ routes, location: req.url }, (err, redirectLocation, renderProps) => {
     const template = require('./views/index.jade');
     const css = [];
 
@@ -94,7 +94,7 @@ server.get('*', (req, res) => {
 
     // 如果用户已经登录就将其中的用户信息保存到 store 中
     if (!!req.user) {
-      const {username, ...profile} = req.user;
+      const { username, ...profile } = req.user;
       initState.auth = fromJS({
         isAuthenticated: true,
         token: null,
@@ -118,7 +118,7 @@ server.get('*', (req, res) => {
     } else if (redirectLocation) {
       res.redirect(302, redirectLocation.pathname + redirectLocation.search);
     } else if (renderProps) {
-      const muiTheme = getMuiTheme({userAgent: req.headers['user-agent']});
+      const muiTheme = getMuiTheme({ userAgent: req.headers['user-agent'] });
       global.navigator = {
         userAgent: req.headers['user-agent'],
       };

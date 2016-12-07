@@ -1,4 +1,4 @@
-import React, {PropTypes, PureComponent} from 'react';
+import React, { PropTypes, PureComponent } from 'react';
 import IconButton from 'material-ui/IconButton';
 import StarBorder from 'material-ui/svg-icons/toggle/star-border';
 import Star from 'material-ui/svg-icons/toggle/star';
@@ -25,15 +25,15 @@ export default class StarButton extends PureComponent {
     };
   }
 
-  componentWillReceiveProps({starred}) {
+  componentWillReceiveProps({ starred }) {
     this.setState({
       starred,
     });
   }
 
   handleTouchTap = () => {
-    const {onStar, onUnstar} = this.props;
-    const {starred} = this.state;
+    const { onStar, onUnstar } = this.props;
+    const { starred } = this.state;
 
     if (starred) {
       onUnstar();
@@ -47,7 +47,7 @@ export default class StarButton extends PureComponent {
   }
 
   render() {
-    const {starred} = this.state;
+    const { starred } = this.state;
     return (
       <IconButton
         touch

@@ -1,16 +1,16 @@
-import React, {Component, PropTypes} from 'react';
-import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
+import React, { Component, PropTypes } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 
 import s from './App.scss';
 
-import {readToken} from 'actions/Auth';
+import { readToken } from 'actions/Auth';
 
 import LoadingOverlay from 'common/LoadingOverlay';
 
-import {appShape} from './propTypes';
+import { appShape } from './propTypes';
 
 class App extends Component {
 
@@ -48,7 +48,7 @@ class App extends Component {
   }
 
   componentDidMount() {
-    const {actions, token} = this.props;
+    const { actions, token } = this.props;
     if (!token) {
       actions.readToken();
       console.log(`App.js initialize the app's token at client-side.`); // eslint-disable-line
@@ -56,8 +56,8 @@ class App extends Component {
   }
 
   render() {
-    const {main, header, error, children} = this.props;
-    const {appBarIconRight} = this.state;
+    const { main, header, error, children } = this.props;
+    const { appBarIconRight } = this.state;
     const headerWithIcon = header ? React.cloneElement(header, {
       iconElementRight: appBarIconRight,
     }) : null;
@@ -84,7 +84,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators(Object.assign({}, {readToken}), dispatch),
+    actions: bindActionCreators(Object.assign({}, { readToken }), dispatch),
   };
 }
 

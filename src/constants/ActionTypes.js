@@ -46,4 +46,13 @@ export default keyMirror({
   UNSTAR_BOOK_DOING: null,
   UNSTAR_BOOK_SUCCESS: null,
   UNSTAR_BOOK_FAILURE: null,
+
+  CREATE_BOOK_DOING: null,
+  CREATE_BOOK_SUCCESS: null,
+  CREATE_BOOK_FAILURE: null,
+
+  SEARCH_BOOK_DOING: null,
+  SEARCH_BOOK_SUCCESS: null,
+  SEARCH_BOOK_FAILURE: null,
+
 });

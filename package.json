@@ -36,7 +36,7 @@
     "jwt-decode": "^2.1.0",
     "log4js": "^0.6.38",
     "markdown-it": "6.0.0",
-    "material-ui": "^0.16.1",
+    "material-ui": "^0.16.4",
     "mongodb": "^2.1.21",
     "mongoose": "^4.6.1",
     "morgan": "^1.7.0",

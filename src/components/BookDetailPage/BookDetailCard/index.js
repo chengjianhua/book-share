@@ -1,8 +1,8 @@
 /**
  * Created by cjh95414 on 2016/6/13.
  */
-import React, {PropTypes, PureComponent} from 'react';
-import {Card, CardText, CardTitle, CardMedia, CardHeader} from 'material-ui/Card';
+import React, { PropTypes, PureComponent } from 'react';
+import { Card, CardText, CardTitle, CardMedia, CardHeader } from 'material-ui/Card';
 import loadingGif from '../../../public/img/loading.gif';
 
 class BookDetailCard extends PureComponent {
@@ -18,7 +18,7 @@ class BookDetailCard extends PureComponent {
 
   render() {
     const loading = '加载中……';
-    const {user, book} = this.props;
+    const { user, book } = this.props;
 
     const bookTitle = book.get('bookTitle');
     const bookShareTitle = book.get('shareTitle');

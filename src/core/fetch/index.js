@@ -1,5 +1,5 @@
 import isomorphicFetch from 'isomorphic-fetch';
-import {canUseDOM} from 'exenv';
+import { canUseDOM } from 'exenv';
 
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-else-return */
@@ -15,7 +15,7 @@ function addAuthorizationHeader(options) {
 
   const headers = Object.assign({}, options.headers, authenticationHeader);
 
-  return Object.assign({}, options, {headers});
+  return Object.assign({}, options, { headers });
 }
 
 function checkStatus(response) {
@@ -33,8 +33,7 @@ function parseJson(response) {
 }
 
 function fetch(url, options = {}) {
-  const finalOptions = addAuthorizationHeader(options);
-  return isomorphicFetch(url, finalOptions)
+  return isomorphicFetch(url, options)
     .then(checkStatus)
     .then(parseJson);
 }

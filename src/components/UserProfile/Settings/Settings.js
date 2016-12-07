@@ -1,59 +1,25 @@
-import React, {Component, PropTypes} from 'react';
-import {Link} from 'react-router';
+import React, { Component } from 'react';
+import { withRouter } from 'react-router';
 
-import {List, ListItem} from 'material-ui/List';
-// import {Card, CardActions, CardHeader, CardTitle, CardText} from 'material-ui/Card';
-import FontIcon from 'material-ui/FontIcon';
-import Divider from 'material-ui/Divider';
-import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
-// import ChevronRight from 'material-ui/svg-icons/navigation/chevron-right';
-// import ImageEdit from 'material-ui/svg-icons/image/edit';
-import IconMenu from 'material-ui/IconMenu';
-import MenuItem from 'material-ui/MenuItem';
-import IconButton from 'material-ui/IconButton';
-// import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
-import {grey300, grey400} from 'material-ui/styles/colors';
-// import Paper from 'material-ui/Paper';
-import {Tabs, Tab} from 'material-ui/Tabs';
-import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
-
+import { RadioButton, RadioButtonGroup } from 'material-ui/RadioButton';
 import TextField from 'material-ui/TextField';
 
-import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import * as accountsActions from '../../../actions/Accounts';
 
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import s from './Settings.scss';
-import LoadingOverlay from '../../common/LoadingOverlay';
-
-import {withRouter} from 'react-router';
-
-const iconButtonElement = (
-  <IconButton
-    touch
-    tooltip="more"
-    tooltipPosition="bottom-left"
-  >
-    <MoreVertIcon color={grey400} />
-  </IconButton>
-);
-
-const rightIconMenu = (
-  <IconMenu iconButtonElement={iconButtonElement}>
-    <MenuItem>删除</MenuItem>
-  </IconMenu>
-);
 
 class Settings extends Component {
 
   constructor(props) {
     super(props);
 
-    const {profile, username} = props;
+    const { profile, username } = props;
 
-    const {signature, gender} = profile.toJS();
+    const { signature, gender } = profile.toJS();
 
     this.state = {
       username,
@@ -64,8 +30,8 @@ class Settings extends Component {
 
   handleFormSubmit = (event) => {
     event.preventDefault();
-    const {username, actions, router} = this.props;
-    const profile = Object.assign({}, this.state, {username});
+    const { username, actions, router } = this.props;
+    const profile = Object.assign({}, this.state, { username });
     actions.updateUserProfile(profile)
     .then(() => {
       router.goBack();
@@ -91,7 +57,7 @@ class Settings extends Component {
   }
 
   render() {
-    const {username, signature, gender} = this.state;
+    const { username, signature, gender } = this.state;
 
     const styles = {
       radioButton: {
@@ -150,7 +116,7 @@ class Settings extends Component {
             primary
             label="保存"
             type="submit"
-            style={{width: '100%'}}
+            style={{ width: '100%' }}
           />
         </form>
       </div>
@@ -171,4 +137,6 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(s)(withRouter(Settings)));
+export default connect(mapStateToProps, mapDispatchToProps)(
+  withStyles(s)(withRouter(Settings))
+);

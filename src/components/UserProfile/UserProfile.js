@@ -1,46 +1,24 @@
 /**
  * Created by cjh95414 on 2016/5/21.
  */
-import React, {Component} from 'react';
-import {Link} from 'react-router';
+import React, { Component } from 'react';
+import { Link } from 'react-router';
 
-import {List, ListItem} from 'material-ui/List';
 import Subheader from 'material-ui/Subheader';
 import FontIcon from 'material-ui/FontIcon';
-import Divider from 'material-ui/Divider';
-import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
-import IconMenu from 'material-ui/IconMenu';
-import MenuItem from 'material-ui/MenuItem';
-import IconButton from 'material-ui/IconButton';
 import RaisedButton from 'material-ui/RaisedButton';
-import {grey300, grey400} from 'material-ui/styles/colors';
-import {Tabs, Tab} from 'material-ui/Tabs';
+import { Tabs, Tab } from 'material-ui/Tabs';
 
-import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import * as accountsActions from 'actions/Accounts';
 
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import LoadingOverlay from 'components/common/LoadingOverlay';
+import ShareList from './ShareList';
 import s from './UserProfile.scss';
 
 import avatar from '../../public/img/avatar.png';
-
-const iconButtonElement = (
-  <IconButton
-    touch
-    tooltip="more"
-    tooltipPosition="bottom-left"
-  >
-    <MoreVertIcon color={grey400} />
-  </IconButton>
-);
-
-const rightIconMenu = (
-  <IconMenu iconButtonElement={iconButtonElement}>
-    <MenuItem>删除</MenuItem>
-  </IconMenu>
-);
 
 class UserProfile extends Component {
 
@@ -53,7 +31,7 @@ class UserProfile extends Component {
   }
 
   componentDidMount() {
-    const {actions, username, books, starredBooks} = this.props;
+    const { actions, username, books, starredBooks } = this.props;
 
     if (!books.size) {
       actions.fetchUserBooks(username);
@@ -64,76 +42,14 @@ class UserProfile extends Component {
     }
   }
 
-  handleTabChange = (value) => {
+  handleTabChange = (tab) => {
     this.setState({
-      tab: value,
+      tab,
     });
   };
 
   render() {
-    const {books, isLoading, profile, starredBooks} = this.props;
-
-    const bookList = books.map((book, index) => {
-      const shareTitle = book.get('shareTitle');
-      const bookTitle = book.get('bookTitle');
-      const shareContent = book.get('shareContent');
-
-      const primaryText = (
-        <p className={s.shareTitle}>
-          <Link to={{pathname: `/share/book/${book.get('_id')}`, state: {book}}}>{shareTitle}</Link>
-          <span style={{color: grey300, fontSize: '0.5rem'}}> - {bookTitle}</span>
-        </p>
-      );
-
-      const secondaryText = (
-        <p>
-          {shareContent ? shareContent.substr(0, 50) : '加载中...'}
-        </p>
-      );
-      return [(
-        <ListItem
-          key={index}
-          secondaryTextLines={1}
-          leftIcon={<FontIcon className="material-icons">book</FontIcon>}
-          rightIconButton={rightIconMenu}
-          primaryText={primaryText}
-          secondaryText={secondaryText}
-        />
-      ),
-        <Divider inset />,
-      ];
-    }).toJS();
-
-    const starredBooksList = starredBooks.map((book, index) => {
-      const shareTitle = book.get('shareTitle');
-      const bookTitle = book.get('bookTitle');
-      const shareContent = book.get('shareContent');
-
-      const primaryText = (
-        <p className={s.shareTitle}>
-          <Link to={{pathname: `/share/book/${book.get('_id')}`, state: {book}}}>{shareTitle}</Link>
-          <span style={{color: grey300, fontSize: '0.5rem'}}> - {bookTitle}</span>
-        </p>
-      );
-
-      const secondaryText = (
-        <p>
-          {shareContent ? shareContent.substr(0, 50) : '加载中...'}
-        </p>
-      );
-      return [(
-        <ListItem
-          key={index}
-          secondaryTextLines={1}
-          leftIcon={<FontIcon className="material-icons">book</FontIcon>}
-          rightIconButton={rightIconMenu}
-          primaryText={primaryText}
-          secondaryText={secondaryText}
-        />
-      ),
-        <Divider inset />,
-      ];
-    }).toJS();
+    const { books, isLoading, profile, starredBooks } = this.props;
 
     return (
       <div className={s.root}>
@@ -150,11 +66,7 @@ class UserProfile extends Component {
 
           <div className={s.editButton}>
             <Link to="/user/settings">
-              <RaisedButton
-                label="编辑"
-                labelPosition="before"
-                primary
-              />
+              <RaisedButton primary label="编辑" labelPosition="before" />
             </Link>
           </div>
 
@@ -168,20 +80,20 @@ class UserProfile extends Component {
             value={0}
             icon={<FontIcon className="material-icons">share</FontIcon>}
           >
-            <List>
+            <div>
               <Subheader>{books.size} 个分享</Subheader>
-              {bookList}
-            </List>
+              <ShareList data={books} />
+            </div>
           </Tab>
 
           <Tab
             value={1}
             icon={<FontIcon className="material-icons">favorite</FontIcon>}
           >
-            <List>
-              <Subheader>{starredBooks.size} 个分享</Subheader>
-              {starredBooksList}
-            </List>
+            <div>
+              <Subheader>{starredBooks.size} 个喜欢</Subheader>
+              <ShareList data={starredBooks} />
+            </div>
           </Tab>
         </Tabs>
 

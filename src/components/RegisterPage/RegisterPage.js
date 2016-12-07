@@ -1,5 +1,5 @@
-import React, {Component} from 'react';
-import {withRouter} from 'react-router';
+import React, { Component } from 'react';
+import { withRouter } from 'react-router';
 
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import TextField from 'material-ui/TextField';
@@ -8,9 +8,9 @@ import RaisedButton from 'material-ui/RaisedButton';
 
 import s from './RegisterPage.scss';
 
-import {bindActionCreators} from 'redux';
-import {connect} from 'react-redux';
-import {checkUsername, register} from 'actions/Auth';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import { checkUsername, register } from 'actions/Auth';
 
 class RegisterPage extends Component {
 
@@ -35,7 +35,7 @@ class RegisterPage extends Component {
 
   handleUsernameBlur = (event) => {
     const username = event.target.value;
-    const {actions} = this.props;
+    const { actions } = this.props;
 
     actions.checkUsername(username)
       .then(isSuccess => {
@@ -60,8 +60,8 @@ class RegisterPage extends Component {
       isValidUsername: false,
     });
 
-    const {actions} = this.props;
-    const {username, password} = this.state;
+    const { actions } = this.props;
+    const { username, password } = this.state;
 
     const user = {
       username, password,
@@ -76,8 +76,8 @@ class RegisterPage extends Component {
   };
 
   render() {
-    const {isValidUsername} = this.state;
-    const {originalUrl} = this.props;
+    const { isValidUsername } = this.state;
+    const { originalUrl } = this.props;
     return (
       <div className={s.root}>
         <form
@@ -116,7 +116,7 @@ class RegisterPage extends Component {
             key="register-button"
             label="注册"
             type="submit"
-            style={{width: '100%', marginTop: '1rem'}}
+            style={{ width: '100%', marginTop: '1rem' }}
             disabled={!isValidUsername}
           />
         </form>
@@ -135,5 +135,5 @@ class RegisterPage extends Component {
 }
 
 export default connect(null, (dispatch) => ({
-  actions: bindActionCreators(Object.assign({}, {checkUsername, register}), dispatch),
+  actions: bindActionCreators(Object.assign({}, { checkUsername, register }), dispatch),
 }))(withStyles(s)(withRouter(RegisterPage)));

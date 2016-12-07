@@ -1,14 +1,14 @@
 /**
  * Created by cjh95414 on 2016/6/13.
  */
-import React, {PropTypes, Component} from 'react';
-import {List, ListItem} from 'material-ui/List';
+import React, { PropTypes, Component } from 'react';
+import { List, ListItem } from 'material-ui/List';
 import Dialog from 'material-ui/Dialog';
 import Divider from 'material-ui/Divider';
 import Subheader from 'material-ui/Subheader';
 import TextField from 'material-ui/TextField';
 import Avatar from 'material-ui/Avatar';
-import {grey400, darkBlack, grey300} from 'material-ui/styles/colors';
+import { grey400, grey300 } from 'material-ui/styles/colors';
 import IconButton from 'material-ui/IconButton';
 import FlatButton from 'material-ui/FlatButton';
 import FontIcon from 'material-ui/FontIcon';
@@ -47,15 +47,6 @@ const styles = {
 
 class CommentBox extends Component {
 
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      openCommentDialog: false,
-      comment: '',
-    };
-  }
-
   static propTypes = {
     user: PropTypes.shape({
       avatar: PropTypes.string,
@@ -72,6 +63,15 @@ class CommentBox extends Component {
     },
   };
 
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      openCommentDialog: false,
+      comment: '',
+    };
+  }
+
   handleCommentDialogOpen = () => {
     this.setState({
       openCommentDialog: true,
@@ -87,10 +87,10 @@ class CommentBox extends Component {
   handleCommentDialogConfirm = () => {
     this.handleCommentDialogClose();
 
-    const {onComment} = this.props;
+    const { onComment } = this.props;
 
     onComment && onComment(this.state.comment); // eslint-disable-line
-  };
+  }
 
   handleCommentChange = (event, value) => {
     this.setState({
@@ -114,7 +114,7 @@ class CommentBox extends Component {
     ];
     // --------对话框的按钮-----------
 
-    const {comments, user} = this.props;
+    const { comments, user } = this.props;
 
     // 根据评论数据生成评论列表
     const commentList = comments.map((comment, index) => [
@@ -125,7 +125,10 @@ class CommentBox extends Component {
         primaryText={
           <p>
             {user.username}
-            <span style={{color: grey300, fontSize: '0.5rem'}}> {new Date(comment.date).toDateString()}</span> <br />
+            <span style={{ color: grey300, fontSize: '0.5rem' }}>
+              {new Date(comment.date).toDateString()}
+            </span>
+            <br />
           </p>
         }
         secondaryText={
@@ -143,9 +146,9 @@ class CommentBox extends Component {
 
         <div className={s.commentButton}>
           <RaisedButton
+            primary
             label="评论"
             labelPosition="after"
-            primary
             icon={<FontIcon className="material-icons">comment</FontIcon>}
             onTouchTap={this.handleCommentDialogOpen}
           />
@@ -157,18 +160,18 @@ class CommentBox extends Component {
         </List>
 
         <Dialog
+          modal
           key="add_comment"
           title="请输入您的评论"
           contentStyle={styles.commentDialogContent}
           actions={dialogActions}
-          modal
           open={this.state.openCommentDialog}
           autoScrollBodyContent
         >
           <TextField
-            hintText="不超过100个字"
             fullWidth
             multiLine
+            hintText="不超过100个字"
             rows={5}
             rowsMax={8}
             value={this.state.comment}

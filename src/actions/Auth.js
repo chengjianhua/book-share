@@ -1,8 +1,8 @@
 import ActionTypes from 'ActionTypes';
-import {fetchJson} from '../core/fetch';
-import {canUseDOM} from 'exenv';
+import { fetchJson } from '../core/fetch';
+import { canUseDOM } from 'exenv';
 import jwtDecode from 'jwt-decode';
-import {fromJS} from 'immutable';
+import { fromJS } from 'immutable';
 
 /* eslint-disable consistent-return */
 export function readToken() {
@@ -38,7 +38,7 @@ export function removeToken() {
   };
 }
 
-export function writeAuthorization({token}) {
+export function writeAuthorization({ token }) {
   return function (dispatch) {
     if (canUseDOM) {
       localStorage.setItem('token', token);
@@ -79,9 +79,9 @@ export const checkUsername = (username) => () =>
       'Content-Type': 'application/json',
     },
   })
-  .then(({isSuccess}) => isSuccess);
+  .then(({ isSuccess }) => isSuccess);
 
-export const register = ({username, password}) => (dispatch) =>
+export const register = ({ username, password }) => (dispatch) =>
   fetchJson('/manage/register', {
     method: 'POST',
     body: JSON.stringify({
@@ -90,7 +90,7 @@ export const register = ({username, password}) => (dispatch) =>
     headers: {
       'Content-Type': 'application/json',
     },
-  }).then(({isSuccess}) => {
+  }).then(({ isSuccess }) => {
     if (isSuccess) {
       dispatch({
         type: ActionTypes.REGISTER_USER_SUCCESS,
