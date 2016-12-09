@@ -1,13 +1,13 @@
 /**
  * Created by cjh95414 on 2016/5/25.
  */
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
-import {bindActionCreators} from 'redux';
-import {connect} from 'react-redux';
-import {Map} from 'immutable';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import { Map } from 'immutable';
 
-import {addComment, fetchBook, star, unstar} from 'actions/Book';
+import { addComment, fetchBook, star, unstar } from 'actions/Book';
 
 import s from './BookDetailPage.scss';
 import BookDetailCard from './BookDetailCard';
@@ -19,13 +19,13 @@ class BookDetailPage extends Component {
   }
 
   componentWillMount() {
-    const {actions, params: {id}} = this.props;
+    const { actions, params: { id } } = this.props;
 
     actions.fetchBook(id);
   }
 
   handleComment = (commentContent) => {
-    const {actions, params: {id}} = this.props;
+    const { actions, params: { id } } = this.props;
     const comment = {
       content: commentContent,
       date: new Date(),
@@ -35,7 +35,7 @@ class BookDetailPage extends Component {
   };
 
   render() {
-    const {book, user} = this.props;
+    const { book, user } = this.props;
     const comments = book.get('comments');
 
     return (
@@ -76,5 +76,5 @@ function mapDispatchToProps(dispatch) {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(
-  withStyles(s)(BookDetailPage)
+  withStyles(s)(BookDetailPage),
 );

@@ -1,6 +1,12 @@
-import {PropTypes} from 'react';
+import { PropTypes } from 'react';
 
-export const appShape = PropTypes.shape({
+const appShape = PropTypes.shape({
   setAppBarIconRight: PropTypes.func,
   restoreAppBar: PropTypes.func,
 });
+
+export default appShape;
+
+export {
+  appShape,
+};

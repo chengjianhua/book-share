@@ -26,7 +26,7 @@ class UserPage extends Component {
   static propTypes = {
     username: PropTypes.string,
     avatar: PropTypes.string,
-    signature: PropTypes.string,
+    // signature: PropTypes.string,
   };
 
   static defaultProps = {
@@ -49,7 +49,7 @@ class UserPage extends Component {
         <Link to="/share/add">
           <MenuItem primaryText="添加" />
         </Link>
-      </IconMenu>
+      </IconMenu>,
     );
   }
 
@@ -98,7 +98,7 @@ class UserPage extends Component {
             className={s.iconButton}
             label="书籍"
             labelPosition="after"
-            icon={ <FontIcon className="material-icons">book</FontIcon> }
+            icon={<FontIcon className="material-icons">book</FontIcon>}
           />
 
           <FlatButton
@@ -117,7 +117,7 @@ class UserPage extends Component {
             className={s.iconButton}
             label="分享"
             labelPosition="after"
-            icon={ <FontIcon className="material-icons">home</FontIcon> }
+            icon={<FontIcon className="material-icons">home</FontIcon>}
           />
 
         </Paper>

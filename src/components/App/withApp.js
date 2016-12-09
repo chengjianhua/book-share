@@ -1,14 +1,14 @@
 import invariant from 'invariant';
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import hoistStatics from 'hoist-non-react-statics';
 
-import {appShape} from './propTypes';
+import { appShape } from './propTypes';
 
 function getDisplayName(WrappedComponent) {
   return WrappedComponent.displayName || WrappedComponent.name || 'Component';
 }
 
-export default function withApp(WrappedComponent, {withRef = true} = {}) {
+export default function withApp(WrappedComponent, { withRef = true } = {}) {
   class WithApp extends Component {
 
     static childContextTypes = {
@@ -31,7 +31,7 @@ export default function withApp(WrappedComponent, {withRef = true} = {}) {
       invariant(
         withRef,
         'To access the wrapped instance, you need to specify ' +
-        '`{ withRef: true }` as the second argument of the withApp() call.'
+        '`{ withRef: true }` as the second argument of the withApp() call.',
       );
 
       return this.wrappedInstance;
@@ -39,7 +39,7 @@ export default function withApp(WrappedComponent, {withRef = true} = {}) {
 
     render() {
       const app = this.props.app || this.context.app;
-      const props = {...this.props, app};
+      const props = { ...this.props, app };
 
       if (withRef) {
         props.ref = (c) => { this.wrappedInstance = c; };

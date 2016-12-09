@@ -7,9 +7,10 @@ import TextField from 'material-ui/TextField';
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import * as accountsActions from '../../../actions/Accounts';
 
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
+
+import * as accountsActions from 'actions/Accounts';
 import s from './Settings.scss';
 
 class Settings extends Component {
@@ -138,5 +139,5 @@ function mapDispatchToProps(dispatch) {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(
-  withStyles(s)(withRouter(Settings))
+  withStyles(s)(withRouter(Settings)),
 );

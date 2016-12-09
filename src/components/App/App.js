@@ -4,18 +4,17 @@ import { bindActionCreators } from 'redux';
 
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 
-import s from './App.scss';
-
 import { readToken } from 'actions/Auth';
 
 import LoadingOverlay from 'common/LoadingOverlay';
 
+import s from './App.scss';
 import { appShape } from './propTypes';
 
 class App extends Component {
 
   static propTypes = {
-    error: PropTypes.object,
+    error: PropTypes.instanceOf(Error),
     header: PropTypes.element,
   };
 

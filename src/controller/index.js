@@ -61,20 +61,19 @@ router.post('/login', passport.authenticate('local'), (req, res) => {
       logger.error(`Fetching user named ${username} from database failed.`);
       throw err;
     }
+
     if (!user) {
       res.status(400).json({
         success: false,
         message: 'Authentication failed. User not found.',
       });
+    } else if (user.password !== password) {
+      res.status(400).json({
+        success: false,
+        message: 'Authentication failed. Wrong password.',
+      });
     } else {
-      if (user.password !== password) {
-        res.status(400).json({
-          success: false,
-          message: 'Authentication failed. Wrong password.',
-        });
-      } else {
-        res.redirect(originalUrl || '/');
-      }
+      res.redirect(originalUrl || '/');
     }
   });
 });

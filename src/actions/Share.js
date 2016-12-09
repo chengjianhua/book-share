@@ -1,5 +1,7 @@
-import ActionTypes from 'ActionTypes';
 import { fromJS } from 'immutable';
+
+import ActionTypes from 'ActionTypes';
+
 import fetch, { postJson } from '../core/fetch';
 import { doubanAPI } from '../config';
 
@@ -8,7 +10,7 @@ const prefix = '/api/share/books';
 /**
  * create [新增一个图书分享]
  */
-export const create = () => dispatch => {
+export const create = () => (dispatch) => {
   dispatch({
     type: ActionTypes.CREATE_BOOK_DOING,
   });
@@ -28,7 +30,7 @@ export const create = () => dispatch => {
     });
 };
 
-export const searchFromDouban = searchText => dispatch => {
+export const searchFromDouban = searchText => (dispatch) => {
   dispatch({
     type: ActionTypes.SEARCH_BOOK_DOING,
   });
@@ -41,13 +43,13 @@ export const searchFromDouban = searchText => dispatch => {
       if (msg) {
         throw new Error('Request for books informations failed.');
       }
-      console.log(json);
+
       dispatch({
         type: ActionTypes.SEARCH_BOOK_SUCCESS,
         data: fromJS(books),
       });
     })
-    .catch(error => {
+    .catch((error) => {
       dispatch({
         type: ActionTypes.SEARCH_BOOK_FAILURE,
         error,

@@ -1,27 +1,26 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 
-import {bindActionCreators} from 'redux';
-import {connect} from 'react-redux';
-
-import {StarButton} from 'components/common/Buttons';
+import { StarButton } from 'components/common/Buttons';
 import Header from 'components/common/Header';
 
-import {star, unstar} from 'actions/Book';
+import { star, unstar } from 'actions/Book';
 
 class BookDetailPageHeader extends Component {
 
   handleStar = () => {
-    const {actions, params: {id}, username} = this.props;
+    const { actions, params: { id }, username } = this.props;
     actions.star(id, username);
   }
 
   handleUnstar = () => {
-    const {actions, params: {id}, username} = this.props;
+    const { actions, params: { id }, username } = this.props;
     actions.unstar(id, username);
   }
 
   render() {
-    const {starred} = this.props;
+    const { starred } = this.props;
 
     const iconElementRight = (
       <StarButton
@@ -56,5 +55,5 @@ function mapDispatchToProps(dispatch) {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(
-  BookDetailPageHeader
+  BookDetailPageHeader,
 );

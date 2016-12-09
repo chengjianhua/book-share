@@ -10,7 +10,7 @@ function addAuthorizationHeader(options) {
     token = localStorage.getItem('token');
   }
   const authenticationHeader = {
-    ['Authorization']: `Bearer ${token}`,
+    Authorization: `Bearer ${token}`,
   };
 
   const headers = Object.assign({}, options.headers, authenticationHeader);

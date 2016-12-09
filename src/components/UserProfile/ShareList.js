@@ -50,7 +50,7 @@ class ShareList extends PureComponent {
 
   render() {
     const { data } = this.props;
-    const items = data.map(item => {
+    const items = data.map((item) => {
       const shareTitle = item.get('shareTitle');
       const bookTitle = item.get('bookTitle');
       const shareContent = item.get('shareContent') ?

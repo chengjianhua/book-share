@@ -13,7 +13,7 @@ class BookDetailCard extends PureComponent {
       signature: PropTypes.string,
       avatar: PropTypes.string,
     }),
-    book: PropTypes.object,
+    book: PropTypes.object, // eslint-disable-line react/forbid-prop-types
   };
 
   render() {
@@ -47,7 +47,7 @@ class BookDetailCard extends PureComponent {
               />
             }
           >
-            <img src={bookImg || loadingGif} />
+            <img alt={bookTitle} src={bookImg || loadingGif} />
           </CardMedia>
 
           <CardTitle title={bookShareTitle || loading} />

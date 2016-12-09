@@ -1,5 +1,6 @@
-import ActionTypes from 'ActionTypes';
 import { Map, List } from 'immutable';
+
+import ActionTypes from 'ActionTypes';
 
 const defaultState = new Map({
   bookSearchResult: new List(),

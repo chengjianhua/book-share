@@ -1,25 +1,20 @@
 /**
  * Created by cjh95414 on 2016/5/5.
  */
-import React, { Component, PropTypes } from 'react';
-import { Link } from 'react-router';
+import React, { PureComponent, PropTypes } from 'react';
 
 import Paper from 'material-ui/Paper';
 import FlatButton from 'material-ui/FlatButton';
-import Divider from 'material-ui/Divider';
-
-import FontIcon from 'material-ui/FontIcon';
 import ActionThumbUp from 'material-ui/svg-icons/action/thumb-up';
 import ComunicateComment from 'material-ui/svg-icons/communication/comment';
-
 import { grey500, blue500 } from 'material-ui/styles/colors';
 
-import s from './BriefShareCard.scss';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 
+import s from './BriefShareCard.scss';
 import loadingGif from '../../../public/img/loading.gif';
 
-class BriefShareCard extends Component {
+class BriefShareCard extends PureComponent {
 
   static propTypes = {
     username: PropTypes.string.isRequired,
@@ -68,13 +63,13 @@ class BriefShareCard extends Component {
       <Paper style={style.root}>
         <div className={s.root}>
           <div className={s.imgBox}>
-            <img className={s.img} src={img || loadingGif} />
+            <img role="presentation" className={s.img} src={img || loadingGif} />
           </div>
           <div className={s.contentBox}>
             <div className={s.header}>
               <p>{title}</p>
               <p style={style.subheader}>
-                <span style={style.username}>{username}</span> 分享了 <span>"{bookName}"</span>
+                <span style={style.username}>{username}</span> 分享了 <span>{`"${bookName}"`}</span>
               </p>
             </div>
 

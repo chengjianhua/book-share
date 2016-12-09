@@ -33,7 +33,7 @@ class Header extends Component {
   }
 
   render() {
-    const iconElementLeft = (
+    const iconElementLeft = this.props.iconElementLeft || (
       <IconButton onTouchTap={this.handleBackButtonTouchTap}>
         <ArrowBack />
       </IconButton>

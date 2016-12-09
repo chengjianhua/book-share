@@ -1,9 +1,0 @@
-{
-  "name": "BookCardPage",
-  "version": "0.0.0",
-  "private": true,
-  "main": "./BookCardPage.js",
-  "dependencies": {
-    "react-router": "latest"
-  }
-}

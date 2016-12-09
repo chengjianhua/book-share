@@ -1,10 +1,10 @@
-import ActionTypes from '../constants/ActionTypes';
+import { fromJS } from 'immutable';
 import isomorphicFetch from 'isomorphic-fetch';
-import {fetchJson, postJson} from '../core/fetch';
 
-import {fromJS} from 'immutable';
+import { fetchJson, postJson } from '../core/fetch';
+import ActionTypes from '../constants/ActionTypes';
 
-import {doubanAPI} from '../config';
+import { doubanAPI } from '../config';
 
 const prefix = '/api/share/books';
 
@@ -16,11 +16,11 @@ export function fetchBookList(page) {
 
     return fetchJson(`${prefix}?page=${page}`)
     .then((json) => {
-      const {books} = json;
+      const { books } = json;
 
       const promises = [];
 
-      books.forEach(book => {
+      books.forEach((book) => {
         if (book.bookId) {
           promises.push(
             isomorphicFetch(`${doubanAPI}/${book.bookId}`, {
@@ -30,7 +30,7 @@ export function fetchBookList(page) {
               },
             })
             .then(response => response.json())
-            .then(detail => Object.assign({}, book, {detail}))
+            .then(detail => Object.assign({}, book, { detail })),
           );
         } else {
           promises.push(Promise.resolve(book));
@@ -39,7 +39,7 @@ export function fetchBookList(page) {
 
       // 将返回带有结果的 Promise 对象添加到数组当中，为了传递给 Promise.all
       Promise.all(promises)
-      .then(bookList => {
+      .then((bookList) => {
         dispatch({
           type: ActionTypes.FETCH_BOOK_LIST_SUCCESS,
           data: fromJS(bookList),
@@ -47,7 +47,7 @@ export function fetchBookList(page) {
         });
       });
     })
-    .catch(error => {
+    .catch((error) => {
       dispatch({
         type: ActionTypes.FETCH_BOOK_LIST_FAILURE,
         error,
@@ -63,19 +63,19 @@ export function fetchBook(bookId) {
     });
 
     return fetchJson(`${prefix}/${bookId}`)
-      .then(json => {
-        const {book} = json;
+      .then((json) => {
+        const { book } = json;
 
         return fetchJson(`${doubanAPI}/${book.bookId}`)
-        .then(detail => {
-          const bookDetail = Object.assign({}, book, {detail});
+        .then((detail) => {
+          const bookDetail = Object.assign({}, book, { detail });
           dispatch({
             type: ActionTypes.FETCH_BOOK_SUCCESS,
             detail: fromJS(bookDetail),
           });
         });
       })
-      .catch(error => {
+      .catch((error) => {
         dispatch({
           type: ActionTypes.FETCH_BOOK_FAILURE,
           error,

@@ -1,12 +1,10 @@
+import { fromJS } from 'immutable';
+import { canUseDOM } from 'exenv';
 import ActionTypes from '../constants/ActionTypes';
 // import isomorphicFetch from 'isomorphic-fetch';
-import {fetchJson, postJson} from '../core/fetch';
+import { fetchJson, postJson } from '../core/fetch';
 
-import {fromJS} from 'immutable';
-
-import {doubanAPI} from '../config'; // eslint-disable-line
-
-import {canUseDOM} from 'exenv';
+import { doubanAPI } from '../config'; // eslint-disable-line
 
 export function fetchUserBooks(username) {
   return function (dispatch) {
@@ -14,13 +12,13 @@ export function fetchUserBooks(username) {
       type: ActionTypes.FETCH_USER_BOOKS_DOING,
     });
     fetchJson(`/api/accounts/${username}/books`)
-    .then(json => {
-      const {books} = json;
+    .then((json) => {
+      const { books } = json;
       dispatch({
         type: ActionTypes.FETCH_USER_BOOKS_SUCCESS,
         data: fromJS(books),
       });
-    }).catch(error => {
+    }).catch((error) => {
       dispatch({
         type: ActionTypes.FETCH_USER_BOOKS_FAILURE,
         error,
@@ -35,7 +33,7 @@ export function fetchUserProfile(username) {
       type: ActionTypes.FETCH_USER_PROFILE_DOING,
     });
     fetchJson(`/api/accounts/${username}/profile`)
-    .then(json => {
+    .then((json) => {
       if (canUseDOM) {
         localStorage.setItem('profile', JSON.stringify(json.profile));
       }
@@ -44,7 +42,7 @@ export function fetchUserProfile(username) {
         data: fromJS(json.profile),
       });
     })
-    .catch(error => {
+    .catch((error) => {
       dispatch({
         type: ActionTypes.FETCH_USER_PROFILE_FAILURE,
         error,
@@ -54,7 +52,7 @@ export function fetchUserProfile(username) {
 }
 
 export function updateUserProfile(newProfile) {
-  const {username} = newProfile;
+  const { username } = newProfile;
   return function (dispatch) {
     dispatch({
       type: ActionTypes.UPDATE_USER_PROFILE_DOING,
@@ -63,7 +61,7 @@ export function updateUserProfile(newProfile) {
     return postJson(`/api/accounts/${username}/profile`, {
       body: JSON.stringify(newProfile),
     })
-    .then(({profile}) => {
+    .then(({ profile }) => {
       if (canUseDOM) {
         localStorage.setItem('profile', JSON.stringify(profile));
       }
@@ -89,13 +87,13 @@ export function fetchStarredBooks(username) {
     });
 
     return fetchJson(`/api/accounts/${username}/stars/books`)
-      .then(({data}) => {
+      .then(({ data }) => {
         dispatch({
           type: ActionTypes.FETCH_USER_STARRED_BOOKS_SUCCESS,
           data: fromJS(data),
         });
       })
-      .catch(error => {
+      .catch((error) => {
         dispatch({
           type: ActionTypes.FETCH_USER_STARRED_BOOKS_FAILURE,
           error,

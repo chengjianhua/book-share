@@ -55,3 +55,7 @@ export function authenticateToken() {
 
   return middleware;
 }
+
+export default {
+  authenticateToken,
+};

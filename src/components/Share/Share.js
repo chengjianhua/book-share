@@ -18,9 +18,9 @@ import Avatar from 'material-ui/Avatar';
 import { ListItem } from 'material-ui/List';
 import { darkBlack, lightBlack } from 'material-ui/styles/colors'; // eslint-disable-line
 
-import SelectableList from '../common/SelectableList';
-
 import * as actions from 'actions/Share';
+
+import SelectableList from 'components/common/SelectableList';
 
 import s from './Share.scss';
 
@@ -163,15 +163,15 @@ class Share extends Component {
 
     const listItems = bookSearchResult.map((book, index, array) => [
       <ListItem
-        key={index}
+        key={book.get('title') + book.get('author')}
         value={index}
         leftAvatar={<Avatar style={styles.avatar} src={book.get('image')} />}
         primaryText={book.get('title')}
         secondaryText={
           <p>
             <span style={{ color: darkBlack }}>{book.get('author')}</span>
-              <br />
-              {book.get('publisher')}
+            <br />
+            {book.get('publisher')}
           </p>
           }
         secondaryTextLines={2}
@@ -242,7 +242,7 @@ class Share extends Component {
           onRequestClose={this.handleCancelDialog}
           autoScrollBodyContent
         >
-          <SelectableList ref="bookList" onSelected={this.handleSelectBook}>
+          <SelectableList onSelected={this.handleSelectBook}>
             {listItems}
           </SelectableList>
         </Dialog>

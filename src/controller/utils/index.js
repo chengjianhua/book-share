@@ -16,6 +16,10 @@ function classof(o) {
  */
 export function formatJson(isSuccess, message, payload) {
   return Object.assign({}, { isSuccess, message },
-    classof(payload) === 'Object' ? payload : { data: payload }
+    classof(payload) === 'Object' ? payload : { data: payload },
   );
 }
+
+export default {
+  formatJson,
+};
