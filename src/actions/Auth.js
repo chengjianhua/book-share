@@ -61,7 +61,7 @@ export function authenticate(username, password) {
       headers: {
         'Content-Type': 'application/json',
       },
-    }).then(json => {
+    }).then((json) => {
       dispatch(writeAuthorization(json));
       dispatch(readToken());
       return json;
@@ -69,7 +69,7 @@ export function authenticate(username, password) {
   };
 }
 
-export const checkUsername = (username) => () =>
+export const checkUsername = username => () =>
   fetchJson('/manage/checkUsername', {
     method: 'POST',
     body: JSON.stringify({
@@ -81,7 +81,7 @@ export const checkUsername = (username) => () =>
   })
   .then(({ isSuccess }) => isSuccess);
 
-export const register = ({ username, password }) => (dispatch) =>
+export const register = ({ username, password }) => dispatch =>
   fetchJson('/manage/register', {
     method: 'POST',
     body: JSON.stringify({

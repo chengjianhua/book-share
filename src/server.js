@@ -10,20 +10,22 @@ import session from 'express-session';
 import morgan from 'morgan';
 import PrettyError from 'pretty-error';
 
+import React from 'react';
+import { renderToString } from 'react-dom/server';
+import { match, RouterContext } from 'react-router';
+import { Provider } from 'react-redux';
+import { fromJS } from 'immutable';
+
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 import schema from './data/schema';
-import assets from './assets';
+import assets from './assets'; // eslint-disable-line import/no-unresolved
 import { port, auth } from './config';
 import mongodbConnect from './database/db';
 
-import React from 'react';
-import { renderToString } from 'react-dom/server';
-import { match, RouterContext } from 'react-router';
 import routes from './router/routes';
 
-import { Provider } from 'react-redux';
 import buildStore from './store/buildStore';
 
 import indexRouter from './controller/index';
@@ -32,7 +34,8 @@ import passport from './core/passport';
 
 import WithStylesContext from './components/WithStylesContext';
 
-import { fromJS } from 'immutable';
+import templateIndex from './views/index.jade';
+import templateError from './views/error.jade';
 
 const server = global.server = express();
 const MongoStore = require('connect-mongo')(session);
@@ -87,13 +90,12 @@ server.use(passport.authenticateMiddleware().unless({
 
 server.get('*', (req, res) => {
   match({ routes, location: req.url }, (err, redirectLocation, renderProps) => {
-    const template = require('./views/index.jade');
     const css = [];
 
     const initState = buildStore().getState();
 
     // 如果用户已经登录就将其中的用户信息保存到 store 中
-    if (!!req.user) {
+    if (req.user) {
       const { username, ...profile } = req.user;
       initState.auth = fromJS({
         isAuthenticated: true,
@@ -123,19 +125,20 @@ server.get('*', (req, res) => {
         userAgent: req.headers['user-agent'],
       };
 
+      /* eslint-disable no-underscore-dangle */
       data.body = renderToString(
-        <Provider store={store}>
-          <WithStylesContext onInsertCss={styles => css.push(styles._getCss())}>
+        <WithStylesContext onInsertCss={styles => css.push(styles._getCss())}>
+          <Provider store={store}>
             <MuiThemeProvider muiTheme={muiTheme}>
               <RouterContext {...renderProps} />
             </MuiThemeProvider>
-          </WithStylesContext>
-        </Provider>
+          </Provider>
+        </WithStylesContext>,
       );
 
       data.css = css.join('');
 
-      res.status(200).send(template(data));
+      res.status(200).send(templateIndex(data));
     } else {
       res.status(404).send('Not found');
     }
@@ -152,10 +155,9 @@ pe.skipPackage('express');
 
 server.use((err, req, res, next) => { // eslint-disable-line no-unused-vars
   console.log(pe.render(err)); // eslint-disable-line no-console
-  const template = require('./views/error.jade');
   const statusCode = err.status || 500;
   res.status(statusCode);
-  res.send(template({
+  res.send(templateError({
     message: err.message,
     stack: process.env.NODE_ENV === 'production' ? '' : err.stack,
   }));
