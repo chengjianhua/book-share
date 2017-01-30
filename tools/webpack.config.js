@@ -1,4 +1,4 @@
-/* eslint-disable func-names */
+/* eslint-disable func-names, global-require */
 import path from 'path';
 import webpack from 'webpack';
 import extend from 'extend';
@@ -6,16 +6,6 @@ import AssetsPlugin from 'assets-webpack-plugin';
 
 const DEBUG = !process.argv.includes('--release');
 const VERBOSE = process.argv.includes('--verbose');
-const AUTOPREFIXER_BROWSERS = [
-  'Android 2.3',
-  'Android >= 4',
-  'Chrome >= 35',
-  'Firefox >= 31',
-  'Explorer >= 9',
-  'iOS >= 7',
-  'Opera >= 12',
-  'Safari >= 7.1',
-];
 const GLOBALS = {
   'process.env.NODE_ENV': DEBUG ? '"development"' : '"production"',
   __DEV__: DEBUG,
@@ -33,7 +23,6 @@ const config = {
   },
 
   cache: DEBUG,
-  debug: DEBUG,
 
   stats: {
     colors: true,
@@ -48,7 +37,11 @@ const config = {
   },
 
   plugins: [
-    new webpack.optimize.OccurenceOrderPlugin(),
+    // new webpack.optimize.OccurenceOrderPlugin(),
+    new webpack.LoaderOptionsPlugin({
+      debug: DEBUG,
+      minimize: DEBUG,
+    }),
   ],
 
   resolve: {
@@ -59,52 +52,65 @@ const config = {
       components: path.resolve(__dirname, '../src/components'),
       common: path.resolve(__dirname, '../src/components/common'),
     },
-    // root: [path.resolve(__dirname, '../src'), path.resolve(__dirname, '../node_modules')],
-    extensions: ['', '.webpack.js', '.web.js', '.js', '.jsx', '.json'],
+    extensions: ['.webpack.js', '.web.js', '.js', '.jsx', '.json'],
   },
 
   module: {
-    loaders: [
+    rules: [
       {
-        test: /\.jsx?$/,
+        test: /\.(jsx|js)?$/,
         include: [
-          path.resolve(__dirname, '../node_modules/react-routing/src'),
           path.resolve(__dirname, '../src'),
         ],
         loader: 'babel-loader',
-      }, {
+        options: {
+          presets: [
+            [
+              'es2015', {
+                modules: false,
+              },
+            ],
+            'stage-0',
+            'react',
+          ],
+        },
+      },
+      {
         test: /\.(css|scss)$/,
-        loaders: [
-          'isomorphic-style-loader',
-          `css-loader?${DEBUG ? 'sourceMap&' : 'minimize&'}modules&localIdentName=` +
-          `${DEBUG ? '[name]_[local]_[hash:base64:3]' : '[hash:base64:4]'}`,
-          'postcss-loader?parser=postcss-scss',
+        use: [
+          {
+            loader: 'isomorphic-style-loader',
+          },
+          {
+            loader: 'css-loader',
+            options: {
+              [DEBUG ? 'sourceMap' : 'minimize']: true,
+              modules: true,
+              localIdentName: DEBUG ? '[name]_[local]_[hash:base64:3]' : '[hash:base64:4]',
+            },
+          },
+          {
+            loader: 'postcss-loader',
+          },
         ],
-      }, {
-        test: /\.json$/,
-        loader: 'json-loader',
-      }, {
+      },
+      {
         test: /\.txt$/,
         loader: 'raw-loader',
-      }, {
+      },
+      {
         test: /\.(png|jpg|jpeg|gif|svg|woff|woff2)$/,
         loader: 'url-loader?limit=10000',
-      }, {
+      },
+      {
         test: /\.(eot|ttf|wav|mp3)$/,
         loader: 'file-loader',
-      }, {
+      },
+      {
         test: /\.jade$/,
         loader: 'jade-loader',
       },
     ],
-  },
-
-  postcss: function plugins(bundler) {
-    return [
-      require('postcss-import')({ addDependencyTo: bundler }),
-      require('precss')(),
-      require('autoprefixer')({ browsers: AUTOPREFIXER_BROWSERS }),
-    ];
   },
 };
 
@@ -124,14 +130,17 @@ const clientConfig = extend(true, {}, config, {
   devtool: DEBUG ? 'eval-source-map' : false,
   plugins: [
     ...config.plugins,
-    new webpack.DefinePlugin({ ...GLOBALS, 'process.env.BROWSER': true }),
+    new webpack.DefinePlugin({
+      ...GLOBALS,
+      'process.env.BROWSER': true,
+      __SERVER__: false,
+    }),
     new AssetsPlugin({
       path: path.join(__dirname, '../build'),
       filename: 'assets.js',
       processOutput: x => `module.exports = ${JSON.stringify(x)};`,
     }),
     ...(!DEBUG ? [
-      new webpack.optimize.DedupePlugin(),
       new webpack.optimize.UglifyJsPlugin({
         compress: {
           screw_ie8: true,
@@ -162,7 +171,7 @@ const serverConfig = extend(true, {}, config, {
       // 匹配上述自定义的 alias, 防止 alias 中的模块被作为外部模块忽略
       const alias = new RegExp(`^(${Object.keys(config.resolve.alias).join('|')})`);
       const isExternal =
-        request.match(/^[@a-z][a-z\/\.\-0-9]*$/i) &&
+        request.match(/^[@a-z][a-z/.\-0-9]*$/i) &&
         !request.match(alias);
       cb(null, Boolean(isExternal));
     },
@@ -178,9 +187,16 @@ const serverConfig = extend(true, {}, config, {
   devtool: 'source-map',
   plugins: [
     ...config.plugins,
-    new webpack.DefinePlugin({ ...GLOBALS, 'process.env.BROWSER': false }),
-    new webpack.BannerPlugin('require("source-map-support").install();',
-      { raw: true, entryOnly: false }),
+    new webpack.DefinePlugin({
+      ...GLOBALS,
+      'process.env.BROWSER': false,
+      __SERVER__: true,
+    }),
+    new webpack.BannerPlugin({
+      banner: 'require("source-map-support").install();',
+      raw: true,
+      entryOnly: false,
+    }),
   ],
 });
 

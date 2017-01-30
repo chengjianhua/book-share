@@ -10,7 +10,7 @@ const buildStore = (initialState = {}) => {
     initialState,
     composeWithDevTools(
       applyMiddleware(thunk),
-    )
+    ),
   );
 
   if (module.hot) {

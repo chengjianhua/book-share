@@ -5,13 +5,13 @@ import React from 'react';
 import { Route, IndexRoute } from 'react-router';
 
 import App from 'components/App';
-import SignPage from 'components/SignPage';
+// import SignPage from 'components/SignPage';
 import BookCardPage from 'components/BookCardPage';
-import UserPage from 'components/UserPage';
-import UserProfile from 'components/UserProfile';
-import ProfileSettings from 'components/UserProfile/Settings';
-import BookDetailPage from 'components/BookDetailPage';
-import Share from 'components/Share';
+// import UserPage from 'components/UserPage';
+// import UserProfile from 'components/UserProfile';
+// import ProfileSettings from 'components/UserProfile/Settings';
+// import BookDetailPage from 'components/BookDetailPage';
+// import Share from 'components/Share';
 import AppHeader from 'components/AppHeader';
 import PageHeader from 'components/PageHeader';
 
@@ -35,22 +35,113 @@ function redirectToLogin(nextState, replace) {
   }
 }
 
-export default ([
-  <Route path="/" component={App}>
+function getComponent(module) {
+  return function (nextState, cb) {
+    module.then((component) => {
+      cb(null, component);
+    });
+  };
+}
 
-    <IndexRoute components={{ main: BookCardPage, header: AppHeader }} />
+/* eslint-disable import/no-dynamic-require, global-require */
+function getComponents(components = {
+  main: null,
+  header: null,
+}) {
+  return async function (nextState, cb) {
+    const keys = Object.keys(components);
+    const lazyModules = keys.map((key) => {
+      const module = components[key];
 
-    <Route path="sign" components={{ main: SignPage }} />
+      if (typeof module === 'string') {
+        if (__SERVER__) {
+          return Promise.resolve(require(`components/${module.replace('components/', '')}`).default);
+        }
 
-    <Route path="share">
-      <Route path="add" components={{ main: Share, header: PageHeader }} />
-      <Route path="book/:id" components={{ main: BookDetailPage, header: BookDetailPage.Header }} />
-    </Route>
+        return import(`components/${module.replace('components/', '')}`);
+      }
 
-    <Route path="user">
-      <IndexRoute components={{ main: UserPage, header: AppHeader }} />
-      <Route path="profile" components={{ main: UserProfile, header: PageHeader }} />
-      <Route path="settings" components={{ main: ProfileSettings, header: PageHeader }} />
-    </Route>
-  </Route>,
-]);
+      return module;
+    });
+
+    const loadedModules = await Promise.all(lazyModules);
+
+    const routes = keys.reduce((obj, key, index) => {
+      const module = loadedModules[index];
+      obj[key] = module.__esModule ? module.default : module; // eslint-disable-line no-param-reassign, no-underscore-dangle
+      return obj;
+    }, {});
+
+    console.log(`getComponents(), main: ${routes.main.displayName} header: ${routes.header ? routes.header.displayName : ''}`);
+
+    if ('Header' in components.main) {
+      routes.header = components.Header;
+    }
+
+    cb(null, routes);
+  };
+}
+
+const routes = {
+  path: '/',
+  component: App,
+  indexRoute: {
+    components: {
+      main: BookCardPage,
+      header: AppHeader,
+    },
+  },
+  childRoutes: [
+    {
+      path: 'sign',
+      getComponents: getComponents({
+        main: 'components/SignPage',
+      }),
+    },
+    {
+      path: 'share',
+      childRoutes: [
+        {
+          path: 'add',
+          getComponents: getComponents({
+            main: 'components/Share',
+            header: Promise.resolve(PageHeader),
+          }),
+        },
+        {
+          path: 'book/:id',
+          getComponents: getComponents({
+            main: 'components/BookDetailPage',
+          }),
+        },
+      ],
+    },
+    {
+      path: 'user',
+      indexRoute: {
+        getComponents: getComponents({
+          main: 'components/UserPage',
+          header: Promise.resolve(AppHeader),
+        }),
+      },
+      childRoutes: [
+        {
+          path: 'profile',
+          getComponents: getComponents({
+            main: 'components/UserProfile',
+            header: Promise.resolve(PageHeader),
+          }),
+        },
+        {
+          path: 'settings',
+          getComponents: getComponents({
+            main: 'components/UserProfile/Settings',
+            header: Promise.resolve(PageHeader),
+          }),
+        },
+      ],
+    },
+  ],
+};
+
+export default routes;

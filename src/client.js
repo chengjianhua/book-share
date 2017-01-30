@@ -1,7 +1,7 @@
 import 'babel-polyfill';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Router, browserHistory } from 'react-router';
+import { Router, browserHistory, match } from 'react-router';
 import { Provider } from 'react-redux';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import FastClick from 'fastclick';
@@ -43,19 +43,19 @@ function render(state) {
 
   trackPageview();
 
-  // match({ browserHistory, routes }, (error, redirectLocation, renderProps) => {
-  //  ReactDOM.render(<Router  history={browserHistory} routes={routes} {...renderProps} />, appContainer);
-  //  });
-
-  ReactDOM.render(
-    <Provider store={store}>
-      <WithStylesContext onInsertCss={styles => styles._insertCss()}>
-        <MuiThemeProvider muiTheme={muiTheme}>
-          <Router history={browserHistory} routes={routes} />
-        </MuiThemeProvider>
-      </WithStylesContext>
-    </Provider>, appContainer
-  );
+  match({ history: browserHistory, routes }, (error, redirectLocation, renderProps) => {
+    console.log(renderProps);
+    /* eslint-disable no-underscore-dangle */
+    ReactDOM.render(
+      <Provider store={store}>
+        <WithStylesContext onInsertCss={styles => styles._insertCss()}>
+          <MuiThemeProvider muiTheme={muiTheme}>
+            <Router {...renderProps} />
+          </MuiThemeProvider>
+        </WithStylesContext>
+      </Provider>, appContainer,
+    );
+  });
 }
 
 function run() {
@@ -66,7 +66,7 @@ function run() {
   FastClick.attach(document.body);
 
   // Re-render the app when window.location changes
-  const unlisten = Location.listen(location => {
+  const unlisten = Location.listen((location) => {
     currentLocation = location;
     currentState = Object.assign({}, location.state, {
       path: location.pathname,

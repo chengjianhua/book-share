@@ -35,6 +35,7 @@ module.exports = {
   ],
   "globals": {
     "__DEV__": true,
+    "__SERVER__": true,
     "Globals": true
   },
   "env": {
@@ -56,6 +57,7 @@ module.exports = {
       }
     ],
     "import/extensions": "off",
+    "import/no-extraneous-dependencies": "off",
     "jsx-quotes": ["error", "prefer-double"],
     "react/prop-types": ["off"],
     "react/no-direct-mutation-state": "error",

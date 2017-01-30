@@ -111,7 +111,7 @@ class User {
         $pull: {
           'stars.books': new ObjectId(shareId),
         },
-      }
+      },
     );
 
     try {

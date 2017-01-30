@@ -25,11 +25,11 @@ const DEBUG = !process.argv.includes('--release');
  */
 async function start() {
   await run(clean);
-  await run(copy.bind(undefined, {watch: true}));
-  await new Promise(resolve => {
+  await run(copy.bind(undefined, { watch: true }));
+  await new Promise((resolve) => {
     // Patch the client-side bundle configurations
     // to enable Hot Module Replacement (HMR) and React Transform
-    webpackConfig.filter(x => x.target !== 'node').forEach(config => {
+    webpackConfig.filter(x => x.target !== 'node').forEach((config) => {
       if (Array.isArray(config.entry)) {
         config.entry.unshift('webpack-hot-middleware/client');
       } else {
@@ -39,12 +39,12 @@ async function start() {
       }
 
       config.plugins.push(new webpack.HotModuleReplacementPlugin());
-      config.plugins.push(new webpack.NoErrorsPlugin());
+      config.plugins.push(new webpack.NoEmitOnErrorsPlugin());
       config
         .module
-        .loaders
+        .rules
         .filter(x => x.loader === 'babel-loader')
-        .forEach(x => (x.query = { // eslint-disable-line no-param-reassign
+        .forEach(x => (x.options = { // eslint-disable-line no-param-reassign
           // Wraps all React components into arbitrary transforms
           // https://github.com/gaearon/babel-plugin-react-transform
           plugins: [
@@ -88,7 +88,7 @@ async function start() {
         if (!err) {
           const bs = Browsersync.create();
           bs.init({
-            ...(DEBUG ? {} : {notify: false, ui: false}),
+            ...(DEBUG ? {} : { notify: false, ui: false }),
 
             proxy: {
               target: host,
